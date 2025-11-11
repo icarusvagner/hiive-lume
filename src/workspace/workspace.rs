@@ -64,11 +64,19 @@ impl Workspace {
         let content = div()
             .id("login-content")
             .flex()
-            .flex_col()
+            .flex_grow()
+            .overflow_hidden()
             .items_center()
             .justify_center()
-            .bg(cx.theme().background)
-            .child(self.login_space.clone());
+            .child(
+                div()
+                    .flex()
+                    .flex_col()
+                    .items_center()
+                    .justify_center()
+                    .bg(cx.theme().background)
+                    .child(self.login_space.clone()),
+            );
 
         content
     }
@@ -77,6 +85,7 @@ impl Workspace {
         let content = div()
             .id("home-content")
             .flex()
+            .flex_grow()
             .bg(cx.theme().background)
             .child(self.home_space.clone());
 
@@ -97,15 +106,7 @@ impl Render for Workspace {
             .flex_col()
             .size_full()
             .child(self.header_bar.clone())
-            .child(
-                div()
-                    .flex()
-                    .flex_grow()
-                    .overflow_hidden()
-                    .items_center()
-                    .justify_center()
-                    .child(content),
-            )
+            .child(content)
             .child(self.footer_bar.clone())
     }
 }

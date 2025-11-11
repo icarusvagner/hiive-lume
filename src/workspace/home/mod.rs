@@ -1,11 +1,24 @@
 use gpui::*;
-use gpui_component::button::Button;
 
-pub struct HomeSpace {}
+use crate::workspace::home::{content::HomeContent, header::HomeHeader};
+
+mod content;
+mod header;
+
+pub struct HomeSpace {
+    home_header: Entity<HomeHeader>,
+    home_content: Entity<HomeContent>,
+}
 
 impl HomeSpace {
-    pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
-        Self {}
+    pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
+        let home_header = HomeHeader::view(window, cx);
+        let home_content = HomeContent::view(window, cx);
+
+        Self {
+            home_header,
+            home_content,
+        }
     }
 
     pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
@@ -19,22 +32,7 @@ impl Render for HomeSpace {
             .size_full()
             .flex()
             .flex_col()
-            .items_center()
-            .justify_center()
-            .gap_2()
-            .child(
-                div()
-                    .items_center()
-                    .justify_center()
-                    .flex()
-                    .flex_col()
-                    .gap_4()
-                    .child("Home space")
-                    .child(
-                        Button::new("btn-01")
-                            .label("Click me")
-                            .on_click(|_, _, _| println!("Home Button clicked")),
-                    ),
-            )
+            .child(self.home_header.clone())
+            .child(self.home_content.clone())
     }
 }
