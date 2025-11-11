@@ -7,6 +7,8 @@ use gpui_component::{
     white,
 };
 
+use crate::states::show_layout::{ActiveLayout, LayoutState};
+
 pub struct RightPane {
     pub username: Entity<InputState>,
     pub password: Entity<InputState>,
@@ -45,7 +47,7 @@ impl Render for RightPane {
             .w(px(480.))
             .child(
                 div()
-                    .child(Label::new("Admin Login").text_xl().font_bold())
+                    .child(Label::new("Admin Login").text_3xl().font_bold())
                     .child(
                         Label::new("Secure access to the admin dashboard")
                             .text_sm()
@@ -81,11 +83,10 @@ impl Render for RightPane {
                             .child(Label::new("Password").font_medium())
                             .child(
                                 TextInput::new(&self.password.clone())
-                                    .prefix(Icon::new(
-                                        Icon::empty()
-                                            .path("assets/icons/lock.svg")
-                                            .text_color(cx.theme().primary_foreground),
-                                    ))
+                                    .prefix(
+                                        Icon::new(Icon::empty())
+                                            .path("icons/custom/lock-outline.svg"),
+                                    )
                                     .border_1()
                                     .text_lg()
                                     .border_color(cx.theme().colors.accent)
@@ -105,7 +106,12 @@ impl Render for RightPane {
                             .large()
                             .text_color(white())
                             .font_medium()
-                            .shadow_md(),
+                            .shadow_md()
+                            .on_click(cx.listener(|_, _, _, cx| {
+                                let state = cx.global_mut::<LayoutState>();
+                                state.layout = ActiveLayout::Home;
+                                cx.notify();
+                            })),
                     ),
             )
     }

@@ -36,7 +36,6 @@ impl Render for LoginSpace {
             .size_full()
             .min_h_full()
             .bg(cx.theme().background)
-            .overflow_hidden()
             .child(
                 div()
                     .flex()

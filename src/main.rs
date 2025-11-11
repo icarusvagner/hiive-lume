@@ -31,6 +31,7 @@ fn main() {
             cx.open_window(window_options, |window, cx| {
                 init(cx);
                 theme::init(cx);
+                states::show_layout::LayoutState::init(cx);
                 change_color_mode(cx.theme().mode, window, cx);
 
                 let workspace_view = Workspace::view(window, cx);

@@ -7,6 +7,7 @@ use std::borrow::Cow;
 #[folder = "./assets"]
 #[include = "icons/**/*.svg"]
 #[include = "images/**/*.jpeg"]
+#[include = "images/**/*.svg"]
 #[include = "images/**/*.jpg"]
 #[include = "images/**/*.png"]
 #[include = "images/**/*.gif"]

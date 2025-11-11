@@ -1,6 +1,6 @@
 use gpui::{prelude::FluentBuilder, *};
 use gpui_component::{
-    ActiveTheme, IconName, Sizable, ThemeMode, TitleBar,
+    ActiveTheme, IconName, Sizable, StyledExt, ThemeMode, TitleBar,
     button::{Button, ButtonVariants},
     h_flex,
     label::Label,
@@ -48,14 +48,14 @@ impl Render for HeaderBar {
             .icon(IconName::GitHub)
             .small()
             .ghost()
-            .on_click(|_, _, cx| cx.open_url("https://github.com/icarusvagner/morphiq-lume.git"));
+            .on_click(|_, _, cx| cx.open_url("https://github.com/icarusvagner/hiive-lume.git"));
 
         TitleBar::new().child(
             h_flex()
                 .w_full()
                 .pr_2()
                 .justify_between()
-                .child(Label::new("Hiive").text_xs())
+                .child(Label::new("Hiive").text_xs().font_medium())
                 .child(
                     div()
                         .pr(px(5.))

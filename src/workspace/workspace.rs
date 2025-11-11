@@ -2,16 +2,17 @@ use gpui::*;
 use gpui_component::{ActiveTheme, indicator::Indicator};
 
 use crate::{
-    states::show_layout::ActiveLayout,
+    states::show_layout::{ActiveLayout, LayoutState},
     workspace::{footer::FooterBar, header::HeaderBar, home::HomeSpace, login::LoginSpace},
 };
 
 pub struct Workspace {
-    pub header_bar: Entity<HeaderBar>,
-    pub active: ActiveLayout,
-    pub login_space: Entity<LoginSpace>,
-    pub home_space: Entity<HomeSpace>,
-    pub footer_bar: Entity<FooterBar>,
+    header_bar: Entity<HeaderBar>,
+    layout: ActiveLayout,
+    login_space: Entity<LoginSpace>,
+    home_space: Entity<HomeSpace>,
+    footer_bar: Entity<FooterBar>,
+    _subscription: Vec<Subscription>,
 }
 
 impl Workspace {
@@ -21,12 +22,18 @@ impl Workspace {
         let home_space = HomeSpace::view(window, cx);
         let footer_bar = FooterBar::view(window, cx);
 
+        let _subscription = vec![cx.observe_global::<LayoutState>(move |this, cx| {
+            this.layout = cx.global::<LayoutState>().layout.clone();
+            cx.notify();
+        })];
+
         Self {
             header_bar,
-            active: ActiveLayout::Login,
+            layout: ActiveLayout::Login,
             login_space,
             home_space,
             footer_bar,
+            _subscription,
         }
     }
 
@@ -79,7 +86,7 @@ impl Workspace {
 
 impl Render for Workspace {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let content = match self.active {
+        let content = match self.layout {
             ActiveLayout::Login => self.render_login(cx),
             ActiveLayout::Home => self.render_home(cx),
             ActiveLayout::Loading => self.render_loading(cx),
@@ -94,6 +101,7 @@ impl Render for Workspace {
                 div()
                     .flex()
                     .flex_grow()
+                    .overflow_hidden()
                     .items_center()
                     .justify_center()
                     .child(content),

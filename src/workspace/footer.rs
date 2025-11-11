@@ -27,7 +27,7 @@ impl Render for FooterBar {
             .text_xs()
             .opacity(0.6)
             .child("Devixion")
-            .child(Icon::new(IconName::Frame));
+            .child(Icon::new(Icon::empty()).path("icons/custom/code-block-tags.svg"));
 
         let version = div()
             .flex()

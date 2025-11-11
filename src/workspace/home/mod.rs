@@ -33,7 +33,7 @@ impl Render for HomeSpace {
                     .child(
                         Button::new("btn-01")
                             .label("Click me")
-                            .on_click(|_, _, _| println!("Home btn clicked")),
+                            .on_click(|_, _, _| println!("Home Button clicked")),
                     ),
             )
     }
