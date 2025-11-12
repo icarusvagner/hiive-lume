@@ -102,9 +102,12 @@ impl Render for Workspace {
         };
 
         div()
+            .flex()
+            .flex_col()
+            .overflow_hidden()
             .size_full()
             .child(self.header_bar.clone())
-            .child(div().flex().flex_grow().child(content))
+            .child(content)
             .child(self.footer_bar.clone())
             .children(Root::render_modal_layer(window, cx))
             .children(Root::render_drawer_layer(window, cx))

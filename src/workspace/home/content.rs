@@ -2,7 +2,7 @@ use gpui::*;
 use gpui_component::ActiveTheme;
 
 use crate::{
-    states::home_layout::HomeActiveLayout,
+    states::home_layout::{HomeActiveLayout, HomeLayout},
     workspace::home::{
         candidates::Candidates, dashboard::Dashboard, employees::Employees, jobs::Jobs,
         leaves::Leaves, settings::Settings,
@@ -17,6 +17,7 @@ pub struct HomeContent {
     candidates: Entity<Candidates>,
     leaves: Entity<Leaves>,
     settings: Entity<Settings>,
+    _subscription: Vec<Subscription>,
 }
 
 impl HomeContent {
@@ -28,6 +29,11 @@ impl HomeContent {
         let leaves = Leaves::view(window, cx);
         let settings = Settings::view(window, cx);
 
+        let _subscription = vec![cx.observe_global::<HomeLayout>(move |this, cx| {
+            this.active = cx.global::<HomeLayout>().home.clone();
+            cx.notify();
+        })];
+
         Self {
             active: HomeActiveLayout::Dashboard,
             dashboard,
@@ -36,6 +42,7 @@ impl HomeContent {
             candidates,
             leaves,
             settings,
+            _subscription,
         }
     }
 
@@ -50,7 +57,8 @@ impl HomeContent {
             .flex_col()
             .content_center()
             .flex_grow()
-            .size_full()
+            .h_full()
+            .w_full()
             .bg(cx.theme().background)
             .child(self.dashboard.clone());
 
@@ -64,7 +72,7 @@ impl HomeContent {
             .flex_col()
             .content_center()
             .flex_grow()
-            .size_full()
+            .h_full()
             .bg(cx.theme().background)
             .child(self.employees.clone());
 
@@ -78,7 +86,7 @@ impl HomeContent {
             .flex_col()
             .content_center()
             .flex_grow()
-            .size_full()
+            .h_full()
             .bg(cx.theme().background)
             .child(self.jobs.clone());
 
@@ -92,7 +100,7 @@ impl HomeContent {
             .flex_col()
             .content_center()
             .flex_grow()
-            .size_full()
+            .h_full()
             .bg(cx.theme().background)
             .child(self.candidates.clone());
 
@@ -106,7 +114,7 @@ impl HomeContent {
             .flex_col()
             .content_center()
             .flex_grow()
-            .size_full()
+            .h_full()
             .bg(cx.theme().background)
             .child(self.leaves.clone());
 
@@ -120,7 +128,7 @@ impl HomeContent {
             .flex_col()
             .content_center()
             .flex_grow()
-            .size_full()
+            .h_full()
             .bg(cx.theme().background)
             .child(self.settings.clone());
 
@@ -139,6 +147,6 @@ impl Render for HomeContent {
             HomeActiveLayout::Settings => self.render_settings(cx),
         };
 
-        div().flex().flex_grow().child(content)
+        div().flex().h_full().flex_grow().child(content)
     }
 }

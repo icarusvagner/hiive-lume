@@ -1,8 +1,8 @@
 use gpui::*;
 use gpui_component::{
-    IconName, StyledExt,
+    ActiveTheme, IconName, StyledExt,
     avatar::Avatar,
-    button::{Button, ButtonVariants, DropdownButton},
+    button::{Button, ButtonVariants},
     label::Label,
 };
 
@@ -41,21 +41,30 @@ impl HomeHeader {
         buttons
     }
 
-    fn menu_profile(&self, _cx: &mut Context<Self>) -> Div {
+    fn menu_profile(&self, cx: &mut Context<Self>) -> Div {
         div()
             .flex()
             .items_center()
             .gap_2()
-            .child(Avatar::new().placeholder(IconName::CircleUser))
-            .child(Label::new("John Doe").secondary("System Admin"))
+            .py(px(2.5))
+            .px(px(5.0))
+            .rounded_full()
+            .bg(cx.theme().secondary)
+            .child(
+                Avatar::new()
+                    .size(px(35.))
+                    .placeholder(IconName::CircleUser)
+                    .bg(cx.theme().primary),
+            )
+            .child(Label::new("John Doe").flex().flex_col().text_sm())
     }
 }
 
 impl Render for HomeHeader {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
-            .py(px(5.))
-            .px(px(2.5))
+            .py(px(4.5))
+            .px(px(5.0))
             .flex()
             .items_center()
             .justify_between()
@@ -87,7 +96,7 @@ impl Render for HomeHeader {
                             .ghost(),
                     )
                     .child(
-                        Button::new("btn-search")
+                        Button::new("btn-notif")
                             .icon(IconName::Bell)
                             .rounded_full()
                             .ghost(),
