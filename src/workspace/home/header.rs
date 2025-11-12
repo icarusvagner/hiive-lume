@@ -1,9 +1,12 @@
 use gpui::*;
 use gpui_component::{
-    Icon, IconName, Sizable, StyledExt,
-    button::{Button, ButtonVariants},
+    IconName, StyledExt,
+    avatar::Avatar,
+    button::{Button, ButtonVariants, DropdownButton},
     label::Label,
 };
+
+use crate::{data::home::header_menu, states::home_layout::HomeLayout};
 
 pub struct HomeHeader {}
 
@@ -15,10 +18,41 @@ impl HomeHeader {
     pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
         cx.new(|cx| Self::new(window, cx))
     }
+
+    fn menu_buttons(&self, cx: &mut Context<Self>) -> Vec<Button> {
+        let mut buttons = Vec::new();
+
+        for (indx, btn) in header_menu::HeaderMenu::all_data().iter().enumerate() {
+            let layout = btn.goto_layout;
+
+            let button = Button::new(indx)
+                .label(btn.label.clone())
+                .icon(btn.icon.clone())
+                .ghost()
+                .on_click(cx.listener(move |_, _, _, cx| {
+                    let state = cx.global_mut::<HomeLayout>();
+                    state.home = layout;
+                    cx.notify();
+                }));
+
+            buttons.push(button);
+        }
+
+        buttons
+    }
+
+    fn menu_profile(&self, _cx: &mut Context<Self>) -> Div {
+        div()
+            .flex()
+            .items_center()
+            .gap_2()
+            .child(Avatar::new().placeholder(IconName::CircleUser))
+            .child(Label::new("John Doe").secondary("System Admin"))
+    }
 }
 
 impl Render for HomeHeader {
-    fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
             .py(px(5.))
             .px(px(2.5))
@@ -28,36 +62,37 @@ impl Render for HomeHeader {
             .child(
                 div()
                     .flex()
-                    .gap_3()
                     .items_center()
-                    .child(img("images/hiive-logo.png").size(px(30.)))
-                    .child(Label::new("Hiive Lume").font_bold().text_lg()),
+                    .gap_4()
+                    .child(
+                        div()
+                            .flex()
+                            .gap_3()
+                            .items_center()
+                            .child(img("images/hiive-logo.png").size(px(30.)))
+                            .child(Label::new("Hiive Lume").font_bold().text_lg()),
+                    )
+                    .child(div().w(px(20.)))
+                    .child(div().flex().gap_2().children(self.menu_buttons(cx))),
             )
             .child(
                 div()
                     .flex()
+                    .items_center()
                     .gap_2()
                     .child(
-                        Button::new("dashboard-btn")
-                            .ghost()
-                            .large()
-                            .icon(IconName::LayoutDashboard)
-                            .label("Dashboard"),
+                        Button::new("btn-search")
+                            .icon(IconName::Search)
+                            .rounded_full()
+                            .ghost(),
                     )
                     .child(
-                        Button::new("employees-btn")
-                            .ghost()
-                            .large()
-                            .icon(IconName::User)
-                            .label("Employees"),
+                        Button::new("btn-search")
+                            .icon(IconName::Bell)
+                            .rounded_full()
+                            .ghost(),
                     )
-                    .child(
-                        Button::new("jobs-btn")
-                            .ghost()
-                            .large()
-                            .icon(Icon::empty().path("icons/custom/users-round-outline.svg"))
-                            .label("Jobs"),
-                    ),
+                    .child(self.menu_profile(cx)),
             )
     }
 }

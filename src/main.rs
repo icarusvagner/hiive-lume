@@ -2,7 +2,10 @@ use gpui::*;
 use gpui_component::{ActiveTheme as _, Root, init, theme};
 
 use crate::{
-    themes::change_color_mode, window::get_window_options, workspace::workspace::Workspace,
+    states::{home_layout, show_layout},
+    themes::change_color_mode,
+    window::get_window_options,
+    workspace::workspace::Workspace,
 };
 
 mod assets;
@@ -31,7 +34,8 @@ fn main() {
             cx.open_window(window_options, |window, cx| {
                 init(cx);
                 theme::init(cx);
-                states::show_layout::LayoutState::init(cx);
+                show_layout::LayoutState::init(cx);
+                home_layout::HomeLayout::init(cx);
                 change_color_mode(cx.theme().mode, window, cx);
 
                 let workspace_view = Workspace::view(window, cx);

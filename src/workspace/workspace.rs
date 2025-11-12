@@ -1,5 +1,5 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, indicator::Indicator};
+use gpui_component::{ActiveTheme, Root, indicator::Indicator};
 
 use crate::{
     states::show_layout::{ActiveLayout, LayoutState},
@@ -94,7 +94,7 @@ impl Workspace {
 }
 
 impl Render for Workspace {
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let content = match self.layout {
             ActiveLayout::Login => self.render_login(cx),
             ActiveLayout::Home => self.render_home(cx),
@@ -102,11 +102,12 @@ impl Render for Workspace {
         };
 
         div()
-            .flex()
-            .flex_col()
             .size_full()
             .child(self.header_bar.clone())
-            .child(content)
+            .child(div().flex().flex_grow().child(content))
             .child(self.footer_bar.clone())
+            .children(Root::render_modal_layer(window, cx))
+            .children(Root::render_drawer_layer(window, cx))
+            .children(Root::render_notification_layer(window, cx))
     }
 }

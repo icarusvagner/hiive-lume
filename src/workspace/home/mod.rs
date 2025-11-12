@@ -2,8 +2,15 @@ use gpui::*;
 
 use crate::workspace::home::{content::HomeContent, header::HomeHeader};
 
+mod candidates;
 mod content;
+mod dashboard;
+mod employees;
 mod header;
+mod jobs;
+mod leaves;
+mod logic;
+mod settings;
 
 pub struct HomeSpace {
     home_header: Entity<HomeHeader>,
