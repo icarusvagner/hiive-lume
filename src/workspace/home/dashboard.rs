@@ -6,6 +6,8 @@ use gpui_component::{
 
 use crate::states::home_layout::HomeLayout;
 
+mod content;
+
 pub struct Dashboard {}
 
 impl Dashboard {
