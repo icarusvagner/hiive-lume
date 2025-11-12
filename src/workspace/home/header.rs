@@ -6,11 +6,13 @@ use gpui_component::{
     label::Label,
 };
 
-use crate::{data::home::header_menu, states::home_layout::HomeLayout};
+use crate::{
+    data::home::header_menu,
+    states::home_layout::HomeLayout,
+    workspace::global_actions::{LogoutAction, ProfileAction, SettingsAction},
+};
 
 pub struct HomeHeader {}
-
-actions!(headermenu, [MyAction]);
 
 impl HomeHeader {
     pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
@@ -62,10 +64,10 @@ impl HomeHeader {
                 DropdownButton::new("dd-profile")
                     .button(Button::new("btn-profile").label("John Doe"))
                     .popup_menu(|menu, _, _| {
-                        menu.menu("Profile", Box::new(MyAction))
-                            .menu("Settings", Box::new(MyAction))
+                        menu.menu("Profile", Box::new(ProfileAction))
+                            .menu("Settings", Box::new(SettingsAction))
                             .separator()
-                            .menu("Logout", Box::new(MyAction))
+                            .menu("Logout", Box::new(LogoutAction))
                     }),
             )
     }
@@ -74,6 +76,7 @@ impl HomeHeader {
 impl Render for HomeHeader {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
+            .bg(cx.theme().accent)
             .py(px(4.5))
             .px(px(5.0))
             .flex()

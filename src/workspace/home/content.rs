@@ -4,8 +4,12 @@ use gpui_component::ActiveTheme;
 use crate::{
     states::home_layout::{HomeActiveLayout, HomeLayout},
     workspace::home::{
-        candidates::Candidates, dashboard::Dashboard, employees::Employees, jobs::Jobs,
-        leaves::Leaves, settings::Settings,
+        candidates::Candidates,
+        dashboard::Dashboard,
+        employees::{Employees, create::CreateEmployee},
+        jobs::Jobs,
+        leaves::Leaves,
+        settings::Settings,
     },
 };
 
@@ -17,6 +21,7 @@ pub struct HomeContent {
     candidates: Entity<Candidates>,
     leaves: Entity<Leaves>,
     settings: Entity<Settings>,
+    create_employee: Entity<CreateEmployee>,
     _subscription: Vec<Subscription>,
 }
 
@@ -28,6 +33,7 @@ impl HomeContent {
         let candidates = Candidates::view(window, cx);
         let leaves = Leaves::view(window, cx);
         let settings = Settings::view(window, cx);
+        let create_employee = CreateEmployee::view(window, cx);
 
         let _subscription = vec![cx.observe_global::<HomeLayout>(move |this, cx| {
             this.active = cx.global::<HomeLayout>().home.clone();
@@ -42,6 +48,7 @@ impl HomeContent {
             candidates,
             leaves,
             settings,
+            create_employee,
             _subscription,
         }
     }
@@ -134,6 +141,20 @@ impl HomeContent {
 
         content
     }
+
+    fn render_create_employee(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
+        let content = div()
+            .id("create-employee")
+            .flex()
+            .flex_col()
+            .content_center()
+            .flex_grow()
+            .h_full()
+            .bg(cx.theme().background)
+            .child(self.create_employee.clone());
+
+        content
+    }
 }
 
 impl Render for HomeContent {
@@ -145,6 +166,7 @@ impl Render for HomeContent {
             HomeActiveLayout::Candidates => self.render_candidates(cx),
             HomeActiveLayout::Leaves => self.render_leaves(cx),
             HomeActiveLayout::Settings => self.render_settings(cx),
+            HomeActiveLayout::CreateEmployee => self.render_create_employee(cx),
         };
 
         div().flex().h_full().flex_grow().child(content)

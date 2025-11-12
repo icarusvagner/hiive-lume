@@ -4,6 +4,7 @@ use gpui_component::ActiveTheme;
 use crate::workspace::login::{left_pane::LeftPane, right_pane::RightPane};
 
 mod left_pane;
+mod login_form;
 mod right_pane;
 
 pub struct LoginSpace {

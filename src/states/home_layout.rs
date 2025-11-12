@@ -8,6 +8,7 @@ pub enum HomeActiveLayout {
     Candidates,
     Leaves,
     Settings,
+    CreateEmployee,
 }
 
 #[derive(Debug, PartialEq)]

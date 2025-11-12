@@ -1,10 +1,8 @@
 use gpui::*;
 
-pub mod create;
+pub struct CreateEmployee {}
 
-pub struct Employees {}
-
-impl Employees {
+impl CreateEmployee {
     pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
         Self {}
     }
@@ -14,8 +12,8 @@ impl Employees {
     }
 }
 
-impl Render for Employees {
+impl Render for CreateEmployee {
     fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
-        div().size_full().child("Employees")
+        div().size_full().child("CreateEmployee")
     }
 }
