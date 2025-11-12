@@ -2,13 +2,15 @@ use gpui::*;
 use gpui_component::{
     ActiveTheme, IconName, StyledExt,
     avatar::Avatar,
-    button::{Button, ButtonVariants},
+    button::{Button, ButtonVariants, DropdownButton},
     label::Label,
 };
 
 use crate::{data::home::header_menu, states::home_layout::HomeLayout};
 
 pub struct HomeHeader {}
+
+actions!(headermenu, [MyAction]);
 
 impl HomeHeader {
     pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
@@ -56,7 +58,16 @@ impl HomeHeader {
                     .placeholder(IconName::CircleUser)
                     .bg(cx.theme().primary),
             )
-            .child(Label::new("John Doe").flex().flex_col().text_sm())
+            .child(
+                DropdownButton::new("dd-profile")
+                    .button(Button::new("btn-profile").label("John Doe"))
+                    .popup_menu(|menu, _, _| {
+                        menu.menu("Profile", Box::new(MyAction))
+                            .menu("Settings", Box::new(MyAction))
+                            .separator()
+                            .menu("Logout", Box::new(MyAction))
+                    }),
+            )
     }
 }
 
