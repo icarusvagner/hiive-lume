@@ -74,5 +74,6 @@ impl Render for Dashboard {
             .flex()
             .flex_col()
             .child(self.render_top_content(cx))
+            .scrollable(Axis::Vertical)
     }
 }

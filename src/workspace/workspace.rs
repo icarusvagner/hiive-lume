@@ -1,5 +1,5 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, Root, indicator::Indicator};
+use gpui_component::{ActiveTheme, Root, indicator::Indicator, v_flex};
 
 use crate::{
     states::show_layout::{ActiveLayout, LayoutState},
@@ -101,9 +101,7 @@ impl Render for Workspace {
             ActiveLayout::Loading => self.render_loading(cx),
         };
 
-        div()
-            .flex()
-            .flex_col()
+        v_flex()
             .overflow_hidden()
             .size_full()
             .child(self.header_bar.clone())

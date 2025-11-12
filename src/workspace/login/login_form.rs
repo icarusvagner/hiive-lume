@@ -1,9 +1,10 @@
 use gpui::*;
 use gpui_component::{
-    Icon, IconName,
+    ContextModal, Icon, IconName, Sizable,
     button::{Button, ButtonVariants},
     form::form_field,
     input::{InputState, TextInput},
+    notification::NotificationType,
 };
 
 use crate::states::auth_state::AuthState;
@@ -52,6 +53,8 @@ impl LoginForm {
             );
             self._clear(window, cx);
             cx.notify();
+        } else {
+            window.push_notification((NotificationType::Error, "Input fields are required"), cx);
         }
     }
 }
@@ -69,7 +72,11 @@ impl Render for LoginForm {
                     .col_span(2)
                     .label("Username")
                     .required(true)
-                    .child(TextInput::new(&self.username).prefix(Icon::new(IconName::User))),
+                    .child(
+                        TextInput::new(&self.username)
+                            .prefix(Icon::new(IconName::User))
+                            .large(),
+                    ),
             )
             // Password
             .child(
@@ -82,7 +89,8 @@ impl Render for LoginForm {
                             .prefix(Icon::new(
                                 Icon::empty().path("icons/custom/lock-outline.svg"),
                             ))
-                            .mask_toggle(),
+                            .mask_toggle()
+                            .large(),
                     ),
             )
             // Submit button
@@ -91,6 +99,7 @@ impl Render for LoginForm {
                     .label("Login")
                     .primary()
                     .cursor_pointer()
+                    .large()
                     .on_click(cx.listener(|this, _, window, cx| this.auth_login(window, cx))),
             )
     }
