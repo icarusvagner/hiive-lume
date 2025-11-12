@@ -1,6 +1,6 @@
 use gpui_component::{Icon, IconName};
 
-use crate::{data::models::HomeHeaderMenuModel, states::home_layout::HomeActiveLayout};
+use crate::{data::models::home_menu::HomeHeaderMenuModel, states::home_layout::HomeActiveLayout};
 
 pub struct HeaderMenu;
 

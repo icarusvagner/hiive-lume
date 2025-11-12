@@ -6,7 +6,7 @@ use crate::{
     workspace::home::{
         candidates::Candidates,
         dashboard::Dashboard,
-        employees::{Employees, create::CreateEmployee},
+        employees::{create::CreateEmployee, view::Employees},
         jobs::Jobs,
         leaves::Leaves,
         settings::Settings,
