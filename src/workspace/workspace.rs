@@ -1,5 +1,5 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, Root, indicator::Indicator, v_flex};
+use gpui_component::{ActiveTheme, Root, Sizable, spinner::Spinner, v_flex};
 
 use crate::{
     states::show_layout::{ActiveLayout, LayoutState},
@@ -50,10 +50,11 @@ impl Workspace {
             .justify_center()
             .items_center()
             .child(
-                div()
-                    .flex()
+                v_flex()
                     .items_center()
-                    .child(Indicator::new())
+                    .justify_center()
+                    .gap_10()
+                    .child(Spinner::new().color(cx.theme().blue).with_size(px(100.)))
                     .child("Loading"),
             );
 
@@ -86,7 +87,7 @@ impl Workspace {
             .id("home-content")
             .flex()
             .flex_grow()
-            .bg(cx.theme().background)
+            .bg(cx.theme().background.opacity(0.30))
             .child(self.home_space.clone());
 
         content
@@ -107,8 +108,8 @@ impl Render for Workspace {
             .child(self.header_bar.clone())
             .child(content)
             .child(self.footer_bar.clone())
-            .children(Root::render_modal_layer(window, cx))
-            .children(Root::render_drawer_layer(window, cx))
+            .children(Root::render_dialog_layer(window, cx))
+            .children(Root::render_sheet_layer(window, cx))
             .children(Root::render_notification_layer(window, cx))
     }
 }

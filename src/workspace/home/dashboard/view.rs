@@ -4,15 +4,19 @@ use gpui_component::{
     button::{Button, ButtonCustomVariant, ButtonVariants},
 };
 
-use crate::states::home_layout::HomeLayout;
+use crate::{
+    states::home_layout::HomeLayout, workspace::home::dashboard::content::DashboardContent,
+};
 
-mod content;
-
-pub struct Dashboard {}
+pub struct Dashboard {
+    cards: Entity<DashboardContent>,
+}
 
 impl Dashboard {
-    pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
-        Self {}
+    pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
+        let cards = DashboardContent::view(window, cx);
+
+        Self { cards }
     }
 
     pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
@@ -22,7 +26,8 @@ impl Dashboard {
     fn render_top_content(&mut self, cx: &mut Context<Self>) -> Div {
         div()
             .flex()
-            .p_10()
+            .px_10()
+            .py_6()
             .bg(cx.theme().accent)
             .justify_between()
             .items_center()
@@ -76,6 +81,7 @@ impl Render for Dashboard {
             .flex()
             .flex_col()
             .child(self.render_top_content(cx))
+            .child(self.cards.clone())
             .scrollable(Axis::Vertical)
     }
 }

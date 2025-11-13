@@ -1,9 +1,9 @@
 use gpui::*;
 use gpui_component::{
-    ContextModal, Icon, IconName, Sizable,
+    Icon, IconName, Sizable, WindowExt,
     button::{Button, ButtonVariants},
-    form::form_field,
-    input::{InputState, TextInput},
+    form::{field, v_form},
+    input::{Input, InputState},
     notification::NotificationType,
 };
 
@@ -61,46 +61,42 @@ impl LoginForm {
 
 impl Render for LoginForm {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        div()
-            .flex_col()
-            .flex()
+        v_form()
+            .large()
             .gap(px(12.))
             .mb_4()
             // Username
             .child(
-                form_field()
-                    .col_span(2)
-                    .label("Username")
-                    .required(true)
-                    .child(
-                        TextInput::new(&self.username)
-                            .prefix(Icon::new(IconName::User))
-                            .large(),
-                    ),
+                field().col_span(2).label("Username").required(true).child(
+                    Input::new(&self.username)
+                        .prefix(Icon::new(IconName::User))
+                        .large(),
+                ),
             )
+            .mb_4()
             // Password
             .child(
-                form_field()
-                    .col_span(2)
-                    .label("Password")
-                    .required(true)
-                    .child(
-                        TextInput::new(&self.password)
-                            .prefix(Icon::new(
-                                Icon::empty().path("icons/custom/lock-outline.svg"),
-                            ))
-                            .mask_toggle()
-                            .large(),
-                    ),
+                field().col_span(2).label("Password").required(true).child(
+                    Input::new(&self.password)
+                        .prefix(Icon::new(
+                            Icon::empty().path("icons/custom/lock-outline.svg"),
+                        ))
+                        .mask_toggle()
+                        .large(),
+                ),
             )
+            .mb_8()
             // Submit button
             .child(
-                Button::new("submit-btn")
-                    .label("Login")
-                    .primary()
-                    .cursor_pointer()
-                    .large()
-                    .on_click(cx.listener(|this, _, window, cx| this.auth_login(window, cx))),
+                field().col_span(2).label_indent(false).child(
+                    Button::new("submit-btn")
+                        .label("Login")
+                        .primary()
+                        .cursor_pointer()
+                        .w_full()
+                        .large()
+                        .on_click(cx.listener(|this, _, window, cx| this.auth_login(window, cx))),
+                ),
             )
     }
 }

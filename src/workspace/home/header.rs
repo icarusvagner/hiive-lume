@@ -2,8 +2,9 @@ use gpui::*;
 use gpui_component::{
     ActiveTheme, IconName, StyledExt,
     avatar::Avatar,
-    button::{Button, ButtonVariants, DropdownButton},
+    button::{Button, ButtonVariants},
     label::Label,
+    menu::DropdownMenu,
 };
 
 use crate::{
@@ -61,9 +62,10 @@ impl HomeHeader {
                     .bg(cx.theme().primary),
             )
             .child(
-                DropdownButton::new("dd-profile")
-                    .button(Button::new("btn-profile").label("John Doe"))
-                    .popup_menu(|menu, _, _| {
+                Button::new("header-menu-btn")
+                    .cursor_pointer()
+                    .label("John Doe")
+                    .dropdown_menu(|menu, _window, _cx| {
                         menu.menu("Profile", Box::new(ProfileAction))
                             .menu("Settings", Box::new(SettingsAction))
                             .separator()
