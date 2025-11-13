@@ -110,6 +110,7 @@ impl DashboardContent {
             .rounded_xl()
             .shadow_2xl()
             .h_full()
+            .max_w(px(900.0))
             .flex_1()
             .child(
                 h_flex()
@@ -176,12 +177,18 @@ impl DashboardContent {
                         .p_5()
                         .child(v_flex().child(day).child(month)),
                 )
-                .child(v_flex().child(event.title).child(event.short_desc));
+                .child(
+                    v_flex()
+                        .text_ellipsis()
+                        .child(div().child(event.title).text_lg())
+                        .child(div().child(event.short_desc).text_xs()),
+                );
 
             events.push(event_div);
         }
 
         v_flex()
+            .w(px(900.0))
             .bg(cx.theme().secondary)
             .p_12()
             .gap_3()
@@ -190,7 +197,7 @@ impl DashboardContent {
             .rounded_xl()
             .shadow_2xl()
             .child(div().child("News & Events").text_xl().font_bold())
-            .child(div().grid_cols(2).gap_8().children(events))
+            .child(div().grid().grid_cols(2).gap_8().children(events))
     }
 }
 
