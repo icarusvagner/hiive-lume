@@ -5,8 +5,11 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.100"
+base64 = "0.22.1"
+chrono = { version = "0.4.42", features = ["serde"] }
 gpui = "0.2.2"
 gpui-component = { version = "0.4.0-preview2", features = ["tree-sitter-languages"] }
 rust-embed = { version = "8.9.0", features = ["interpolate-folder-path"] }
 serde_json = "1.0.145"
+time = { version = "0.3.44", features = ["formatting", "serde", "parsing"] }
 tokio = { version = "1.48.0", features = ["full"] }

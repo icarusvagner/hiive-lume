@@ -1,7 +1,20 @@
+use chrono::NaiveDateTime;
 use gpui::*;
-use gpui_component::{ActiveTheme, StyledExt, avatar::Avatar, chart::PieChart, h_flex, v_flex};
+use gpui_component::{
+    ActiveTheme, StyledExt,
+    avatar::Avatar,
+    chart::{AreaChart, PieChart},
+    checkbox::Checkbox,
+    h_flex,
+    label::Label,
+    v_flex,
+};
 
-use crate::data::home::dashboard_card_data::{DashboardCardData, DashboardPieCard};
+use crate::data::home::{
+    attendance_overview_data::AttendanceOverviewData,
+    dashboard_card_data::{DashboardCardData, DashboardPieCard},
+    events_news_data::EventsNewsData,
+};
 
 #[derive(Clone)]
 pub struct DashboardContent {}
@@ -26,7 +39,7 @@ impl DashboardContent {
                 .border_1()
                 .border_color(black().opacity(0.40))
                 .bg(cx.theme().secondary)
-                .p(px(22.0))
+                .p_12()
                 .w_full()
                 .child(
                     Avatar::new()
@@ -52,9 +65,8 @@ impl DashboardContent {
             .border_1()
             .border_color(black().opacity(0.40))
             .bg(cx.theme().secondary)
-            .p(px(22.0))
+            .p_12()
             .w_full()
-            .justify_between()
             .child(
                 PieChart::new(data.clone())
                     .value(|d| d.data as f32)
@@ -81,17 +93,128 @@ impl DashboardContent {
                     ),
             )
     }
+
+    fn render_attendance_overview(
+        &self,
+        _window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> impl IntoElement {
+        let data = AttendanceOverviewData::all_data();
+
+        v_flex()
+            .bg(cx.theme().secondary)
+            .p_12()
+            .gap_3()
+            .border_1()
+            .border_color(black().opacity(0.40))
+            .rounded_xl()
+            .shadow_2xl()
+            .h_full()
+            .flex_1()
+            .child(
+                h_flex()
+                    .justify_between()
+                    .child(Label::new("Attendance Overview").text_lg().font_bold())
+                    .child(
+                        h_flex()
+                            .gap_2()
+                            .child(Checkbox::new("on-time").label("On Time").checked(true))
+                            .child(
+                                Checkbox::new("late-arrival")
+                                    .label("Late Arrival")
+                                    .checked(false),
+                            )
+                            .child(Checkbox::new("absent").label("Abset").checked(false)),
+                    ),
+            )
+            .child(
+                div().flex_1().py_4().child(
+                    AreaChart::new(data)
+                        .x(|d| d.month.clone())
+                        .y(|d| d.on_time)
+                        .stroke(cx.theme().chart_1)
+                        .fill(linear_gradient(
+                            0.,
+                            linear_color_stop(cx.theme().chart_1.opacity(0.4), 1.),
+                            linear_color_stop(cx.theme().background.opacity(0.3), 0.),
+                        ))
+                        .y(|d| d.late_arrival)
+                        .stroke(cx.theme().chart_2)
+                        .fill(linear_gradient(
+                            0.,
+                            linear_color_stop(cx.theme().chart_2, 1.),
+                            linear_color_stop(cx.theme().background.opacity(0.3), 0.),
+                        ))
+                        .y(|d| d.absent)
+                        .stroke(cx.theme().chart_3)
+                        .fill(linear_gradient(
+                            0.,
+                            linear_color_stop(cx.theme().chart_3, 1.),
+                            linear_color_stop(cx.theme().background.opacity(0.3), 0.),
+                        ))
+                        .tick_margin(3),
+                ),
+            )
+    }
+
+    fn render_events_news(&self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let data = EventsNewsData::all_data();
+        let mut events = Vec::new();
+
+        for event in data {
+            let dt = NaiveDateTime::parse_from_str(&event.date_time, "%Y-%m-%d %H:%M:%S")
+                .expect("Cannot parse date and time str");
+            let month = dt.format("%b").to_string();
+            let day = dt.format("%d").to_string();
+
+            let event_div = h_flex()
+                .gap_4()
+                .child(
+                    v_flex()
+                        .bg(cx.theme().accent.opacity(0.50))
+                        .rounded_lg()
+                        .p_5()
+                        .child(v_flex().child(day).child(month)),
+                )
+                .child(v_flex().child(event.title).child(event.short_desc));
+
+            events.push(event_div);
+        }
+
+        v_flex()
+            .bg(cx.theme().secondary)
+            .p_12()
+            .gap_3()
+            .border_1()
+            .border_color(black().opacity(0.40))
+            .rounded_xl()
+            .shadow_2xl()
+            .child(div().child("News & Events").text_xl().font_bold())
+            .children(events)
+    }
 }
 
 impl Render for DashboardContent {
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        div().px_10().py_6().child(
-            h_flex()
-                .items_center()
-                .justify_between()
-                .gap_8()
-                .children(self.cards(cx))
-                .child(self.pie_chart_card(cx)),
-        )
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        v_flex()
+            .px_10()
+            .py_6()
+            .gap_5()
+            .h_full()
+            .flex_1()
+            .child(
+                h_flex()
+                    .items_center()
+                    .justify_between()
+                    .gap_8()
+                    .children(self.cards(cx))
+                    .child(self.pie_chart_card(cx)),
+            )
+            .child(
+                h_flex()
+                    .gap_8()
+                    .child(self.render_attendance_overview(window, cx))
+                    .child(self.render_events_news(window, cx)),
+            )
     }
 }

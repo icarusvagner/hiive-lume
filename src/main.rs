@@ -9,6 +9,7 @@ use crate::{
 };
 
 mod assets;
+mod core;
 mod data;
 mod states;
 mod themes;
