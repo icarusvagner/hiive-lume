@@ -190,7 +190,7 @@ impl DashboardContent {
             .rounded_xl()
             .shadow_2xl()
             .child(div().child("News & Events").text_xl().font_bold())
-            .children(events)
+            .child(div().grid_cols(2).gap_8().children(events))
     }
 }
 

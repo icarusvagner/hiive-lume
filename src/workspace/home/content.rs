@@ -156,7 +156,8 @@ impl Render for HomeContent {
         v_flex()
             .size_full()
             .flex_grow()
-            .pb_12()
+            .pb_24()
+            .bg(cx.theme().background)
             .child(content)
             .scrollable(Axis::Vertical)
     }
