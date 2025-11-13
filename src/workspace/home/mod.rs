@@ -1,4 +1,5 @@
 use gpui::*;
+use gpui_component::v_flex;
 
 use crate::workspace::home::{content::HomeContent, header::HomeHeader};
 
@@ -35,10 +36,8 @@ impl HomeSpace {
 
 impl Render for HomeSpace {
     fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
-        div()
+        v_flex()
             .size_full()
-            .flex()
-            .flex_col()
             .child(self.home_header.clone())
             .child(self.home_content.clone())
     }

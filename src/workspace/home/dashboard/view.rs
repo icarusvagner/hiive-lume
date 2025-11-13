@@ -2,7 +2,6 @@ use gpui::*;
 use gpui_component::{
     ActiveTheme, IconName, Sizable, StyledExt,
     button::{Button, ButtonCustomVariant, ButtonVariants},
-    scroll::ScrollbarAxis,
     v_flex,
 };
 
@@ -82,6 +81,5 @@ impl Render for Dashboard {
             .size_full()
             .child(self.render_top_content(cx))
             .child(self.cards.clone())
-            .scrollable(ScrollbarAxis::Vertical)
     }
 }

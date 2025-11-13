@@ -216,5 +216,6 @@ impl Render for DashboardContent {
                     .child(self.render_attendance_overview(window, cx))
                     .child(self.render_events_news(window, cx)),
             )
+            .scrollable(Axis::Vertical)
     }
 }

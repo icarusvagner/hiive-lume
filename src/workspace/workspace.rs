@@ -83,10 +83,11 @@ impl Workspace {
     }
 
     fn render_home(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("home-content")
-            .flex()
+            .flex_1()
             .flex_grow()
+            .size_full()
             .bg(cx.theme().background.opacity(0.30))
             .child(self.home_space.clone());
 

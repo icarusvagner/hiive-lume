@@ -1,5 +1,5 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, StyledExt, v_flex};
+use gpui_component::{ActiveTheme, v_flex};
 
 pub struct Employees {}
 
@@ -15,16 +15,12 @@ impl Employees {
 
 impl Render for Employees {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        v_flex()
-            .gap_2()
-            .p_4()
-            .children((0..50).map(|i| {
-                div()
-                    .w_full()
-                    .h(px(80.))
-                    .bg(cx.theme().accent)
-                    .child(format!("Card {}", i))
-            }))
-            .scrollable(Axis::Vertical)
+        v_flex().size_full().children((0..50).map(|i| {
+            div()
+                .h(px(40.))
+                .w_full()
+                .bg(cx.theme().secondary)
+                .child(format!("Employee Item {}", i))
+        }))
     }
 }

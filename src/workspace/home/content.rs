@@ -1,5 +1,5 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, Sizable, spinner::Spinner, v_flex};
+use gpui_component::{ActiveTheme, Sizable, StyledExt, spinner::Spinner, v_flex};
 
 use crate::{
     states::home_layout::{HomeActiveLayout, HomeLayout},
@@ -58,14 +58,9 @@ impl HomeContent {
     }
 
     fn render_dashboard(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("dashboard")
-            .flex()
-            .flex_col()
-            .content_center()
-            .flex_grow()
-            .h_full()
-            .w_full()
+            .size_full()
             .bg(cx.theme().background)
             .child(self.dashboard.clone());
 
@@ -73,13 +68,9 @@ impl HomeContent {
     }
 
     fn render_employees(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("employees")
-            .flex()
-            .flex_col()
-            .content_center()
-            .flex_grow()
-            .h_full()
+            .size_full()
             .bg(cx.theme().background)
             .child(self.employees.clone());
 
@@ -87,13 +78,9 @@ impl HomeContent {
     }
 
     fn render_jobs(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("jobs")
-            .flex()
-            .flex_col()
-            .content_center()
-            .flex_grow()
-            .h_full()
+            .size_full()
             .bg(cx.theme().background)
             .child(self.jobs.clone());
 
@@ -101,13 +88,9 @@ impl HomeContent {
     }
 
     fn render_candidates(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("candidates")
-            .flex()
-            .flex_col()
-            .content_center()
-            .flex_grow()
-            .h_full()
+            .size_full()
             .bg(cx.theme().background)
             .child(self.candidates.clone());
 
@@ -115,13 +98,9 @@ impl HomeContent {
     }
 
     fn render_leaves(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("leaves")
-            .flex()
-            .flex_col()
-            .content_center()
-            .flex_grow()
-            .h_full()
+            .size_full()
             .bg(cx.theme().background)
             .child(self.leaves.clone());
 
@@ -129,13 +108,9 @@ impl HomeContent {
     }
 
     fn render_settings(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("settings")
-            .flex()
-            .flex_col()
-            .content_center()
-            .flex_grow()
-            .h_full()
+            .size_full()
             .bg(cx.theme().background)
             .child(self.settings.clone());
 
@@ -143,13 +118,9 @@ impl HomeContent {
     }
 
     fn render_create_employee(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("create-employee")
-            .flex()
-            .flex_col()
-            .content_center()
-            .flex_grow()
-            .h_full()
+            .size_full()
             .bg(cx.theme().background)
             .child(self.create_employee.clone());
 
@@ -157,20 +128,13 @@ impl HomeContent {
     }
 
     fn render_loading_home(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = div()
+        let content = v_flex()
             .id("loading-content")
-            .flex()
-            .flex_grow()
+            .size_full()
             .bg(cx.theme().background)
             .justify_center()
             .items_center()
-            .child(
-                v_flex()
-                    .items_center()
-                    .justify_center()
-                    .gap_10()
-                    .child(Spinner::new().color(cx.theme().blue).with_size(px(160.))),
-            );
+            .child(Spinner::new().color(cx.theme().blue).with_size(px(160.)));
 
         content
     }
@@ -189,6 +153,11 @@ impl Render for HomeContent {
             HomeActiveLayout::Loading => self.render_loading_home(cx),
         };
 
-        div().flex().h_full().flex_grow().child(content)
+        v_flex()
+            .size_full()
+            .flex_grow()
+            .pb_12()
+            .child(content)
+            .scrollable(Axis::Vertical)
     }
 }
