@@ -134,7 +134,15 @@ impl HomeContent {
             .bg(cx.theme().background)
             .justify_center()
             .items_center()
-            .child(Spinner::new().color(cx.theme().blue).with_size(px(160.)));
+            .content_center()
+            .h_full()
+            .child(
+                div()
+                    .flex()
+                    .items_center()
+                    .justify_center()
+                    .child(Spinner::new().color(cx.theme().blue).with_size(px(160.))),
+            );
 
         content
     }

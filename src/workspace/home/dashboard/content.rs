@@ -17,11 +17,19 @@ use crate::data::home::{
 };
 
 #[derive(Clone)]
-pub struct DashboardContent {}
+pub struct DashboardContent {
+    on_time: bool,
+    late_arrival: bool,
+    absent: bool,
+}
 
 impl DashboardContent {
     pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
-        Self {}
+        Self {
+            on_time: false,
+            late_arrival: false,
+            absent: false,
+        }
     }
 
     pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
@@ -119,13 +127,33 @@ impl DashboardContent {
                     .child(
                         h_flex()
                             .gap_2()
-                            .child(Checkbox::new("on-time").label("On Time").checked(true))
+                            .child(
+                                Checkbox::new("on-time")
+                                    .label("On Time")
+                                    .checked(self.on_time)
+                                    .on_click(cx.listener(|this, checked, _, cx| {
+                                        this.on_time = *checked;
+                                        cx.notify();
+                                    })),
+                            )
                             .child(
                                 Checkbox::new("late-arrival")
                                     .label("Late Arrival")
-                                    .checked(false),
+                                    .checked(self.late_arrival)
+                                    .on_click(cx.listener(|this, checked, _, cx| {
+                                        this.late_arrival = *checked;
+                                        cx.notify();
+                                    })),
                             )
-                            .child(Checkbox::new("absent").label("Abset").checked(false)),
+                            .child(
+                                Checkbox::new("absent")
+                                    .label("Absent")
+                                    .checked(self.absent)
+                                    .on_click(cx.listener(|this, checked, _, cx| {
+                                        this.absent = *checked;
+                                        cx.notify();
+                                    })),
+                            ),
                     ),
             )
             .child(
@@ -133,10 +161,10 @@ impl DashboardContent {
                     AreaChart::new(data)
                         .x(|d| d.month.clone())
                         .y(|d| d.on_time)
-                        .stroke(cx.theme().chart_1)
+                        .stroke(cx.theme().chart_5)
                         .fill(linear_gradient(
                             0.,
-                            linear_color_stop(cx.theme().chart_1.opacity(0.4), 1.),
+                            linear_color_stop(cx.theme().chart_5.opacity(0.4), 1.),
                             linear_color_stop(cx.theme().background.opacity(0.3), 0.),
                         ))
                         .y(|d| d.late_arrival)
@@ -153,7 +181,7 @@ impl DashboardContent {
                             linear_color_stop(cx.theme().chart_3, 1.),
                             linear_color_stop(cx.theme().background.opacity(0.3), 0.),
                         ))
-                        .tick_margin(3),
+                        .linear(),
                 ),
             )
     }
@@ -180,6 +208,7 @@ impl DashboardContent {
                 .child(
                     v_flex()
                         .text_ellipsis()
+                        .overflow_hidden()
                         .child(div().child(event.title).text_lg())
                         .child(div().child(event.short_desc).text_xs()),
                 );

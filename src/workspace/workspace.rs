@@ -1,5 +1,5 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, Root, Sizable, spinner::Spinner, v_flex};
+use gpui_component::{ActiveTheme, Root, Sizable, WindowExt, spinner::Spinner, v_flex};
 
 use crate::{
     states::show_layout::{ActiveLayout, LayoutState},
@@ -97,6 +97,9 @@ impl Workspace {
 
 impl Render for Workspace {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        window.close_all_dialogs(cx);
+        window.close_sheet(cx);
+
         let content = match self.layout {
             ActiveLayout::Login => self.render_login(cx),
             ActiveLayout::Home => self.render_home(cx),

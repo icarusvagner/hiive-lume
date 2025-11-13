@@ -28,12 +28,14 @@ impl HomeHeader {
 
     fn navigate_home_content(&self, layout: HomeActiveLayout, cx: &mut App) {
         let _ = cx.update_global::<HomeLayout, _>(|state, _| {
-            state.home = HomeActiveLayout::Loading;
+            if !state.home.eq(&layout) {
+                state.home = HomeActiveLayout::Loading;
+            }
         });
 
         cx.spawn(async move |cx| {
             cx.background_executor()
-                .timer(Duration::from_millis(1000))
+                .timer(Duration::from_millis(500))
                 .await;
 
             let _ = cx.update_global::<HomeLayout, _>(|state, _| {
