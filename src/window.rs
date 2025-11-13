@@ -17,6 +17,8 @@ pub fn get_window_options(cx: &mut App) -> WindowOptions {
         titlebar: Some(TitleBar::title_bar_options()),
         kind: WindowKind::Normal,
         window_decorations: Some(WindowDecorations::Client),
+        is_movable: true,
+        is_resizable: true,
         ..Default::default()
     }
 }
