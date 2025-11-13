@@ -9,6 +9,8 @@ pub enum HomeActiveLayout {
     Leaves,
     Settings,
     CreateEmployee,
+    // Loading state
+    Loading,
 }
 
 #[derive(Debug, PartialEq)]

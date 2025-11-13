@@ -1,5 +1,5 @@
 use gpui::*;
-use gpui_component::ActiveTheme;
+use gpui_component::{ActiveTheme, Sizable, spinner::Spinner, v_flex};
 
 use crate::{
     states::home_layout::{HomeActiveLayout, HomeLayout},
@@ -155,6 +155,25 @@ impl HomeContent {
 
         content
     }
+
+    fn render_loading_home(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
+        let content = div()
+            .id("loading-content")
+            .flex()
+            .flex_grow()
+            .bg(cx.theme().background)
+            .justify_center()
+            .items_center()
+            .child(
+                v_flex()
+                    .items_center()
+                    .justify_center()
+                    .gap_10()
+                    .child(Spinner::new().color(cx.theme().blue).with_size(px(160.))),
+            );
+
+        content
+    }
 }
 
 impl Render for HomeContent {
@@ -167,6 +186,7 @@ impl Render for HomeContent {
             HomeActiveLayout::Leaves => self.render_leaves(cx),
             HomeActiveLayout::Settings => self.render_settings(cx),
             HomeActiveLayout::CreateEmployee => self.render_create_employee(cx),
+            HomeActiveLayout::Loading => self.render_loading_home(cx),
         };
 
         div().flex().h_full().flex_grow().child(content)

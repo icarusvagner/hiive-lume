@@ -44,7 +44,7 @@ impl DashboardContent {
                 .child(
                     Avatar::new()
                         .p_4()
-                        .placeholder(card.icon().text_color(black().opacity(0.70)))
+                        .placeholder(card.icon().text_color(cx.theme().foreground))
                         .bg(cx.theme().blue.opacity(0.40)),
                 )
                 .child(div().child(card.label()).text_sm())

@@ -2,6 +2,8 @@ use gpui::*;
 use gpui_component::{
     ActiveTheme, IconName, Sizable, StyledExt,
     button::{Button, ButtonCustomVariant, ButtonVariants},
+    scroll::ScrollbarAxis,
+    v_flex,
 };
 
 use crate::{
@@ -56,7 +58,7 @@ impl Dashboard {
                     .custom(
                         ButtonCustomVariant::new(cx)
                             .color(cx.theme().blue)
-                            .foreground(cx.theme().foreground)
+                            .foreground(cx.theme().background)
                             .border(cx.theme().blue)
                             .hover(cx.theme().blue.opacity(0.80))
                             .active(cx.theme().blue),
@@ -76,12 +78,10 @@ impl Dashboard {
 
 impl Render for Dashboard {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        div()
+        v_flex()
             .size_full()
-            .flex()
-            .flex_col()
             .child(self.render_top_content(cx))
             .child(self.cards.clone())
-            .scrollable(Axis::Vertical)
+            .scrollable(ScrollbarAxis::Vertical)
     }
 }

@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use gpui::*;
 use gpui_component::{
     ActiveTheme, IconName, StyledExt,
@@ -9,7 +11,7 @@ use gpui_component::{
 
 use crate::{
     data::home::header_menu,
-    states::home_layout::HomeLayout,
+    states::home_layout::{HomeActiveLayout, HomeLayout},
     workspace::global_actions::{LogoutAction, ProfileAction, SettingsAction},
 };
 
@@ -24,6 +26,23 @@ impl HomeHeader {
         cx.new(|cx| Self::new(window, cx))
     }
 
+    fn navigate_home_content(&self, layout: HomeActiveLayout, cx: &mut App) {
+        let _ = cx.update_global::<HomeLayout, _>(|state, _| {
+            state.home = HomeActiveLayout::Loading;
+        });
+
+        cx.spawn(async move |cx| {
+            cx.background_executor()
+                .timer(Duration::from_millis(1000))
+                .await;
+
+            let _ = cx.update_global::<HomeLayout, _>(|state, _| {
+                state.home = layout;
+            });
+        })
+        .detach();
+    }
+
     fn menu_buttons(&self, cx: &mut Context<Self>) -> Vec<Button> {
         let mut buttons = Vec::new();
 
@@ -34,10 +53,8 @@ impl HomeHeader {
                 .label(btn.label.clone())
                 .icon(btn.icon.clone())
                 .ghost()
-                .on_click(cx.listener(move |_, _, _, cx| {
-                    let state = cx.global_mut::<HomeLayout>();
-                    state.home = layout;
-                    cx.notify();
+                .on_click(cx.listener(move |this, _, _, cx| {
+                    this.navigate_home_content(layout, cx);
                 }));
 
             buttons.push(button);
