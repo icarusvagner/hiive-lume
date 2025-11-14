@@ -5,9 +5,7 @@ use gpui_component::{
     v_flex,
 };
 
-use crate::{
-    states::home_layout::HomeLayout, workspace::home::dashboard::content::DashboardContent,
-};
+use crate::workspace::home::dashboard::content::DashboardContent;
 
 pub struct Dashboard {
     cards: Entity<DashboardContent>,
@@ -66,13 +64,16 @@ impl Dashboard {
                     .icon(IconName::Plus)
                     .label("Add Employee")
                     .cursor_pointer()
-                    .on_click(cx.listener(|_, _, window, cx| {
+                    .on_click(|_, window, cx| {
+                        println!("Open dialog");
                         window.open_dialog(cx, |dialog, _, _| {
                             dialog
+                                .p_5()
+                                .rounded_lg()
                                 .title("Add Employee")
-                                .child("This is the add employee dialog")
+                                .child("thisis a dialog")
                         });
-                    })),
+                    }),
             )
     }
 }

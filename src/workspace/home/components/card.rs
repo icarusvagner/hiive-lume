@@ -1,8 +1,7 @@
 use gpui::*;
-use gpui_component::v_flex;
 
 pub fn custom_card(child: impl IntoElement, bg: Hsla) -> Div {
-    v_flex()
+    div()
         .rounded_xl()
         .shadow_2xl()
         .border_1()
