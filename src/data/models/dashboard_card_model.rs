@@ -1,3 +1,4 @@
+use gpui::Hsla;
 use gpui_component::Icon;
 
 #[derive(Clone)]
@@ -33,10 +34,11 @@ impl DashboardCardModel {
 pub struct DashboardCardPieChartModel {
     pub label: String,
     pub data: f64,
+    pub color: Hsla,
 }
 
 impl DashboardCardPieChartModel {
-    pub fn new(label: String, data: f64) -> Self {
-        Self { label, data }
+    pub fn new(label: String, data: f64, color: Hsla) -> Self {
+        Self { label, data, color }
     }
 }

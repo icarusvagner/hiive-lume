@@ -1,3 +1,4 @@
+use gpui::rgb;
 use gpui_component::{Icon, IconName};
 
 use crate::data::models::dashboard_card_model::{DashboardCardModel, DashboardCardPieChartModel};
@@ -37,8 +38,8 @@ impl DashboardCardData {
 impl DashboardPieCard {
     pub fn data() -> Vec<DashboardCardPieChartModel> {
         vec![
-            DashboardCardPieChartModel::new("Office".to_string(), 153.0),
-            DashboardCardPieChartModel::new("Remote".to_string(), 46.0),
+            DashboardCardPieChartModel::new("Office".to_string(), 153.0, rgb(0xFB8500).into()),
+            DashboardCardPieChartModel::new("Remote".to_string(), 46.0, rgb(0xE63946).into()),
         ]
     }
 }

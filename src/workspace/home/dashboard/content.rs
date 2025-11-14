@@ -4,31 +4,32 @@ use gpui_component::{
     ActiveTheme, StyledExt,
     avatar::Avatar,
     chart::{AreaChart, PieChart},
-    checkbox::Checkbox,
     h_flex,
     label::Label,
+    radio::RadioGroup,
     v_flex,
 };
 
-use crate::data::home::{
-    attendance_overview_data::AttendanceOverviewData,
-    dashboard_card_data::{DashboardCardData, DashboardPieCard},
-    events_news_data::EventsNewsData,
+use crate::{
+    core::types::attendance_filter::AttendanceOverviewFilter,
+    data::home::{
+        attendance_overview_data::AttendanceOverviewData,
+        dashboard_card_data::{DashboardCardData, DashboardPieCard},
+        events_news_data::EventsNewsData,
+    },
 };
 
 #[derive(Clone)]
 pub struct DashboardContent {
-    on_time: bool,
-    late_arrival: bool,
-    absent: bool,
+    filter_index: Option<usize>,
+    filter_type: Option<AttendanceOverviewFilter>,
 }
 
 impl DashboardContent {
     pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
         Self {
-            on_time: false,
-            late_arrival: false,
-            absent: false,
+            filter_index: None,
+            filter_type: None,
         }
     }
 
@@ -66,6 +67,7 @@ impl DashboardContent {
 
     fn pie_chart_card(&self, cx: &mut Context<Self>) -> Div {
         let data = DashboardPieCard::data();
+        let total_count: f64 = data.iter().map(|x| x.data).sum();
 
         h_flex()
             .rounded_xl()
@@ -76,11 +78,26 @@ impl DashboardContent {
             .p_12()
             .w_full()
             .child(
-                PieChart::new(data.clone())
-                    .value(|d| d.data as f32)
-                    .outer_radius(60.)
-                    .inner_radius(20.)
-                    .pad_angle(25. / 100.),
+                div()
+                    .relative()
+                    .child(
+                        PieChart::new(data.clone())
+                            .value(|d| d.data as f32)
+                            .outer_radius(60.)
+                            .inner_radius(20.)
+                            .pad_angle(50. / 100.)
+                            .color(|d| d.color),
+                    )
+                    .child(
+                        div().absolute().top_10().left_10().child(
+                            v_flex()
+                                .gap_2()
+                                .items_center()
+                                .justify_center()
+                                .child(div().child(format!("{total_count}")).text_xs())
+                                .child(div().child("Employees").text_lg().font_semibold()),
+                        ),
+                    ),
             )
             .child(
                 v_flex()
@@ -89,15 +106,25 @@ impl DashboardContent {
                         v_flex()
                             .items_start()
                             .justify_center()
-                            .child(div().child("23%").text_sm().font_thin())
-                            .child(div().child("Remote").text_lg().font_bold()),
+                            .child(
+                                div()
+                                    .child(format!("{:.2}%", (data[0].data / total_count) * 100.0))
+                                    .text_sm()
+                                    .font_thin(),
+                            )
+                            .child(div().child(data[0].label.clone()).text_lg().font_bold()),
                     )
                     .child(
                         v_flex()
                             .items_start()
                             .justify_center()
-                            .child(div().child("77%").text_sm().font_thin())
-                            .child(div().child("Office").text_lg().font_bold()),
+                            .child(
+                                div()
+                                    .child(format!("{:.2}%", (data[1].data / total_count) * 100.0))
+                                    .text_sm()
+                                    .font_thin(),
+                            )
+                            .child(div().child(data[1].label.clone()).text_lg().font_bold()),
                     ),
             )
     }
@@ -125,35 +152,36 @@ impl DashboardContent {
                     .justify_between()
                     .child(Label::new("Attendance Overview").text_lg().font_bold())
                     .child(
-                        h_flex()
-                            .gap_2()
-                            .child(
-                                Checkbox::new("on-time")
-                                    .label("On Time")
-                                    .checked(self.on_time)
-                                    .on_click(cx.listener(|this, checked, _, cx| {
-                                        this.on_time = *checked;
-                                        cx.notify();
-                                    })),
-                            )
-                            .child(
-                                Checkbox::new("late-arrival")
-                                    .label("Late Arrival")
-                                    .checked(self.late_arrival)
-                                    .on_click(cx.listener(|this, checked, _, cx| {
-                                        this.late_arrival = *checked;
-                                        cx.notify();
-                                    })),
-                            )
-                            .child(
-                                Checkbox::new("absent")
-                                    .label("Absent")
-                                    .checked(self.absent)
-                                    .on_click(cx.listener(|this, checked, _, cx| {
-                                        this.absent = *checked;
-                                        cx.notify();
-                                    })),
-                            ),
+                        h_flex().child(
+                            RadioGroup::horizontal("filter-attendance")
+                                .children(["On Time", "Late Arrival", "Absent"])
+                                .selected_index(self.filter_index)
+                                .on_click(cx.listener(|this, index, _, cx| {
+                                    match index {
+                                        0 => {
+                                            this.filter_type =
+                                                Some(AttendanceOverviewFilter::OnTime);
+                                            this.filter_index = Some(*index);
+                                        }
+                                        1 => {
+                                            this.filter_type =
+                                                Some(AttendanceOverviewFilter::LateArrival);
+                                            this.filter_index = Some(*index);
+                                        }
+                                        2 => {
+                                            this.filter_type =
+                                                Some(AttendanceOverviewFilter::Absent);
+                                            this.filter_index = Some(*index);
+                                        }
+                                        _ => {
+                                            this.filter_type =
+                                                Some(AttendanceOverviewFilter::OnTime);
+                                            this.filter_index = Some(*index);
+                                        }
+                                    }
+                                    cx.notify();
+                                })),
+                        ),
                     ),
             )
             .child(
@@ -208,6 +236,7 @@ impl DashboardContent {
                 .child(
                     v_flex()
                         .text_ellipsis()
+                        .flex_wrap()
                         .overflow_hidden()
                         .child(div().child(event.title).text_lg())
                         .child(div().child(event.short_desc).text_xs()),
