@@ -17,20 +17,26 @@ use crate::{
         dashboard_card_data::{DashboardCardData, DashboardPieCard},
         events_news_data::EventsNewsData,
     },
-    workspace::home::components::card::custom_card,
+    workspace::home::{
+        components::card::custom_card, dashboard::recent_jobs::RecentJobApplications,
+    },
 };
 
 #[derive(Clone)]
 pub struct DashboardContent {
     filter_index: Option<usize>,
     filter_type: Option<AttendanceOverviewFilter>,
+    recent_jobs: Entity<RecentJobApplications>,
 }
 
 impl DashboardContent {
-    pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
+    pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
+        let recent_jobs = RecentJobApplications::view(window, cx);
+
         Self {
             filter_index: None,
             filter_type: None,
+            recent_jobs,
         }
     }
 
@@ -289,9 +295,9 @@ impl Render for DashboardContent {
             .h_full()
             .flex_1()
             .child(
-                h_flex()
-                    .items_center()
-                    .justify_between()
+                div()
+                    .grid()
+                    .grid_cols(5)
                     .gap_8()
                     .children(self.cards(cx))
                     .child(self.pie_chart_card(cx)),
@@ -301,6 +307,13 @@ impl Render for DashboardContent {
                     .gap_8()
                     .child(self.render_attendance_overview(window, cx))
                     .child(self.render_events_news(window, cx)),
+            )
+            .child(
+                div()
+                    .grid()
+                    .grid_cols(6)
+                    .gap_8()
+                    .child(div().col_span(2).child(self.recent_jobs.clone())),
             )
             .scrollable(Axis::Vertical)
     }
