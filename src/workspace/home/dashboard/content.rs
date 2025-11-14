@@ -18,7 +18,8 @@ use crate::{
         events_news_data::EventsNewsData,
     },
     workspace::home::{
-        components::card::custom_card, dashboard::recent_jobs::RecentJobApplications,
+        components::card::custom_card,
+        dashboard::{recent_jobs::RecentJobApplications, upcomings::UpcomingInterviews},
     },
 };
 
@@ -27,16 +28,19 @@ pub struct DashboardContent {
     filter_index: Option<usize>,
     filter_type: Option<AttendanceOverviewFilter>,
     recent_jobs: Entity<RecentJobApplications>,
+    upcoming_interviews: Entity<UpcomingInterviews>,
 }
 
 impl DashboardContent {
     pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
         let recent_jobs = RecentJobApplications::view(window, cx);
+        let upcoming_interviews = UpcomingInterviews::view(window, cx);
 
         Self {
             filter_index: None,
             filter_type: None,
             recent_jobs,
+            upcoming_interviews,
         }
     }
 
@@ -97,8 +101,6 @@ impl DashboardContent {
                     )
                     .child(
                         div()
-                            .border_1()
-                            .border_color(black())
                             .absolute()
                             .top_8()
                             .left_11()
@@ -364,7 +366,8 @@ impl Render for DashboardContent {
                             .bg(cx.theme().secondary)
                             .rounded_xl()
                             .border_1()
-                            .border_color(black().opacity(0.20)),
+                            .border_color(black().opacity(0.20))
+                            .child(self.upcoming_interviews.clone()),
                     )
                     .child(
                         div()
