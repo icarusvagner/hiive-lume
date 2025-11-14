@@ -49,21 +49,22 @@ impl DashboardContent {
         let mut cards = Vec::new();
 
         for card in cards_data {
-            let card = custom_card(
-                v_flex()
-                    .w_full()
-                    .items_center()
-                    .justify_start()
-                    .child(
-                        Avatar::new()
-                            .p_4()
-                            .placeholder(card.icon().text_color(cx.theme().foreground))
-                            .bg(cx.theme().blue.opacity(0.40)),
-                    )
-                    .child(div().child(card.label()).text_sm())
-                    .child(div().child(card.content()).text_2xl().font_semibold()),
-                cx.theme().secondary,
-            );
+            let card = v_flex()
+                .rounded_xl()
+                .border_1()
+                .border_color(black().opacity(0.20))
+                .bg(cx.theme().secondary)
+                .p_4()
+                .items_start()
+                .justify_center()
+                .child(
+                    Avatar::new()
+                        .p_5()
+                        .placeholder(card.icon().text_color(cx.theme().foreground))
+                        .bg(cx.theme().blue.opacity(0.40)),
+                )
+                .child(div().child(card.label()).text_sm())
+                .child(div().child(card.content()).text_2xl().font_semibold());
 
             cards.push(card);
         }
@@ -75,71 +76,77 @@ impl DashboardContent {
         let data = DashboardPieCard::data();
         let total_count: f64 = data.iter().map(|x| x.data).sum();
 
-        custom_card(
-            h_flex()
-                .justify_between()
-                .items_center()
-                .child(
-                    div()
-                        .relative()
-                        .child(
-                            div().absolute().w_20().left_2().child(
-                                v_flex()
-                                    .items_center()
-                                    .justify_center()
-                                    .child(div().child(format!("{total_count}")).text_xs())
-                                    .child(div().child("Employees").text_sm().font_semibold()),
+        div()
+            .rounded_xl()
+            .border_1()
+            .border_color(black().opacity(0.20))
+            .bg(cx.theme().secondary)
+            .grid()
+            .grid_cols(2)
+            .p_4()
+            .child(
+                div()
+                    .relative()
+                    .child(
+                        PieChart::new(data.clone())
+                            .value(|d| d.data as f32)
+                            .outer_radius(60.)
+                            .inner_radius(45.)
+                            .pad_angle(25. / 100.)
+                            .color(|d| d.color),
+                    )
+                    .child(
+                        div()
+                            .border_1()
+                            .border_color(black())
+                            .absolute()
+                            .top_8()
+                            .left_11()
+                            .items_center()
+                            .justify_center()
+                            .child(
+                                div()
+                                    .child(format!("{total_count}"))
+                                    .text_xs()
+                                    .text_center(),
+                            )
+                            .child(
+                                div()
+                                    .child("Employees")
+                                    .text_xs()
+                                    .font_semibold()
+                                    .text_center(),
                             ),
-                        )
-                        .child(
-                            div().absolute().inset_2().w_20().child(
-                                v_flex().items_center().justify_center().child(
-                                    PieChart::new(data.clone())
-                                        .value(|d| d.data as f32)
-                                        .outer_radius(60.)
-                                        .inner_radius(35.)
-                                        .pad_angle(25. / 100.)
-                                        .color(|d| d.color),
-                                ),
-                            ),
-                        ),
-                )
-                .child(
-                    v_flex()
-                        .gap_2()
-                        .child(
-                            v_flex()
-                                .items_start()
-                                .justify_center()
-                                .child(
-                                    div()
-                                        .child(format!(
-                                            "{:.1}%",
-                                            (data[0].data / total_count) * 100.0
-                                        ))
-                                        .text_sm()
-                                        .font_thin(),
-                                )
-                                .child(div().child(data[0].label.clone()).text_lg().font_bold()),
-                        )
-                        .child(
-                            v_flex()
-                                .items_start()
-                                .justify_center()
-                                .child(
-                                    div()
-                                        .child(format!(
-                                            "{:.1}%",
-                                            (data[1].data / total_count) * 100.0
-                                        ))
-                                        .text_sm()
-                                        .font_thin(),
-                                )
-                                .child(div().child(data[1].label.clone()).text_lg().font_bold()),
-                        ),
-                ),
-            cx.theme().secondary,
-        )
+                    ),
+            )
+            .child(
+                v_flex()
+                    .gap_2()
+                    .child(
+                        v_flex()
+                            .items_start()
+                            .justify_center()
+                            .child(
+                                div()
+                                    .child(format!("{:.1}%", (data[0].data / total_count) * 100.0))
+                                    .text_sm()
+                                    .font_thin(),
+                            )
+                            .child(div().child(data[0].label.clone()).text_lg().font_bold()),
+                    )
+                    .child(
+                        v_flex()
+                            .items_start()
+                            .justify_center()
+                            .child(
+                                div()
+                                    .child(format!("{:.1}%", (data[1].data / total_count) * 100.0))
+                                    .text_sm()
+                                    .font_thin(),
+                            )
+                            .child(div().child(data[1].label.clone()).text_lg().font_bold()),
+                    ),
+            )
     }
 
     fn render_attendance_overview(
@@ -158,10 +165,9 @@ impl DashboardContent {
                     div()
                         .grid()
                         .grid_cols(2)
-                        .justify_between()
                         .child(Label::new("Attendance Overview").text_lg().font_bold())
                         .child(
-                            h_flex().items_center().justify_end().child(
+                            h_flex().w_full().items_center().justify_end().child(
                                 RadioGroup::horizontal("filter-attendance")
                                     .children(["On Time", "Late Arrival", "Absent"])
                                     .selected_index(self.filter_index)
