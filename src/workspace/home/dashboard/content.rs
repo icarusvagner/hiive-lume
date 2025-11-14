@@ -152,7 +152,6 @@ impl DashboardContent {
         custom_card(
             v_flex()
                 .h_full()
-                .min_w(px(900.0))
                 .flex_1()
                 .child(
                     h_flex()
@@ -278,7 +277,6 @@ impl DashboardContent {
 
         custom_card(
             v_flex()
-                .min_w(px(900.0))
                 .child(div().child("News & Events").text_xl().font_bold())
                 .child(div().grid().grid_cols(2).gap_8().children(events)),
             cx.theme().secondary,
@@ -303,7 +301,9 @@ impl Render for DashboardContent {
                     .child(self.pie_chart_card(cx)),
             )
             .child(
-                h_flex()
+                div()
+                    .grid()
+                    .grid_cols(2)
                     .gap_8()
                     .child(self.render_attendance_overview(window, cx))
                     .child(self.render_events_news(window, cx)),
@@ -313,7 +313,23 @@ impl Render for DashboardContent {
                     .grid()
                     .grid_cols(6)
                     .gap_8()
-                    .child(div().col_span(2).child(self.recent_jobs.clone())),
+                    .child(div().col_span(2).child(self.recent_jobs.clone()))
+                    .child(
+                        div()
+                            .col_span(3)
+                            .bg(cx.theme().secondary)
+                            .rounded_xl()
+                            .border_1()
+                            .border_color(black().opacity(0.20)),
+                    )
+                    .child(
+                        div()
+                            .col_span(1)
+                            .bg(cx.theme().secondary)
+                            .rounded_xl()
+                            .border_1()
+                            .border_color(black().opacity(0.20)),
+                    ),
             )
             .scrollable(Axis::Vertical)
     }

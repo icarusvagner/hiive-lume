@@ -6,7 +6,7 @@ pub fn custom_card(child: impl IntoElement, bg: Hsla) -> Div {
         .rounded_xl()
         .shadow_2xl()
         .border_1()
-        .border_color(black().opacity(0.40))
+        .border_color(black().opacity(0.20))
         .bg(bg)
         .p_12()
         .w_full()

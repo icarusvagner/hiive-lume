@@ -20,8 +20,6 @@ impl RecentJobApplications {
         let mut applications_card = Vec::new();
 
         for item in data {
-            let colors = [cx.theme().blue, cx.theme().magenta, cx.theme().cyan];
-            let random_indx_color = rand::rng().random_range(0..colors.len());
             let card_item = h_flex()
                 .gap_3()
                 .justify_between()
@@ -51,11 +49,7 @@ impl RecentJobApplications {
                         .rounded_full()
                         .px_3()
                         .py_2()
-                        .bg(if random_indx_color % 2 == 0 {
-                            colors[random_indx_color]
-                        } else {
-                            colors[random_indx_color]
-                        })
+                        .bg(cx.theme().cyan.opacity(0.20))
                         .child(Label::new(item.position())),
                 );
 
@@ -72,12 +66,10 @@ impl Render for RecentJobApplications {
             .rounded_xl()
             .shadow_2xl()
             .border_1()
-            .border_color(black().opacity(0.40))
+            .border_color(black().opacity(0.20))
             .bg(cx.theme().secondary)
-            .p_12()
+            .p_6()
             .w_full()
-            .h_full()
-            .h(px(350.0))
             .child(self.render_applicants(window, cx))
             .scrollable(Axis::Vertical)
     }

@@ -1,6 +1,6 @@
 use gpui::*;
 use gpui_component::{
-    ActiveTheme, IconName, Sizable, StyledExt,
+    ActiveTheme, IconName, Sizable, StyledExt, WindowExt,
     button::{Button, ButtonCustomVariant, ButtonVariants},
     v_flex,
 };
@@ -66,10 +66,12 @@ impl Dashboard {
                     .icon(IconName::Plus)
                     .label("Add Employee")
                     .cursor_pointer()
-                    .on_click(cx.listener(|_, _, _, cx| {
-                        let state = cx.global_mut::<HomeLayout>();
-                        state.home = crate::states::home_layout::HomeActiveLayout::CreateEmployee;
-                        cx.notify();
+                    .on_click(cx.listener(|_, _, window, cx| {
+                        window.open_dialog(cx, |dialog, _, _| {
+                            dialog
+                                .title("Add Employee")
+                                .child("This is the add employee dialog")
+                        });
                     })),
             )
     }
