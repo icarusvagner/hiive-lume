@@ -20,6 +20,8 @@ impl UpcomingInterviews {
                     .px_3()
                     .py_1()
                     .rounded_full()
+                    .border_1()
+                    .border_color(cx.theme().secondary)
                     .child("Today")
                     .hover(|this| {
                         this.bg(cx.theme().primary.opacity(0.40))
@@ -32,6 +34,8 @@ impl UpcomingInterviews {
                     .px_3()
                     .py_1()
                     .rounded_full()
+                    .border_1()
+                    .border_color(cx.theme().secondary)
                     .child("Tomorrow")
                     .hover(|this| {
                         this.bg(cx.theme().primary.opacity(0.40))
