@@ -96,8 +96,8 @@ impl DashboardContent {
                                 v_flex().items_center().justify_center().child(
                                     PieChart::new(data.clone())
                                         .value(|d| d.data as f32)
-                                        .outer_radius(70.)
-                                        .inner_radius(55.)
+                                        .outer_radius(60.)
+                                        .inner_radius(35.)
                                         .pad_angle(25. / 100.)
                                         .color(|d| d.color),
                                 ),
@@ -153,12 +153,15 @@ impl DashboardContent {
             v_flex()
                 .h_full()
                 .flex_1()
+                .gap_8()
                 .child(
-                    h_flex()
+                    div()
+                        .grid()
+                        .grid_cols(2)
                         .justify_between()
                         .child(Label::new("Attendance Overview").text_lg().font_bold())
                         .child(
-                            h_flex().child(
+                            h_flex().items_center().justify_end().child(
                                 RadioGroup::horizontal("filter-attendance")
                                     .children(["On Time", "Late Arrival", "Absent"])
                                     .selected_index(self.filter_index)
@@ -277,10 +280,45 @@ impl DashboardContent {
 
         custom_card(
             v_flex()
+                .gap_8()
                 .child(div().child("News & Events").text_xl().font_bold())
                 .child(div().grid().grid_cols(2).gap_8().children(events)),
             cx.theme().secondary,
         )
+    }
+
+    fn render_project_overview(&self, cx: &mut Context<Self>) -> Div {
+        v_flex()
+            .gap_8()
+            .p_4()
+            .rounded_xl()
+            .border_1()
+            .border_color(black().opacity(0.20))
+            .child(Label::new("Projects Overview").text_lg().font_bold())
+            .child(
+                v_flex()
+                    .p_5()
+                    .rounded_xl()
+                    .bg(cx.theme().blue.opacity(0.30))
+                    .child(Label::new("125").text_lg().font_bold())
+                    .child(Label::new("Total Projects").text_xs().font_bold()),
+            )
+            .child(
+                v_flex()
+                    .p_5()
+                    .rounded_xl()
+                    .bg(cx.theme().blue.opacity(0.30))
+                    .child(Label::new("12").text_lg().font_bold())
+                    .child(Label::new("Projects on Hold").text_xs().font_bold()),
+            )
+            .child(
+                v_flex()
+                    .p_5()
+                    .rounded_xl()
+                    .bg(cx.theme().blue.opacity(0.30))
+                    .child(Label::new("5").text_lg().font_bold())
+                    .child(Label::new("Upcoming Projects").text_xs().font_bold()),
+            )
     }
 }
 
@@ -328,7 +366,8 @@ impl Render for DashboardContent {
                             .bg(cx.theme().secondary)
                             .rounded_xl()
                             .border_1()
-                            .border_color(black().opacity(0.20)),
+                            .border_color(black().opacity(0.20))
+                            .child(self.render_project_overview(cx)),
                     ),
             )
             .scrollable(Axis::Vertical)

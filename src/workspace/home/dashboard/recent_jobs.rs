@@ -1,6 +1,5 @@
 use gpui::*;
 use gpui_component::{ActiveTheme, StyledExt, avatar::Avatar, h_flex, label::Label, v_flex};
-use rand::Rng;
 
 use crate::data::home::job_applicants_data::JobApplicantData;
 
@@ -56,7 +55,7 @@ impl RecentJobApplications {
             applications_card.push(card_item);
         }
 
-        div().bg(cx.theme().secondary).children(applications_card)
+        v_flex().gap_5().children(applications_card)
     }
 }
 
@@ -64,12 +63,14 @@ impl Render for RecentJobApplications {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         v_flex()
             .rounded_xl()
-            .shadow_2xl()
             .border_1()
             .border_color(black().opacity(0.20))
             .bg(cx.theme().secondary)
-            .p_6()
+            .p_4()
             .w_full()
+            .h_full()
+            .gap_8()
+            .child(Label::new("Recent Job Applicants").text_lg().font_bold())
             .child(self.render_applicants(window, cx))
             .scrollable(Axis::Vertical)
     }
