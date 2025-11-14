@@ -359,6 +359,7 @@ impl Render for DashboardContent {
                     .grid()
                     .grid_cols(6)
                     .gap_8()
+                    .h_full()
                     .child(div().col_span(2).child(self.recent_jobs.clone()))
                     .child(
                         div()
