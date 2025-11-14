@@ -4,6 +4,7 @@ use gpui_component::v_flex;
 use crate::workspace::home::{content::HomeContent, header::HomeHeader};
 
 mod candidates;
+mod components;
 mod content;
 mod dashboard;
 mod employees;

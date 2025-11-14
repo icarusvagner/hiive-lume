@@ -2508,6 +2508,7 @@ dependencies = [
  "chrono",
  "gpui",
  "gpui-component",
+ "mockd",
  "rust-embed",
  "serde_json",
  "time",
@@ -3410,6 +3411,16 @@ dependencies = [
  "log",
  "wasi",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "mockd"
+version = "0.4.54"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8837ee66d782b79f26e97a239212038a3cc68cda598a8657ba565fb04467ec79"
+dependencies = [
+ "chrono",
+ "simplerand",
 ]
 
 [[package]]
@@ -5186,6 +5197,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7a9c6883ca9c3c7c90e888de77b7a5c849c779d25d74a1269b0218b14e8b136c"
 dependencies = [
  "log",
+]
+
+[[package]]
+name = "simplerand"
+version = "1.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e111daec97c913e764c730b11de670f36adfc9ef87c791ee8999ecc3ded8f644"
+dependencies = [
+ "lazy_static",
 ]
 
 [[package]]

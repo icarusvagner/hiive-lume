@@ -77,25 +77,28 @@ impl DashboardContent {
             .bg(cx.theme().secondary)
             .p_12()
             .w_full()
+            .justify_between()
+            .items_center()
             .child(
                 div()
                     .relative()
                     .child(
-                        PieChart::new(data.clone())
-                            .value(|d| d.data as f32)
-                            .outer_radius(60.)
-                            .inner_radius(20.)
-                            .pad_angle(50. / 100.)
-                            .color(|d| d.color),
+                        div().absolute().top_1().left_3().w_56().child(
+                            PieChart::new(data.clone())
+                                .value(|d| d.data as f32)
+                                .outer_radius(60.)
+                                .inner_radius(60.)
+                                .pad_angle(25. / 100.)
+                                .color(|d| d.color),
+                        ),
                     )
                     .child(
-                        div().absolute().top_10().left_10().child(
+                        div().absolute().w_32().top_3().left_5().child(
                             v_flex()
-                                .gap_2()
                                 .items_center()
                                 .justify_center()
                                 .child(div().child(format!("{total_count}")).text_xs())
-                                .child(div().child("Employees").text_lg().font_semibold()),
+                                .child(div().child("Employees").text_sm().font_semibold()),
                         ),
                     ),
             )
@@ -108,7 +111,7 @@ impl DashboardContent {
                             .justify_center()
                             .child(
                                 div()
-                                    .child(format!("{:.2}%", (data[0].data / total_count) * 100.0))
+                                    .child(format!("{:.1}%", (data[0].data / total_count) * 100.0))
                                     .text_sm()
                                     .font_thin(),
                             )
@@ -120,7 +123,7 @@ impl DashboardContent {
                             .justify_center()
                             .child(
                                 div()
-                                    .child(format!("{:.2}%", (data[1].data / total_count) * 100.0))
+                                    .child(format!("{:.1}%", (data[1].data / total_count) * 100.0))
                                     .text_sm()
                                     .font_thin(),
                             )

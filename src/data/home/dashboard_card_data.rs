@@ -39,7 +39,7 @@ impl DashboardPieCard {
     pub fn data() -> Vec<DashboardCardPieChartModel> {
         vec![
             DashboardCardPieChartModel::new("Office".to_string(), 153.0, rgb(0xFB8500).into()),
-            DashboardCardPieChartModel::new("Remote".to_string(), 46.0, rgb(0xE63946).into()),
+            DashboardCardPieChartModel::new("Remote".to_string(), 47.0, rgb(0xE63946).into()),
         ]
     }
 }
