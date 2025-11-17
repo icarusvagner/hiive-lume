@@ -163,16 +163,18 @@ impl CreateEmployee {
             .py_6()
             .grid()
             .grid_cols(2)
-            .gap_8()
+            .gap_5()
             .child(
                 v_flex()
                     .gap_8()
                     .child(
                         div()
-                            .h(px(650.0))
+                            .flex_grow()
+                            .flex()
                             .w_full()
                             .bg(cx.theme().accent.opacity(0.60))
-                            .rounded_xl(),
+                            .rounded_xl()
+                            .overflow_hidden(),
                     )
                     .child(
                         v_flex().gap_2().child(

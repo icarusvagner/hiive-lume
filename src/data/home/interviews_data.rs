@@ -1,7 +1,7 @@
 use crate::data::models::interviews_model::UpcomingInterviewModel;
 use chrono::{Duration, Utc};
 
-#[derive(Debug)]
+#[derive(Debug, Ord, Eq, PartialEq, PartialOrd)]
 pub struct InterviewsData;
 
 impl InterviewsData {
@@ -32,6 +32,16 @@ impl InterviewsData {
             entry("Trixie Manalili", "Data Analyst"),
             entry("Harvey Robles", "DevOps Engineer"),
             entry("Charlene Bautista", "UI/UX Designer"),
+            entry("Luis Andrade", "Network Engineer"),
+            entry("Reina Gutierrez", "Recruitment Specialist"),
+            entry("Owen Vergara", "Database Administrator"),
+            entry("Janelle Pascual", "Product Manager"),
+            entry("Rico San Miguel", "Cybersecurity Analyst"),
+            entry("Bianca Lumbre", "Technical Writer"),
+            entry("Carlo Montenegro", "Software Architect"),
+            entry("Shaira Delos Reyes", "Business Analyst"),
+            entry("Vincent Labrador", "Machine Learning Engineer"),
+            entry("Melanie Alcaraz", "Customer Support Representative"),
         ]
     }
 }
