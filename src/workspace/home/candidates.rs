@@ -12,6 +12,7 @@ use crate::data::home::interviews_data::InterviewsData;
 pub struct Candidates {
     timeframe_state: Entity<SelectState<Vec<String>>>,
     position_state: Entity<SelectState<Vec<String>>>,
+    active_button: usize,
 }
 
 impl Candidates {
@@ -36,6 +37,7 @@ impl Candidates {
             Candidates {
                 timeframe_state,
                 position_state,
+                active_button: 0,
             }
         })
     }
@@ -55,6 +57,7 @@ impl Candidates {
             .child(
                 div()
                     .flex()
+                    .w_full()
                     .flex_col()
                     .gap_1()
                     .child(
@@ -89,14 +92,14 @@ impl Candidates {
                     .label("Add New Job")
                     .cursor_pointer()
                     .on_click(|_, window, cx| {
-                        window
-                            .open_dialog(cx, |dialog, _, _| dialog.title("Post new Jobe").alert());
+                        window.open_dialog(cx, |dialog, _, _| dialog.title("Post new Job").alert());
                     }),
             )
     }
 
     fn render_filters(&self, _window: &mut Window, cx: &mut Context<Self>) -> Div {
-        h_flex()
+        div()
+            .flex()
             .justify_between()
             .items_center()
             .child(
@@ -125,26 +128,29 @@ impl Candidates {
             )
             .child(
                 ButtonGroup::new("toggle-group")
+                    .gap_3()
+                    .flex()
+                    .items_center()
+                    .justify_end()
                     .child(
                         Button::new("table-type")
                             .rounded_full()
                             .cursor_pointer()
                             .large()
-                            .primary()
                             .icon(IconName::LayoutDashboard)
-                            .selected(true),
+                            .selected(self.active_button == 0),
                     )
                     .child(
                         Button::new("card-type")
                             .rounded_full()
                             .cursor_pointer()
                             .large()
-                            .primary()
-                            .icon(Icon::empty().path("icons/custom/list-line.svg")),
+                            .icon(Icon::empty().path("icons/custom/list-line.svg"))
+                            .selected(self.active_button == 1),
                     )
-                    .on_click(|selected_indices, _, _| {
-                        println!("Selected: {:?}", selected_indices);
-                    }),
+                    .on_click(cx.listener(|this, clicks: &Vec<usize>, _, _| {
+                        this.active_button = clicks[0];
+                    })),
             )
     }
 }
