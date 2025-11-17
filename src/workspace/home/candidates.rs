@@ -1,7 +1,7 @@
 use gpui::*;
 use gpui_component::{
-    ActiveTheme, IconName, IndexPath, Sizable, StyledExt, WindowExt,
-    button::{Button, ButtonCustomVariant, ButtonVariants},
+    ActiveTheme, Icon, IconName, IndexPath, Selectable, Sizable, StyledExt, WindowExt,
+    button::{Button, ButtonCustomVariant, ButtonGroup, ButtonVariants},
     h_flex,
     select::{Select, SelectState},
     white,
@@ -10,26 +10,39 @@ use gpui_component::{
 use crate::data::home::interviews_data::InterviewsData;
 
 pub struct Candidates {
-    timeframe_idx: usize,
-    position_idx: usize,
+    timeframe_state: Entity<SelectState<Vec<String>>>,
+    position_state: Entity<SelectState<Vec<String>>>,
 }
 
 impl Candidates {
-    pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
-        Self {
-            timeframe_idx: 0,
-            position_idx: 0,
-        }
-    }
-
     pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
-        cx.new(|cx| Self::new(window, cx))
+        let data = InterviewsData::data();
+        let mut positions = data.iter().map(|c| c.position()).collect::<Vec<String>>();
+        positions.dedup();
+
+        cx.new(|cx| {
+            let timeframe_state = cx.new(|cx| {
+                SelectState::new(
+                    vec!["New".to_string(), "Old".to_string()],
+                    Some(IndexPath::default()),
+                    window,
+                    cx,
+                )
+            });
+
+            let position_state =
+                cx.new(|cx| SelectState::new(positions, Some(IndexPath::default()), window, cx));
+
+            Candidates {
+                timeframe_state,
+                position_state,
+            }
+        })
     }
 
     fn render_top_content(&mut self, window: &mut Window, cx: &mut Context<Self>) -> Div {
         let data = InterviewsData::data();
         let total_candidates = data.iter().count();
-        let positions = data.iter().map(|c| c.position()).collect::<Vec<String>>();
 
         div()
             .flex()
@@ -57,7 +70,7 @@ impl Candidates {
                             .text_color(cx.theme().accent_foreground.opacity(0.70))
                             .font_thin(),
                     )
-                    .child(self.render_filters(positions, window, cx)),
+                    .child(self.render_filters(window, cx)),
             )
             .child(
                 Button::new("add-newjob-btn")
@@ -82,74 +95,57 @@ impl Candidates {
             )
     }
 
-    fn timeframe_select(
-        &self,
-        window: &mut Window,
-        cx: &mut Context<Self>,
-    ) -> Entity<SelectState<Vec<&'static str>>> {
-        let timeframe_select_state = cx
-            .new(|cx| SelectState::new(vec!["New", "Old"], Some(IndexPath::default()), window, cx));
-
-        timeframe_select_state.update(cx, |state, cx| {
-            state.set_selected_index(
-                Some(IndexPath::default().row(self.timeframe_idx)),
-                window,
-                cx,
-            );
-        });
-
-        timeframe_select_state
-    }
-
-    fn position_state(
-        &self,
-        mut positions: Vec<String>,
-        window: &mut Window,
-        cx: &mut Context<Self>,
-    ) -> Entity<SelectState<Vec<String>>> {
-        positions.dedup();
-        let position_state =
-            cx.new(|cx| SelectState::new(positions, Some(IndexPath::default()), window, cx));
-
-        position_state.update(cx, |state, cx| {
-            state.set_selected_index(
-                Some(IndexPath::default().row(self.position_idx)),
-                window,
-                cx,
-            );
-        });
-
-        position_state
-    }
-
-    fn render_filters(
-        &self,
-        positions: Vec<String>,
-        window: &mut Window,
-        cx: &mut Context<Self>,
-    ) -> Div {
-        h_flex().justify_between().items_center().child(
-            h_flex()
-                .mt_5()
-                .items_start()
-                .gap_3()
-                .child(
-                    Select::new(&self.timeframe_select(window, cx))
-                        .py_3()
-                        .appearance(false)
-                        .rounded_full()
-                        .border_1()
-                        .border_color(cx.theme().foreground.opacity(0.40)),
-                )
-                .child(
-                    Select::new(&self.position_state(positions, window, cx))
-                        .py_3()
-                        .appearance(false)
-                        .rounded_full()
-                        .border_1()
-                        .border_color(cx.theme().foreground.opacity(0.40)),
-                ),
-        )
+    fn render_filters(&self, _window: &mut Window, cx: &mut Context<Self>) -> Div {
+        h_flex()
+            .justify_between()
+            .items_center()
+            .child(
+                h_flex()
+                    .mt_5()
+                    .items_start()
+                    .gap_2()
+                    .child(
+                        Select::new(&self.timeframe_state)
+                            .py_3()
+                            .menu_width(px(110.0))
+                            .appearance(false)
+                            .rounded_full()
+                            .border_1()
+                            .border_color(cx.theme().foreground.opacity(0.40)),
+                    )
+                    .child(
+                        Select::new(&self.position_state)
+                            .py_3()
+                            .menu_width(px(225.0))
+                            .appearance(false)
+                            .rounded_full()
+                            .border_1()
+                            .border_color(cx.theme().foreground.opacity(0.40)),
+                    ),
+            )
+            .child(
+                ButtonGroup::new("toggle-group")
+                    .child(
+                        Button::new("table-type")
+                            .rounded_full()
+                            .cursor_pointer()
+                            .large()
+                            .primary()
+                            .icon(IconName::LayoutDashboard)
+                            .selected(true),
+                    )
+                    .child(
+                        Button::new("card-type")
+                            .rounded_full()
+                            .cursor_pointer()
+                            .large()
+                            .primary()
+                            .icon(Icon::empty().path("icons/custom/list-line.svg")),
+                    )
+                    .on_click(|selected_indices, _, _| {
+                        println!("Selected: {:?}", selected_indices);
+                    }),
+            )
     }
 }
 
