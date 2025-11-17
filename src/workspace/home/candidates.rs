@@ -2,9 +2,8 @@ use gpui::*;
 use gpui_component::{
     ActiveTheme, Icon, IconName, IndexPath, Selectable, Sizable, StyledExt, WindowExt,
     button::{Button, ButtonCustomVariant, ButtonGroup, ButtonVariants},
-    h_flex,
     select::{Select, SelectState},
-    white,
+    v_flex, white,
 };
 
 use crate::data::home::interviews_data::InterviewsData;
@@ -46,66 +45,73 @@ impl Candidates {
         let data = InterviewsData::data();
         let total_candidates = data.iter().count();
 
-        div()
-            .flex()
+        v_flex()
             .px_10()
             .pt_6()
             .pb_32()
             .bg(cx.theme().accent)
-            .justify_between()
-            .items_center()
             .child(
                 div()
                     .flex()
-                    .w_full()
-                    .flex_col()
-                    .gap_1()
+                    .justify_between()
+                    .items_center()
                     .child(
                         div()
-                            .child("Candidates")
-                            .text_size(AbsoluteLength::Pixels(px(55.0)))
-                            .font_bold(),
+                            .flex()
+                            .w_full()
+                            .flex_col()
+                            .gap_1()
+                            .child(
+                                div()
+                                    .child("Candidates")
+                                    .text_size(AbsoluteLength::Pixels(px(55.0)))
+                                    .font_bold(),
+                            )
+                            .child(
+                                div()
+                                    .child(format!("{} Total Candidates", total_candidates))
+                                    .text_size(AbsoluteLength::Pixels(px(22.0)))
+                                    .text_color(cx.theme().accent_foreground.opacity(0.70))
+                                    .font_thin(),
+                            ),
                     )
                     .child(
-                        div()
-                            .child(format!("{} Total Candidates", total_candidates))
-                            .text_size(AbsoluteLength::Pixels(px(22.0)))
-                            .text_color(cx.theme().accent_foreground.opacity(0.70))
-                            .font_thin(),
-                    )
-                    .child(self.render_filters(window, cx)),
+                        Button::new("add-newjob-btn")
+                            .large()
+                            .p_3()
+                            .custom(
+                                ButtonCustomVariant::new(cx)
+                                    .color(cx.theme().blue)
+                                    .foreground(white())
+                                    .border(cx.theme().blue)
+                                    .hover(cx.theme().blue.opacity(0.80))
+                                    .active(cx.theme().blue),
+                            )
+                            .rounded_full()
+                            .icon(IconName::Plus)
+                            .label("Add New Job")
+                            .cursor_pointer()
+                            .on_click(|_, window, cx| {
+                                window.open_dialog(cx, |dialog, _, _| {
+                                    dialog.title("Post new Job").alert()
+                                });
+                            }),
+                    ),
             )
-            .child(
-                Button::new("add-newjob-btn")
-                    .large()
-                    .p_3()
-                    .custom(
-                        ButtonCustomVariant::new(cx)
-                            .color(cx.theme().blue)
-                            .foreground(white())
-                            .border(cx.theme().blue)
-                            .hover(cx.theme().blue.opacity(0.80))
-                            .active(cx.theme().blue),
-                    )
-                    .rounded_full()
-                    .icon(IconName::Plus)
-                    .label("Add New Job")
-                    .cursor_pointer()
-                    .on_click(|_, window, cx| {
-                        window.open_dialog(cx, |dialog, _, _| dialog.title("Post new Job").alert());
-                    }),
-            )
+            .child(self.render_filters(window, cx))
     }
 
     fn render_filters(&self, _window: &mut Window, cx: &mut Context<Self>) -> Div {
         div()
+            .mt_5()
             .flex()
-            .justify_between()
             .items_center()
+            .justify_between()
             .child(
-                h_flex()
-                    .mt_5()
+                div()
+                    .flex()
                     .items_start()
+                    .justify_start()
                     .gap_2()
                     .child(
                         Select::new(&self.timeframe_state)
@@ -128,24 +134,55 @@ impl Candidates {
             )
             .child(
                 ButtonGroup::new("toggle-group")
+                    .border_1()
+                    .rounded_full()
+                    .border_color(cx.theme().foreground)
                     .gap_3()
                     .flex()
                     .items_center()
                     .justify_end()
                     .child(
                         Button::new("table-type")
+                            .custom(
+                                ButtonCustomVariant::new(cx)
+                                    .color(cx.theme().secondary)
+                                    .foreground(cx.theme().secondary_foreground)
+                                    .hover(cx.theme().secondary.opacity(0.30))
+                                    .active(cx.theme().primary),
+                            )
+                            .p_5()
                             .rounded_full()
                             .cursor_pointer()
                             .large()
-                            .icon(IconName::LayoutDashboard)
+                            .icon(Icon::new(IconName::LayoutDashboard).text_color(
+                                if self.active_button != 0 {
+                                    cx.theme().foreground
+                                } else {
+                                    white()
+                                },
+                            ))
                             .selected(self.active_button == 0),
                     )
                     .child(
                         Button::new("card-type")
+                            .custom(
+                                ButtonCustomVariant::new(cx)
+                                    .color(cx.theme().secondary)
+                                    .foreground(cx.theme().secondary_foreground)
+                                    .hover(cx.theme().secondary.opacity(0.30))
+                                    .active(cx.theme().primary),
+                            )
+                            .p_5()
                             .rounded_full()
                             .cursor_pointer()
                             .large()
-                            .icon(Icon::empty().path("icons/custom/list-line.svg"))
+                            .icon(Icon::empty().path("icons/custom/list-line.svg").text_color(
+                                if self.active_button != 1 {
+                                    cx.theme().foreground
+                                } else {
+                                    white()
+                                },
+                            ))
                             .selected(self.active_button == 1),
                     )
                     .on_click(cx.listener(|this, clicks: &Vec<usize>, _, _| {

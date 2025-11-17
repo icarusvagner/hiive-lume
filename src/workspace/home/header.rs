@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use gpui::*;
 use gpui_component::{
-    ActiveTheme, IconName, StyledExt,
+    ActiveTheme, Icon, IconName, StyledExt,
     avatar::Avatar,
     button::{Button, ButtonVariants},
     label::Label,
@@ -77,7 +77,7 @@ impl HomeHeader {
             .child(
                 Avatar::new()
                     .size(px(35.))
-                    .placeholder(IconName::CircleUser)
+                    .placeholder(Icon::new(IconName::CircleUser).text_color(white()))
                     .bg(cx.theme().primary),
             )
             .child(
