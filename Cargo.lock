@@ -2161,9 +2161,9 @@ dependencies = [
 
 [[package]]
 name = "gpui-component"
-version = "0.4.0-preview2"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "54ca6397f1dae49d9fce9cb254aa9e99443d54264f4adc456303871d160a8adf"
+checksum = "2f58e192c970b94144e884d7eadbeb47ae0439b94eead33abd331df16ec71f48"
 dependencies = [
  "aho-corasick",
  "anyhow",
@@ -2227,10 +2227,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "gpui-component-macros"
-version = "0.4.0-preview2"
+name = "gpui-component-assets"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b62bf31416493266c9b3009b02233098c42ac2c995e371e22fc7c816baf74a9f"
+checksum = "275913d119db966729c1e4a7c51f87ded868026f84de3ad327aa88367c225d4b"
+dependencies = [
+ "anyhow",
+ "gpui",
+ "rust-embed",
+]
+
+[[package]]
+name = "gpui-component-macros"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e6ac41ada7802159245da8bb8cc2ae15506b74f2c7abde583538d9a60058346"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2508,6 +2519,7 @@ dependencies = [
  "chrono",
  "gpui",
  "gpui-component",
+ "gpui-component-assets",
  "mockd",
  "rand 0.9.2",
  "rust-embed",

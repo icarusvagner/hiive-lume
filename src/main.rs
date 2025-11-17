@@ -43,7 +43,7 @@ fn main() {
                 change_color_mode(cx.theme().mode, window, cx);
 
                 let workspace_view = Workspace::view(window, cx);
-                cx.new(|cx| Root::new(workspace_view.into(), window, cx))
+                cx.new(|cx| Root::new(workspace_view, window, cx))
             })?;
 
             Ok::<_, anyhow::Error>(())
