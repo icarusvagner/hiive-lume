@@ -90,6 +90,7 @@ impl Render for LoginForm {
             .child(
                 field().col_span(2).label_indent(false).child(
                     Button::new("submit-btn")
+                        .mt_4()
                         .label("Login")
                         .primary()
                         .cursor_pointer()

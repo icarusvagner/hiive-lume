@@ -62,6 +62,7 @@ impl Candidates {
             .child(
                 Button::new("add-newjob-btn")
                     .large()
+                    .p_3()
                     .custom(
                         ButtonCustomVariant::new(cx)
                             .color(cx.theme().blue)
@@ -129,10 +130,12 @@ impl Candidates {
     ) -> Div {
         h_flex().justify_between().items_center().child(
             h_flex()
+                .mt_5()
                 .items_start()
                 .gap_3()
                 .child(
                     Select::new(&self.timeframe_select(window, cx))
+                        .py_3()
                         .appearance(false)
                         .rounded_full()
                         .border_1()
@@ -140,6 +143,7 @@ impl Candidates {
                 )
                 .child(
                     Select::new(&self.position_state(positions, window, cx))
+                        .py_3()
                         .appearance(false)
                         .rounded_full()
                         .border_1()
