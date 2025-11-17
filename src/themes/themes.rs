@@ -11,9 +11,13 @@ pub static THEMES: LazyLock<HashMap<SharedString, ThemeConfig>> = LazyLock::new(
     let mut themes = HashMap::new();
 
     for source in [
-        include_str!("./catppuccin.json"),
-        include_str!("./tokyonight.json"),
-        include_str!("./ayu.json"),
+        include_str!("../../assets/themes/catppuccin.json"),
+        include_str!("../../assets/themes/tokyonight.json"),
+        include_str!("../../assets/themes/everforest.json"),
+        include_str!("../../assets/themes/jellybeans.json"),
+        include_str!("../../assets/themes/adventure.json"),
+        include_str!("../../assets/themes/ayu.json"),
+        include_str!("../../assets/themes/macos-classic.json"),
     ] {
         let theme_set = parse_theme(source);
         for theme in theme_set.themes {
@@ -26,8 +30,8 @@ pub static THEMES: LazyLock<HashMap<SharedString, ThemeConfig>> = LazyLock::new(
 
 pub fn change_color_mode(mode: ThemeMode, _window: &mut Window, cx: &mut App) {
     let theme_name = match mode {
-        ThemeMode::Light => "Catppuccin Latte",
-        ThemeMode::Dark => "Catppuccin Macchiato",
+        ThemeMode::Light => "macOS Classic Light",
+        ThemeMode::Dark => "macOS Classic Dark",
     };
 
     if let Some(theme_config) = THEMES.get(theme_name) {

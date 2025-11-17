@@ -8,6 +8,7 @@ use gpui_component::{
     h_flex,
     input::{Input, InputState},
     label::Label,
+    notification::NotificationType,
     v_flex,
 };
 
@@ -130,7 +131,10 @@ impl CreateEmployee {
             .emergency_contact_number
             .update(cx, |this, cx| this.set_value("", window, cx));
 
-        window.push_notification("Creat employee form cleared", cx);
+        window.push_notification(
+            (NotificationType::Success, "Creat employee form cleared"),
+            cx,
+        );
         cx.notify();
     }
 
@@ -165,7 +169,7 @@ impl CreateEmployee {
                     .gap_8()
                     .child(
                         div()
-                            .h_80()
+                            .h(px(650.0))
                             .w_full()
                             .bg(cx.theme().accent.opacity(0.60))
                             .rounded_xl(),
@@ -176,6 +180,7 @@ impl CreateEmployee {
                                 .label("Upload Image")
                                 .w_full()
                                 .large()
+                                .cursor_pointer()
                                 .primary(),
                         ),
                     ),
@@ -274,19 +279,22 @@ impl CreateEmployee {
                                 .gap_2()
                                 .items_center()
                                 .child(
+                                    Button::new("submit-form-fields")
+                                        .label("Create")
+                                        .primary()
+                                        .large()
+                                        .cursor_pointer()
+                                        .w(px(120.0)),
+                                )
+                                .child(
                                     Button::new("clear-form-fields")
                                         .label("Clear")
                                         .ghost()
                                         .cursor_pointer()
                                         .on_click(cx.listener(|this, _, window, cx| {
                                             this.clear_input(window, cx)
-                                        })),
-                                )
-                                .child(
-                                    Button::new("submit-form-fields")
-                                        .label("Create")
-                                        .primary()
-                                        .cursor_pointer(),
+                                        }))
+                                        .w(px(120.0)),
                                 ),
                         ),
                     ),
