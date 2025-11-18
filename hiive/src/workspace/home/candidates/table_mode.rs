@@ -230,6 +230,7 @@ impl TableModeView {
                 TableEvent::DoubleClickedRow(row_ix) => {
                     println!("Row {} double-clicked", row_ix);
                     // Open detail view or edit mode
+
                     window.open_dialog(cx, |dialog, _, _| {
                         dialog
                             .title("Show Candidates")
