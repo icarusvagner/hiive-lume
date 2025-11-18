@@ -1,0 +1,19 @@
+[package]
+name = "hiive"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+base64.workspace = true
+chrono.workspace = true
+gpui.workspace = true
+gpui-component.workspace = true
+gpui-component-assets.workspace = true
+mockd.workspace = true
+rand.workspace = true
+rust-embed.workspace = true
+serde_json.workspace = true
+time.workspace = true
+tokio.workspace = true
+reqwest_client.workspace = true

@@ -1,9 +1,19 @@
-[package]
-name = "hiive"
+[workspace]
+resolver = "2"
+members = [
+    "crates/reqwest_client",
+    "hiive"
+]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
+description = "Hiive Lume is a next‑generation desktop Human Resource & Operations Management system built using Rust, gpui, and gpui-component. Inspired by Morphiq Lume but architected for a fully declarative, component‑driven UI, Hiive Lume delivers a fast, clean, and modern HR experience."
+authors = ["devixion", "icarusvagner <ruthakaza@gmail.com>"]
 
-[dependencies]
+[workspace.dependencies]
+reqwest_client = { path = "crates/reqwest_client" }
+
 anyhow = "1.0.100"
 base64 = "0.22.1"
 chrono = { version = "0.4.42", features = ["serde"] }
@@ -16,3 +26,31 @@ rust-embed = { version = "8.9.0", features = ["interpolate-folder-path"] }
 serde_json = "1.0.145"
 time = { version = "0.3.44", features = ["formatting", "serde", "parsing"] }
 tokio = { version = "1.48.0", features = ["full"] }
+reqwest = { version = "0.12.15-zed", package = "zed-reqwest" }
+
+[workspace.lints.clippy]
+almost_complete_range = "allow"
+arc_with_non_send_sync = "allow"
+borrowed_box = "allow"
+dbg_macro = "deny"
+let_underscore_future = "allow"
+manual_is_multiple_of = "allow"
+map_entry = "allow"
+module_inception = "allow"
+non_canonical_partial_ord_impl = "allow"
+reversed_empty_ranges = "allow"
+single_range_in_vec_init = "allow"
+style = { level = "allow", priority = -1 }
+todo = "deny"
+type_complexity = "allow"
+
+[profile.dev]
+codegen-units = 16
+debug = "limited"
+split-debuginfo = "unpacked"
+
+[profile.dev.package]
+resvg = { opt-level = 3 }
+rustybuzz = { opt-level = 3 }
+taffy = { opt-level = 3 }
+ttf-parser = { opt-level = 3 }
