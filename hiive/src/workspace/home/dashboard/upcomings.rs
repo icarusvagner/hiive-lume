@@ -48,7 +48,7 @@ impl UpcomingInterviews {
     }
 
     fn render_interviews(&self, _window: &mut Window, cx: &mut Context<Self>) -> Vec<Div> {
-        let data = InterviewsData::data()[0..=8].to_vec();
+        let data = InterviewsData::data()[0..=9].to_vec();
         let mut cards = Vec::new();
 
         for item in data {

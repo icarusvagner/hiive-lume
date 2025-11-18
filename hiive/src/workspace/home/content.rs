@@ -128,20 +128,20 @@ impl HomeContent {
     }
 
     fn render_loading_home(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
-        let content = v_flex()
-            .id("loading-content")
-            .size_full()
+        let content = div()
+            .id("home-loading-content")
+            .flex()
+            .flex_grow()
             .bg(cx.theme().background)
             .justify_center()
             .items_center()
-            .content_center()
-            .h_full()
             .child(
-                div()
-                    .flex()
+                v_flex()
+                    .mt_80()
                     .items_center()
                     .justify_center()
-                    .child(Spinner::new().color(cx.theme().blue).with_size(px(160.))),
+                    .gap_10()
+                    .child(Spinner::new().color(cx.theme().blue).with_size(px(100.))),
             );
 
         content
@@ -163,6 +163,7 @@ impl Render for HomeContent {
 
         v_flex()
             .size_full()
+            .flex_1()
             .flex_grow()
             .pb_24()
             .bg(cx.theme().background)

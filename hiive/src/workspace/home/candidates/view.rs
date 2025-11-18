@@ -196,9 +196,9 @@ impl Candidates {
                             .large()
                             .icon(Icon::new(IconName::LayoutDashboard).text_color(
                                 if self.switch_mode.eq(&SwitchMode::CardMode) {
-                                    cx.theme().foreground
+                                    cx.theme().background
                                 } else {
-                                    white()
+                                    cx.theme().foreground
                                 },
                             ))
                             .selected(self.switch_mode.eq(&SwitchMode::CardMode)),
@@ -218,9 +218,9 @@ impl Candidates {
                             .large()
                             .icon(Icon::empty().path("icons/custom/list-line.svg").text_color(
                                 if self.switch_mode.eq(&SwitchMode::TableMode) {
-                                    cx.theme().foreground
+                                    cx.theme().background
                                 } else {
-                                    white()
+                                    cx.theme().foreground
                                 },
                             ))
                             .selected(self.switch_mode.eq(&SwitchMode::TableMode)),

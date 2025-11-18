@@ -16,12 +16,16 @@ impl LeftPane {
 
 impl Render for LeftPane {
     fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
-        div().w(px(530.)).h_full().overflow_hidden().child(
-            img(self.src.clone())
-                .w_full()
-                .object_fit(ObjectFit::Cover)
-                .rounded_tl_lg()
-                .rounded_bl_lg(),
-        )
+        div()
+            .relative()
+            .w(px(530.))
+            .h_full()
+            .overflow_hidden()
+            .child(
+                img(self.src.clone())
+                    .h_full()
+                    .w_full()
+                    .object_fit(ObjectFit::Cover),
+            )
     }
 }
