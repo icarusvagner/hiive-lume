@@ -196,7 +196,7 @@ impl Candidates {
                             .large()
                             .icon(Icon::new(IconName::LayoutDashboard).text_color(
                                 if self.switch_mode.eq(&SwitchMode::CardMode) {
-                                    cx.theme().background
+                                    white()
                                 } else {
                                     cx.theme().foreground
                                 },
@@ -218,7 +218,7 @@ impl Candidates {
                             .large()
                             .icon(Icon::empty().path("icons/custom/list-line.svg").text_color(
                                 if self.switch_mode.eq(&SwitchMode::TableMode) {
-                                    cx.theme().background
+                                    white()
                                 } else {
                                     cx.theme().foreground
                                 },
@@ -246,6 +246,7 @@ impl Candidates {
             .id("render-table-mode-candidate")
             .px_10()
             .py_6()
+            .size_full()
             .child(self.table_mode.clone());
 
         content

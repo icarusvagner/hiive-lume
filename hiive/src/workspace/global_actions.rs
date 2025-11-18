@@ -4,6 +4,7 @@ use crate::states::{home_layout::HomeLayout, show_layout::LayoutState};
 
 actions!(headermenu, [ProfileAction, SettingsAction, LogoutAction]);
 actions!(candidatemenu, [ViewCandidate, RemoveCandidte]);
+actions!(window, [QuitApp]);
 
 pub fn register_actions(cx: &mut App) {
     cx.on_action(profile_action);
@@ -11,6 +12,20 @@ pub fn register_actions(cx: &mut App) {
     cx.on_action(logout_action);
     cx.on_action(view_candidate_action);
     cx.on_action(remove_candidate_action);
+    cx.on_action(quit_app_action);
+
+    register_key_bindings(cx);
+}
+
+fn register_key_bindings(cx: &mut App) {
+    cx.bind_keys([
+        KeyBinding::new("ctrl-q", QuitApp, None),
+        KeyBinding::new("cmd-q", QuitApp, None),
+    ]);
+}
+
+fn quit_app_action(_: &QuitApp, cx: &mut App) {
+    cx.quit();
 }
 
 fn profile_action(_: &ProfileAction, cx: &mut App) {

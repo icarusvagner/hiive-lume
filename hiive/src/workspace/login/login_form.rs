@@ -96,6 +96,7 @@ impl Render for LoginForm {
                         .cursor_pointer()
                         .w_full()
                         .large()
+                        .py_5()
                         .on_click(cx.listener(|this, _, window, cx| this.auth_login(window, cx))),
                 ),
             )

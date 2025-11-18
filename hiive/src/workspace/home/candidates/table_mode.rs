@@ -2,9 +2,9 @@ use std::ops::Range;
 
 use gpui::*;
 use gpui_component::{
-    ActiveTheme, Sizable,
-    button::{Button, ButtonCustomVariant, ButtonVariants},
-    table::{Column, ColumnSort, Table, TableDelegate, TableState},
+    ActiveTheme, WindowExt,
+    checkbox::Checkbox,
+    table::{Column, ColumnSort, Table, TableDelegate, TableEvent, TableState},
     v_flex,
 };
 
@@ -21,40 +21,57 @@ struct TableModeViewDelegate {
     columns: Vec<Column>,
     loading: bool,
     visible_rows: Range<usize>,
+    select_all: bool,
 }
 
 impl TableModeViewDelegate {
     pub fn new() -> Self {
-        let rows = Candidatesdata::data();
-
-        let columns = vec![
-            Column::new("candidate-name", "Candidate Name")
-                .resizable(true)
-                .sortable(),
-            Column::new("designation", "Designation")
-                .resizable(true)
-                .sortable(),
-            Column::new("candidate-status", "Status")
-                .resizable(true)
-                .sortable(),
-            Column::new("candidate-email", "Email")
-                .resizable(true)
-                .sortable(),
-            Column::new("candidate-number", "Mobile Number")
-                .resizable(true)
-                .sortable(),
-            Column::new("applied-on", "Applied On")
-                .resizable(true)
-                .sortable(),
-            Column::new("actions", "Action").width(150.0),
-        ];
-
         Self {
-            rows,
-            columns,
+            rows: Vec::new(),
+            columns: Vec::new(),
             loading: false,
             visible_rows: Range::default(),
+            select_all: false,
         }
+    }
+
+    pub fn update(&mut self, data: Vec<CandidatesCardModel>) {
+        let columns = vec![
+            Column::new("checkbox", "").width(40.0).movable(false),
+            Column::new("candidate-name", "Candidate Name")
+                .width(180.0)
+                .resizable(true)
+                .movable(false)
+                .sortable(),
+            Column::new("designation", "Designation")
+                .width(325.0)
+                .resizable(true)
+                .movable(false)
+                .sortable(),
+            Column::new("candidate-status", "Status")
+                .width(120.0)
+                .resizable(true)
+                .movable(false)
+                .sortable(),
+            Column::new("candidate-email", "Email")
+                .width(210.0)
+                .resizable(true)
+                .movable(false)
+                .sortable(),
+            Column::new("candidate-number", "Mobile Number")
+                .width(290.0)
+                .resizable(true)
+                .movable(false)
+                .sortable(),
+            Column::new("applied-on", "Applied On")
+                .width(160.0)
+                .resizable(true)
+                .movable(false)
+                .sortable(),
+        ];
+
+        self.rows = data;
+        self.columns = columns;
     }
 }
 
@@ -74,17 +91,16 @@ impl TableDelegate for TableModeViewDelegate {
     fn render_th(&self, col_ix: usize, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let col = self.column(col_ix, cx);
 
-        div().child(format!("{}", col.clone().name)).w_full()
+        match col.key.as_ref() {
+            "checkbox" => {
+                div().child(Checkbox::new("select_all_checkbox").checked(self.select_all))
+            }
+            _ => div().child(col.name.to_string()),
+        }
     }
 
     fn render_tr(&self, row_ix: usize, _window: &mut Window, _cx: &mut App) -> Stateful<Div> {
-        div().id(row_ix).on_click(move |ev, _, _| {
-            println!(
-                "Row {} clicked\nSecondary: {}",
-                row_ix,
-                ev.modifiers().secondary()
-            )
-        })
+        div().id(row_ix)
     }
 
     fn render_td(
@@ -92,12 +108,13 @@ impl TableDelegate for TableModeViewDelegate {
         row_ix: usize,
         col_ix: usize,
         _window: &mut Window,
-        cx: &mut App,
+        _cx: &mut App,
     ) -> impl IntoElement {
         let candidates = &self.rows[row_ix];
         let column = &self.columns[col_ix];
 
         match column.key.as_str() {
+            "checkbox" => div().child(Checkbox::new("row_checkbox").checked(false)),
             "candidate-name" => div()
                 .font_weight(FontWeight::BOLD)
                 .min_w_32()
@@ -122,59 +139,18 @@ impl TableDelegate for TableModeViewDelegate {
                 .font_weight(FontWeight::BOLD)
                 .min_w_32()
                 .child(candidates.date_applied()),
-            "actions" => div()
-                .grid()
-                .grid_cols(2)
-                .gap_2()
-                .child(
-                    Button::new("view-candidate-table-action")
-                        .custom(
-                            ButtonCustomVariant::new(cx)
-                                .color(cx.theme().primary.opacity(0.60))
-                                .foreground(cx.theme().background)
-                                .border(cx.theme().primary)
-                                .hover(cx.theme().primary)
-                                .active(cx.theme().primary),
-                        )
-                        .label("View")
-                        .text_center()
-                        .small()
-                        .p_3()
-                        .rounded_full(),
-                )
-                .child(
-                    Button::new("notes-candidate-table-action")
-                        .custom(
-                            ButtonCustomVariant::new(cx)
-                                .color(cx.theme().yellow.opacity(0.60))
-                                .foreground(cx.theme().background)
-                                .border(cx.theme().yellow)
-                                .hover(cx.theme().yellow)
-                                .active(cx.theme().yellow),
-                        )
-                        .label("Notes")
-                        .text_center()
-                        .small()
-                        .p_3()
-                        .rounded_full(),
-                ),
             _ => div(),
         }
     }
 
     fn render_empty(&self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        v_flex()
-            .justify_center()
-            .items_center()
-            .h_full()
-            .w_full()
-            .child(
-                div()
-                    .p_4()
-                    .bg(cx.theme().accent)
-                    .rounded_lg()
-                    .child("No Data Available"),
-            )
+        v_flex().justify_center().h_full().w_full().p_3().child(
+            div()
+                .bg(cx.theme().accent)
+                .rounded_xl()
+                .shadow_lg()
+                .child("No Data available"),
+        )
     }
 
     fn perform_sort(
@@ -205,11 +181,7 @@ impl TableDelegate for TableModeViewDelegate {
         }
     }
 
-    // fn load_more(
-    //     &mut self,
-    //     window: &mut Window,
-    //     cx: &mut Context<gpui_component::table::TableState<Self>>,
-    // ) {
+    // fn load_more(&mut self, window: &mut Window, cx: &mut Context<gpui_component::table::TableState<Self>>) {
     //     if self.loading {
     //         return;
     //     }
@@ -227,8 +199,7 @@ impl TableDelegate for TableModeViewDelegate {
     //                 delegate.has_more_data = !new_data.is_empty();
     //             });
     //         })
-    //     })
-    //     .detach();
+    //     }).detach();
     // }
 
     fn loading(&self, _cx: &App) -> bool {
@@ -254,19 +225,60 @@ impl TableModeView {
         let delegate = TableModeViewDelegate::new();
         let table_state = cx.new(|cx| TableState::new(delegate, window, cx).sortable(true));
 
+        cx.subscribe_in(&table_state, window, |_view, _table, event, window, cx| {
+            match event {
+                TableEvent::DoubleClickedRow(row_ix) => {
+                    println!("Row {} double-clicked", row_ix);
+                    // Open detail view or edit mode
+                    window.open_dialog(cx, |dialog, _, _| {
+                        dialog
+                            .title("Show Candidates")
+                            .child("This is double clicked on row")
+                    });
+                }
+                _ => {}
+            }
+        })
+        .detach();
+
         Self { table_state }
     }
     pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
         cx.new(|cx| Self::new(window, cx))
     }
+
+    fn render_table_mode(&self, _window: &mut Window, cx: &mut Context<Self>) -> Div {
+        let data = Candidatesdata::data();
+
+        self.table_state.update(cx, |table, cx| {
+            table.delegate_mut().update(data.clone());
+            table.loop_selection = true;
+            table.col_resizable = true;
+            table.sortable = true;
+            table.col_movable = false;
+            table.refresh(cx);
+
+            cx.notify();
+        });
+
+        v_flex()
+            .justify_start()
+            .h(px(610.))
+            .bg(cx.theme().accent)
+            .child(
+                Table::new(&self.table_state.clone())
+                    .stripe(true)
+                    .bordered(true)
+                    .scrollbar_visible(true, true),
+            )
+    }
 }
 
 impl Render for TableModeView {
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
-            .bg(cx.theme().accent)
-            .rounded_xl()
             .size_full()
-            .child(Table::new(&self.table_state.clone()).stripe(true))
+            .rounded_xl()
+            .child(self.render_table_mode(window, cx))
     }
 }
