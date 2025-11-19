@@ -195,7 +195,10 @@ impl Render for Employees {
 
         div()
             .size_full()
-            .relative()
+            .flex()
+            .flex_col()
+            .flex_1()
+            .flex_grow()
             .child(self.render_top_content(window, cx))
             .child(mode_content)
             .scrollable(Axis::Vertical)
