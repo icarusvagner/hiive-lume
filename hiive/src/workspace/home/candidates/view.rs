@@ -173,7 +173,7 @@ impl Candidates {
                     ),
             )
             .child(
-                ButtonGroup::new("toggle-group")
+                ButtonGroup::new("candidate-toggle-group")
                     .border_1()
                     .rounded_full()
                     .border_color(cx.theme().foreground)

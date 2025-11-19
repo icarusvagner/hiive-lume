@@ -2,8 +2,11 @@ use std::ops::Range;
 
 use gpui::*;
 use gpui_component::{
-    ActiveTheme, WindowExt,
+    ActiveTheme, IndexPath, Sizable, WindowExt,
     checkbox::Checkbox,
+    h_flex,
+    label::Label,
+    select::{Select, SelectItem, SelectState},
     table::{Column, ColumnSort, Table, TableDelegate, TableEvent, TableState},
     v_flex,
 };
@@ -12,8 +15,31 @@ use crate::data::{
     home::candidates_data::Candidatesdata, models::candidates_model::card_mode::CandidatesCardModel,
 };
 
+#[derive(Clone, Debug)]
+struct RowsPerPage {
+    count: SharedString,
+    name: SharedString,
+}
+
+impl SelectItem for RowsPerPage {
+    type Value = SharedString;
+
+    fn title(&self) -> SharedString {
+        self.name.clone()
+    }
+
+    fn display_title(&self) -> Option<AnyElement> {
+        Some(format!("{} {}", self.count, self.name).into_any_element())
+    }
+
+    fn value(&self) -> &Self::Value {
+        &self.count
+    }
+}
+
 pub struct TableModeView {
     table_state: Entity<TableState<TableModeViewDelegate>>,
+    rows_per_page_state: Entity<SelectState<Vec<RowsPerPage>>>,
 }
 
 struct TableModeViewDelegate {
@@ -39,7 +65,7 @@ impl TableModeViewDelegate {
         let columns = vec![
             Column::new("checkbox", "").width(40.0).movable(false),
             Column::new("candidate-name", "Candidate Name")
-                .width(180.0)
+                .width(220.0)
                 .resizable(true)
                 .movable(false)
                 .sortable(),
@@ -49,17 +75,17 @@ impl TableModeViewDelegate {
                 .movable(false)
                 .sortable(),
             Column::new("candidate-status", "Status")
-                .width(120.0)
+                .width(190.0)
                 .resizable(true)
                 .movable(false)
                 .sortable(),
             Column::new("candidate-email", "Email")
-                .width(210.0)
+                .width(280.0)
                 .resizable(true)
                 .movable(false)
                 .sortable(),
             Column::new("candidate-number", "Mobile Number")
-                .width(290.0)
+                .width(220.0)
                 .resizable(true)
                 .movable(false)
                 .sortable(),
@@ -100,7 +126,7 @@ impl TableDelegate for TableModeViewDelegate {
     }
 
     fn render_tr(&self, row_ix: usize, _window: &mut Window, _cx: &mut App) -> Stateful<Div> {
-        div().id(row_ix)
+        h_flex().id(row_ix).h_16().py_2()
     }
 
     fn render_td(
@@ -115,9 +141,17 @@ impl TableDelegate for TableModeViewDelegate {
 
         match column.key.as_str() {
             "checkbox" => div().child(Checkbox::new("row_checkbox").checked(false)),
-            "candidate-name" => div()
+            "candidate-name" => h_flex()
                 .font_weight(FontWeight::BOLD)
-                .min_w_32()
+                .gap_1()
+                .child(
+                    img(candidates.src())
+                        .h_8()
+                        .w_8()
+                        .rounded_full()
+                        .overflow_hidden()
+                        .object_fit(ObjectFit::Cover),
+                )
                 .child(candidates.fullname()),
             "designation" => div()
                 .font_weight(FontWeight::BOLD)
@@ -125,8 +159,12 @@ impl TableDelegate for TableModeViewDelegate {
                 .child(candidates.position()),
             "candidate-status" => div()
                 .font_weight(FontWeight::BOLD)
-                .min_w_20()
-                .child(candidates.status().to_string()),
+                .rounded_full()
+                .px_3()
+                .py_1()
+                .text_center()
+                .bg(candidates.status().color().opacity(0.20))
+                .child(candidates.status().to_string().to_uppercase()),
             "candidate-email" => div()
                 .font_weight(FontWeight::BOLD)
                 .min_w_40()
@@ -224,6 +262,47 @@ impl TableModeView {
     pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
         let delegate = TableModeViewDelegate::new();
         let table_state = cx.new(|cx| TableState::new(delegate, window, cx).sortable(true));
+        let rows_per_page_state = cx.new(|cx| {
+            SelectState::new(
+                vec![
+                    RowsPerPage {
+                        count: "10".into(),
+                        name: "Rows per page".into(),
+                    },
+                    RowsPerPage {
+                        count: "20".into(),
+                        name: "Rows per page".into(),
+                    },
+                    RowsPerPage {
+                        count: "30".into(),
+                        name: "Rows per page".into(),
+                    },
+                    RowsPerPage {
+                        count: "45".into(),
+                        name: "Rows per page".into(),
+                    },
+                    RowsPerPage {
+                        count: "55".into(),
+                        name: "Rows per page".into(),
+                    },
+                    RowsPerPage {
+                        count: "70".into(),
+                        name: "Rows per page".into(),
+                    },
+                    RowsPerPage {
+                        count: "85".into(),
+                        name: "Rows per page".into(),
+                    },
+                    RowsPerPage {
+                        count: "100".into(),
+                        name: "Rows per page".into(),
+                    },
+                ],
+                Some(IndexPath::default()),
+                window,
+                cx,
+            )
+        });
 
         cx.subscribe_in(&table_state, window, |_view, _table, event, window, cx| {
             match event {
@@ -242,13 +321,16 @@ impl TableModeView {
         })
         .detach();
 
-        Self { table_state }
+        Self {
+            table_state,
+            rows_per_page_state,
+        }
     }
     pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
         cx.new(|cx| Self::new(window, cx))
     }
 
-    fn render_table_mode(&self, _window: &mut Window, cx: &mut Context<Self>) -> Div {
+    fn render_table_mode(&self, window: &mut Window, cx: &mut Context<Self>) -> Div {
         let data = Candidatesdata::data();
 
         self.table_state.update(cx, |table, cx| {
@@ -263,14 +345,40 @@ impl TableModeView {
         });
 
         v_flex()
-            .justify_start()
-            .h(px(610.))
-            .bg(cx.theme().accent)
+            .gap_5()
             .child(
-                Table::new(&self.table_state.clone())
-                    .stripe(true)
-                    .bordered(true)
-                    .scrollbar_visible(true, true),
+                v_flex().bg(cx.theme().accent).h(px(620.)).child(
+                    Table::new(&self.table_state.clone())
+                        .with_size(px(50.))
+                        .stripe(true)
+                        .bordered(true)
+                        .scrollbar_visible(true, true),
+                ),
+            )
+            .child(self.render_table_status(window, cx))
+    }
+
+    fn render_table_status(&self, _window: &mut Window, cx: &mut Context<Self>) -> Div {
+        div()
+            .flex()
+            .items_center()
+            .justify_between()
+            .w_full()
+            .child(
+                div().flex().items_start().justify_start().child(
+                    Select::new(&self.rows_per_page_state)
+                        .rounded_full()
+                        .bg(cx.theme().accent),
+                ),
+            )
+            .child(
+                h_flex()
+                    .child(Label::new("1-10").font_weight(FontWeight::SEMIBOLD))
+                    .child(
+                        Label::new("/990 results")
+                            .text_sm()
+                            .font_weight(FontWeight::LIGHT),
+                    ),
             )
     }
 }

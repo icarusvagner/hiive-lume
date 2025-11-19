@@ -5,6 +5,7 @@ use crate::states::{home_layout::HomeLayout, show_layout::LayoutState};
 actions!(headermenu, [ProfileAction, SettingsAction, LogoutAction]);
 actions!(candidatemenu, [ViewCandidate, RemoveCandidte]);
 actions!(window, [QuitApp]);
+actions!(employee, [UpdateEmployee, ShowEmployee]);
 
 pub fn register_actions(cx: &mut App) {
     cx.on_action(profile_action);
@@ -13,9 +14,14 @@ pub fn register_actions(cx: &mut App) {
     cx.on_action(view_candidate_action);
     cx.on_action(remove_candidate_action);
     cx.on_action(quit_app_action);
+    cx.on_action(update_employee_action);
+    cx.on_action(show_employee_action);
 
     register_key_bindings(cx);
 }
+
+fn update_employee_action(_: &UpdateEmployee, _cx: &mut App) {}
+fn show_employee_action(_: &ShowEmployee, _cx: &mut App) {}
 
 fn register_key_bindings(cx: &mut App) {
     cx.bind_keys([

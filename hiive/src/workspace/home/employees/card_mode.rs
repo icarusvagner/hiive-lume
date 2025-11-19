@@ -1,7 +1,7 @@
 use gpui::*;
 use gpui_component::{
-    ActiveTheme, Icon, IconName, Sizable, StyledExt, black,
-    button::{Button, ButtonCustomVariant, ButtonVariants},
+    ActiveTheme, Icon, IconName,
+    button::{Button, ButtonVariants},
     h_flex,
     label::Label,
     menu::DropdownMenu,
@@ -9,16 +9,16 @@ use gpui_component::{
 };
 
 use crate::{
-    data::home::candidates_data::Candidatesdata,
+    data::employees::employees_data::EmployeesData,
     workspace::{
         components::card::custom_card,
-        global_actions::{RemoveCandidte, ViewCandidate},
+        global_actions::{ShowEmployee, UpdateEmployee},
     },
 };
 
-pub struct CandidateCardModeView;
+pub struct EmployeeCardMode;
 
-impl CandidateCardModeView {
+impl EmployeeCardMode {
     pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
         Self {}
     }
@@ -28,7 +28,7 @@ impl CandidateCardModeView {
     }
 
     fn render_cards(&self, window: &mut Window, cx: &mut Context<Self>) -> Vec<Div> {
-        let data = Candidatesdata::data();
+        let data = EmployeesData::data();
         let mut cards = Vec::new();
 
         for (index, item) in data.iter().enumerate() {
@@ -38,6 +38,7 @@ impl CandidateCardModeView {
                     .child(
                         div().absolute().right_0().top_0().child(
                             Button::new(SharedString::new(format!("btn-card-candidate-{index}")))
+                                .compact()
                                 .ghost()
                                 .rounded_full()
                                 .icon(
@@ -45,8 +46,8 @@ impl CandidateCardModeView {
                                         .text_color(cx.theme().foreground),
                                 )
                                 .dropdown_menu(|menu, _, _| {
-                                    menu.menu("View", Box::new(ViewCandidate))
-                                        .menu("Remove", Box::new(RemoveCandidte))
+                                    menu.menu("Update", Box::new(UpdateEmployee))
+                                        .menu("View", Box::new(ShowEmployee))
                                 }),
                         ),
                     )
@@ -68,14 +69,15 @@ impl CandidateCardModeView {
                             .child(
                                 Label::new(item.fullname())
                                     .text_lg()
-                                    .font_bold()
+                                    .font_weight(FontWeight::BOLD)
                                     .text_center(),
                             )
                             .child(
                                 Label::new(item.position())
                                     .text_sm()
-                                    .font_thin()
-                                    .text_center(),
+                                    .font_weight(FontWeight::NORMAL)
+                                    .text_center()
+                                    .text_color(cx.theme().foreground.opacity(0.70)),
                             )
                             .child(
                                 v_flex()
@@ -87,15 +89,15 @@ impl CandidateCardModeView {
                                     .rounded_full()
                                     .bg(item.status().color().opacity(0.20))
                                     .child(
-                                        Label::new(item.status().to_string().to_uppercase())
-                                            .font_bold()
+                                        Label::new(item.status().as_str().to_uppercase())
+                                            .font_weight(FontWeight::BOLD)
                                             .text_center(),
                                     ),
                             )
                             .child(
                                 v_flex()
                                     .mt_4()
-                                    .bg(black().opacity(0.10))
+                                    .bg(white().opacity(0.30))
                                     .rounded_lg()
                                     .p_3()
                                     .child(
@@ -127,60 +129,23 @@ impl CandidateCardModeView {
                                         h_flex()
                                             .gap_2()
                                             .justify_between()
-                                            .child(Label::new("Experience").text_sm())
+                                            .child(Label::new("Department").text_sm())
                                             .child(
-                                                Label::new(item.experience()).text_sm().font_bold(),
+                                                Label::new(item.department().as_str())
+                                                    .text_sm()
+                                                    .font_weight(FontWeight::BOLD),
                                             ),
                                     )
                                     .child(
                                         h_flex()
                                             .gap_2()
                                             .justify_between()
-                                            .child(Label::new("Applied On").text_sm())
+                                            .child(Label::new("Date of Joining").text_sm())
                                             .child(
-                                                Label::new(item.date_applied())
+                                                Label::new(item.date_joined())
                                                     .text_sm()
-                                                    .font_bold(),
+                                                    .font_weight(FontWeight::BOLD),
                                             ),
-                                    ),
-                            )
-                            .child(
-                                div()
-                                    .mt_3()
-                                    .grid()
-                                    .grid_cols(2)
-                                    .gap_3()
-                                    .child(
-                                        Button::new("btn-candidate-notes")
-                                            .custom(
-                                                ButtonCustomVariant::new(cx)
-                                                    .color(cx.theme().yellow.opacity(0.60))
-                                                    .foreground(cx.theme().background)
-                                                    .border(cx.theme().yellow)
-                                                    .hover(cx.theme().yellow)
-                                                    .active(cx.theme().yellow),
-                                            )
-                                            .label("Notes")
-                                            .text_center()
-                                            .large()
-                                            .p_3()
-                                            .rounded_full(),
-                                    )
-                                    .child(
-                                        Button::new("btn-candidate-view")
-                                            .custom(
-                                                ButtonCustomVariant::new(cx)
-                                                    .color(cx.theme().primary.opacity(0.60))
-                                                    .foreground(cx.theme().background)
-                                                    .border(cx.theme().primary)
-                                                    .hover(cx.theme().primary)
-                                                    .active(cx.theme().primary),
-                                            )
-                                            .label("View")
-                                            .text_center()
-                                            .large()
-                                            .p_3()
-                                            .rounded_full(),
                                     ),
                             ),
                     ),
@@ -195,7 +160,7 @@ impl CandidateCardModeView {
     }
 }
 
-impl Render for CandidateCardModeView {
+impl Render for EmployeeCardMode {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
             .grid()

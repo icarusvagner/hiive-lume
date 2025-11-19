@@ -4,7 +4,7 @@ use gpui::*;
 use gpui_component::{
     ActiveTheme, Icon, IconName, StyledExt,
     avatar::Avatar,
-    button::{Button, ButtonVariants},
+    button::{Button, ButtonCustomVariant, ButtonVariants},
     label::Label,
     menu::DropdownMenu,
 };
@@ -52,9 +52,15 @@ impl HomeHeader {
             let layout = btn.goto_layout;
 
             let button = Button::new(indx)
+                .custom(
+                    ButtonCustomVariant::new(cx)
+                        .color(cx.theme().background.opacity(0.20))
+                        .foreground(cx.theme().foreground)
+                        .hover(cx.theme().background)
+                        .active(cx.theme().background),
+                )
                 .label(btn.label.clone())
                 .icon(btn.icon.clone())
-                .ghost()
                 .on_click(cx.listener(move |this, _, _, cx| {
                     this.navigate_home_content(layout, cx);
                 }));
