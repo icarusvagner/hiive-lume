@@ -6,3 +6,4 @@ pub mod events_news_model;
 pub mod home_menu;
 pub mod interviews_model;
 pub mod job_applicant_model;
+pub mod jobs_model;

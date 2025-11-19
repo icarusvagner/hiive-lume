@@ -7,7 +7,7 @@ use crate::{
         candidates::view::Candidates,
         dashboard::Dashboard,
         employees::{create::CreateEmployee, view::Employees},
-        jobs::Jobs,
+        jobs::view::Jobs,
         leaves::Leaves,
         settings::Settings,
     },

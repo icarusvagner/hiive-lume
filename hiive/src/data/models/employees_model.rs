@@ -1,13 +1,11 @@
-use crate::core::types::{
-    employee_departments::EmployeeDepartment, employee_status::EmployeeStatus,
-};
+use crate::core::types::{employee_departments::EmployeeDepartment, gen_status::GeneralStatus};
 
 #[derive(Clone, Debug)]
 pub struct EmployeeModel {
     src: String,
     position: String,
     fullname: String,
-    status: EmployeeStatus,
+    status: GeneralStatus,
     email: String,
     number: String,
     department: EmployeeDepartment,
@@ -19,7 +17,7 @@ impl EmployeeModel {
         src: String,
         position: String,
         fullname: String,
-        status: EmployeeStatus,
+        status: GeneralStatus,
         email: String,
         number: String,
         department: EmployeeDepartment,
@@ -47,7 +45,7 @@ impl EmployeeModel {
     pub fn fullname(&self) -> String {
         self.fullname.clone()
     }
-    pub fn status(&self) -> EmployeeStatus {
+    pub fn status(&self) -> GeneralStatus {
         self.status.clone()
     }
     pub fn email(&self) -> String {

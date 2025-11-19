@@ -23,6 +23,7 @@ struct EmployeeTableDelegate {
     data: Vec<EmployeeModel>,
     columns: Vec<Column>,
     select_all: bool,
+    loading: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -72,6 +73,7 @@ impl EmployeeTableDelegate {
             data,
             columns,
             select_all: false,
+            loading: false,
         }
     }
 }
@@ -153,6 +155,10 @@ impl TableDelegate for EmployeeTableDelegate {
                 .child("No Data available"),
         )
     }
+
+    fn loading(&self, _cx: &App) -> bool {
+        self.loading
+    }
 }
 
 impl EmployeeTableMode {
@@ -160,10 +166,11 @@ impl EmployeeTableMode {
         let delegate = EmployeeTableDelegate::new();
         let table_state = cx.new(|cx| {
             TableState::new(delegate, window, cx)
-                .sortable(true)
-                .col_movable(false)
-                .col_selectable(true)
                 .col_resizable(true)
+                .col_movable(false)
+                .sortable(true)
+                .col_selectable(true)
+                .row_selectable(true)
         });
         let rows_per_page_state = cx.new(|cx| {
             SelectState::new(
