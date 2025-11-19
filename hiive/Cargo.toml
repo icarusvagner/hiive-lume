@@ -17,3 +17,11 @@ serde_json.workspace = true
 time.workspace = true
 tokio.workspace = true
 reqwest_client.workspace = true
+
+[[example]]
+name = "example-001"
+path = "examples/virtual_scroll.rs"
+
+[[example]]
+name = "example-002"
+path = "examples/select_with_scroll.rs"
