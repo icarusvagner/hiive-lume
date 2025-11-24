@@ -1,6 +1,6 @@
 use gpui::*;
 use gpui_component::{
-    ActiveTheme, Icon, IconName,
+    ActiveTheme, Icon, IconName, WindowExt,
     button::{Button, ButtonCustomVariant, ButtonVariants},
     h_flex,
     label::Label,
@@ -66,9 +66,37 @@ impl Jobs {
                         )
                         .rounded_full()
                         .icon(Icon::new(IconName::Plus))
-                        .label("Add New Job"),
+                        .label("Add New Job")
+                        .cursor_pointer()
+                        .on_click(
+                            cx.listener(|this, _, window, cx| this.render_add_new_job(window, cx)),
+                        ),
                 ),
         )
+    }
+
+    fn render_add_new_job(&self, window: &mut Window, cx: &mut Context<Self>) {
+        window.open_dialog(cx, |dialog, _, _| {
+            dialog.title("Add new Job").footer(|_, _, _, _| {
+                vec![
+                    Button::new("job-confirm-btn")
+                        .primary()
+                        .py_3()
+                        .label("Add new Job")
+                        .cursor_pointer()
+                        .on_click(|_, window, cx| {
+                            window.close_dialog(cx);
+                        }),
+                    Button::new("job-cancel-btn")
+                        .py_3()
+                        .label("Cancel")
+                        .cursor_pointer()
+                        .on_click(|_, window, cx| {
+                            window.close_dialog(cx);
+                        }),
+                ]
+            })
+        });
     }
 
     fn render_cards_job(&self, _cx: &mut Context<Self>) -> Stateful<Div> {

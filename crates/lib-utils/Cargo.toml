@@ -1,0 +1,13 @@
+[package]
+name = "lib-utils"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+authors.workspace = true
+
+[dependencies]
+base64.workspace = true
+time.workspace = true
+
+[lints]
+workspace = true

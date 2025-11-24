@@ -1,10 +1,7 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, WindowExt, h_flex, label::Label, v_flex};
+use gpui_component::{ActiveTheme, h_flex, label::Label, v_flex};
 
-use crate::{
-    data::models::jobs_model::JobsModel,
-    workspace::{components::card::custom_card, home::jobs::job_info::JobInfo},
-};
+use crate::{data::models::jobs_model::JobsModel, workspace::components::card::custom_card};
 
 pub struct JobCardsView {
     data: Vec<JobsModel>,
@@ -89,20 +86,7 @@ impl JobCardsView {
                                 .child(job.work_type().as_str()),
                         ),
                 )
-                .cursor_pointer()
-                .on_mouse_down(
-                    MouseButton::Left,
-                    cx.listener(move |this, _, window, cx| {
-                        let job_info = this.data[index].clone();
-
-                        window.open_dialog(cx, |dialog, window, cx| {
-                            dialog
-                                .width(px(500.))
-                                .h(px(550.))
-                                .child(JobInfo::view(job_info, window, cx))
-                        });
-                    }),
-                );
+                .cursor_pointer();
 
             let card = div().child(custom_card(content, window, cx));
 

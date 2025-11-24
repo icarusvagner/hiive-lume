@@ -17,6 +17,8 @@ serde_json.workspace = true
 time.workspace = true
 tokio.workspace = true
 reqwest_client.workspace = true
+tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
+tracing = "0.1.41"
 
 [[example]]
 name = "example-001"
