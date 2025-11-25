@@ -157,13 +157,13 @@ Choose between:
 ## 👤 Maintainers
 
 * **Akaza Ruthven** – Founder, Lead Engineer
-* **YourTeamName** – UI/Architecture
+* **Devixion** – UI/Architecture
 
 ---
 
 ## 📬 Contact
 
-📧 [hiive@castlebytesolutions.com](mailto:hiive@castlebytesolutions.com)
+📧 [info@hiive.com](mailto:info@hiive.com)
 
 ---
 

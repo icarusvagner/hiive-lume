@@ -1,6 +1,10 @@
 [workspace]
 resolver = "2"
-members = ["crates/lib-core", "crates/lib-utils",
+members = [
+    "crates/lib-auth",
+    "crates/lib-core",
+    "crates/lib-models",
+    "crates/lib-utils",
     "crates/reqwest_client",
     "hiive"
 ]
@@ -35,6 +39,8 @@ time = { version = "0.3", features = ["formatting", "serde", "parsing"] }
 diesel = { version = "2.3.3", features = ["postgres", "time", "uuid"] }
 dotenvy = "0.15.7"
 pq-sys = { version = "0.7.5", features = ["bundled"] }
+serde = { version = "1.0.228", features = ["derive"] }
+uuid = { version = "1.18.1", features = ["fast-rng", "v7", "v4"] }
 
 [workspace.lints.clippy]
 almost_complete_range = "allow"

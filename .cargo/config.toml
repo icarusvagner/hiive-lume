@@ -2,7 +2,7 @@
 vcs = "none"
 
 [env]
-RUST_LOG="hiive=debug,reqwest_client=debug,lib_core=debug,lib_utils=debug"
+RUST_LOG="hiive=debug,reqwest_client=debug,lib_core=debug,lib_utils=debug,lib_auth=debug"
 
 # -- Service Environment Variables
 # IMPORTANT: 
@@ -15,11 +15,10 @@ RUST_LOG="hiive=debug,reqwest_client=debug,lib_core=debug,lib_utils=debug"
 # e.g., "welcome" type of passwords.
 # i.e., Encryption not needed.
 
-# DATABASE_URL="postgres://castlebyte_dev:Dev_only.2025@localhost/morphiq_lume_db"
-DATABASE_URL="postgres://devixion:Dev_only.2025@localhost/morphiq_lume_db"
+DATABASE_URL="postgres://devixion:Dev_only.2025@localhost/hiive_lume_db"
 
-SERVICE_PWD_KEY="CKUGFOD9_2Qf6Pn3ZFRYgPYb8ht4vKqEG9PGMXTB7497bT0367DjoaD6ydFnEVaIRda0kKeBZVCT5Hb62m2sCA"
+SERVICE_PWD_KEY="X6i9NNjv6SvF0oltbZVVvl-89drBwCRNp4whN3u6ZBALpxqoGCIpxXxkzI57rNQM79lG0A2EIC4UDTPeIZDZqA"
 
-SERVICE_TOKEN_KEY="9FoHBmkyxbgu_xFoQK7e0jz3RMNVJWgfvbVn712FBNH9LLaAWS3CS6Zpcg6RveiObvCUb6a2z-uAiLjhLh2igw"
+SERVICE_TOKEN_KEY="lQ9G0j7bVR3UW_HeFHWftGquev3Hb0K6pn2L3PBjx3inmDhR2KVCDbDjl1_d3lEM8fvjU_yCnZP408wjjlrSFg"
 SERVICE_TOKEN_DURATION_SEC="1800" # 30 minutes
 

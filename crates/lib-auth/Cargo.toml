@@ -1,0 +1,23 @@
+[package]
+name = "lib-auth"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+authors.workspace = true
+
+[dependencies]
+lib-utils = { version = "0.1.0", path = "../lib-utils" }
+derive_more.workspace = true
+tokio.workspace = true
+serde.workspace = true
+uuid.workspace = true
+
+argon2 = { version = "0.5.3", features = ["std"] }
+blake3 = "1.8.2"
+enum_dispatch = "0.3.13"
+hmac = "0.12.1"
+sha2 = "0.10.9"
+lazy-regex = "3.4.2"
+
+[lints]
+workspace = true
