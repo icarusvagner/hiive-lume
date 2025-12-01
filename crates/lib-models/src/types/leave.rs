@@ -1,7 +1,7 @@
 use std::io::Write;
 
 use diesel::{
-	expression::AsExpression, pg, serialize::{self, ToSql}
+	backend, deserialize::{self, FromSql}, expression::AsExpression, pg, serialize::{self, ToSql}
 };
 use lib_schema::schema::sql_types::LeaveRequestStatus;
 
@@ -54,5 +54,22 @@ impl ToSql<LeaveRequestStatusMapping, pg::Pg> for LeaveRequestStatusType {
 		out.write_all(self.to_string().as_bytes())?;
 
 		Ok(serialize::IsNull::No)
+	}
+}
+
+impl FromSql<LeaveRequestStatusMapping, pg::Pg> for LeaveRequestStatusType {
+	fn from_sql(
+		bytes: <pg::Pg as backend::Backend>::RawValue<'_>,
+	) -> deserialize::Result<Self> {
+		match bytes.as_bytes() {
+			b"pending" => Ok(Self::Pending),
+			b"approved" => Ok(Self::Approved),
+			b"denied" => Ok(Self::Denied),
+			b"cancelled" => Ok(Self::Cancelled),
+			b"for_revision" => Ok(Self::ForRevision),
+			b"forwarded" => Ok(Self::Forwarded),
+			b"escalated" => Ok(Self::Escalated),
+			_ => Err("Unknown leave request status".into()),
+		}
 	}
 }
