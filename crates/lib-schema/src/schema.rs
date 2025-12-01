@@ -1,9 +1,57 @@
 // @generated automatically by Diesel CLI.
 
+pub mod sql_types {
+	#[derive(
+		diesel::query_builder::QueryId,
+		Clone,
+		std::fmt::Debug,
+		diesel::sql_types::SqlType,
+	)]
+	#[diesel(postgres_type(name = "applicant_status"))]
+	pub struct ApplicantStatus;
+
+	#[derive(
+		diesel::query_builder::QueryId,
+		Clone,
+		std::fmt::Debug,
+		diesel::sql_types::SqlType,
+	)]
+	#[diesel(postgres_type(name = "attendance_status"))]
+	pub struct AttendanceStatus;
+
+	#[derive(
+		diesel::query_builder::QueryId,
+		Clone,
+		std::fmt::Debug,
+		diesel::sql_types::SqlType,
+	)]
+	#[diesel(postgres_type(name = "leave_request_status"))]
+	pub struct LeaveRequestStatus;
+
+	#[derive(
+		diesel::query_builder::QueryId,
+		Clone,
+		std::fmt::Debug,
+		diesel::sql_types::SqlType,
+	)]
+	#[diesel(postgres_type(name = "performance_review_status"))]
+	pub struct PerformanceReviewStatus;
+
+	#[derive(
+		diesel::query_builder::QueryId,
+		Clone,
+		std::fmt::Debug,
+		diesel::sql_types::SqlType,
+	)]
+	#[diesel(postgres_type(name = "user_session_state"))]
+	pub struct UserSessionState;
+}
+
 diesel::table! {
 	tbl_address (id) {
 		id -> Int8,
-		address_id -> Uuid,
+		#[max_length = 120]
+		address_id -> Varchar,
 		building_number -> Nullable<Text>,
 		street_name -> Nullable<Text>,
 		barangay -> Nullable<Text>,
@@ -18,12 +66,33 @@ diesel::table! {
 }
 
 diesel::table! {
+	use diesel::sql_types::*;
+	use super::sql_types::ApplicantStatus;
+
+	tbl_applicant (id) {
+		id -> Int8,
+		#[max_length = 150]
+		full_name -> Varchar,
+		#[max_length = 150]
+		email -> Varchar,
+		status -> ApplicantStatus,
+		cid -> Int8,
+		ctime -> Timestamptz,
+		mid -> Int8,
+		mtime -> Timestamptz,
+	}
+}
+
+diesel::table! {
+	use diesel::sql_types::*;
+	use super::sql_types::AttendanceStatus;
+
 	tbl_attendance_record (id) {
 		id -> Int8,
 		attendance_record_id -> Uuid,
 		employee_id -> Int8,
 		date -> Date,
-		status -> Text,
+		status -> AttendanceStatus,
 		cid -> Int8,
 		ctime -> Timestamptz,
 		mid -> Int8,
@@ -62,8 +131,10 @@ diesel::table! {
 diesel::table! {
 	tbl_deduction (id) {
 		id -> Int8,
-		deduction_id -> Uuid,
-		name -> Text,
+		#[max_length = 120]
+		deduction_id -> Varchar,
+		#[max_length = 120]
+		name -> Varchar,
 		amount -> Nullable<Numeric>,
 		percentage -> Nullable<Numeric>,
 		cid -> Int8,
@@ -76,7 +147,8 @@ diesel::table! {
 diesel::table! {
 	tbl_department (id) {
 		id -> Int8,
-		department_id -> Uuid,
+		#[max_length = 120]
+		department_id -> Varchar,
 		name -> Text,
 		description -> Nullable<Text>,
 		cid -> Int8,
@@ -89,8 +161,10 @@ diesel::table! {
 diesel::table! {
 	tbl_earning (id) {
 		id -> Int8,
-		earning_id -> Uuid,
-		name -> Text,
+		#[max_length = 120]
+		earning_id -> Varchar,
+		#[max_length = 120]
+		name -> Varchar,
 		amount -> Numeric,
 		taxable -> Nullable<Bool>,
 		cid -> Int8,
@@ -101,14 +175,20 @@ diesel::table! {
 }
 
 diesel::table! {
+	use diesel::sql_types::*;
+	use super::sql_types::UserSessionState;
+
 	tbl_employee (id) {
 		id -> Int8,
-		employee_id -> Uuid,
-		firstname -> Text,
+		#[max_length = 120]
+		employee_id -> Varchar,
+		#[max_length = 120]
+		firstname -> Varchar,
 		middlename -> Nullable<Text>,
-		lastname -> Text,
+		#[max_length = 120]
+		lastname -> Varchar,
 		hire_date -> Date,
-		status -> Text,
+		status -> UserSessionState,
 		supervisor_id -> Nullable<Int8>,
 		address_id -> Nullable<Int8>,
 		department_id -> Nullable<Int8>,
@@ -123,7 +203,8 @@ diesel::table! {
 diesel::table! {
 	tbl_job_position (id) {
 		id -> Int8,
-		job_position_id -> Uuid,
+		#[max_length = 120]
+		job_position_id -> Varchar,
 		title -> Text,
 		department_id -> Int8,
 		salary_grade_id -> Int8,
@@ -138,8 +219,10 @@ diesel::table! {
 diesel::table! {
 	tbl_kpi (id) {
 		id -> Int8,
-		kpi_id -> Uuid,
-		name -> Text,
+		#[max_length = 120]
+		kpi_id -> Varchar,
+		#[max_length = 120]
+		name -> Varchar,
 		weight -> Nullable<Int4>,
 		cid -> Int8,
 		ctime -> Timestamptz,
@@ -162,6 +245,9 @@ diesel::table! {
 }
 
 diesel::table! {
+	use diesel::sql_types::*;
+	use super::sql_types::LeaveRequestStatus;
+
 	tbl_leave_request (id) {
 		id -> Int8,
 		employee_id -> Int8,
@@ -169,7 +255,7 @@ diesel::table! {
 		start_date -> Date,
 		end_date -> Date,
 		reason -> Nullable<Text>,
-		status -> Text,
+		status -> LeaveRequestStatus,
 		created_at -> Nullable<Timestamp>,
 		updated_at -> Nullable<Timestamp>,
 		cid -> Int8,
@@ -211,13 +297,16 @@ diesel::table! {
 }
 
 diesel::table! {
+	use diesel::sql_types::*;
+	use super::sql_types::PerformanceReviewStatus;
+
 	tbl_performance_review (id) {
 		id -> Int8,
 		employee_id -> Int8,
 		date_evaluated -> Date,
 		score -> Nullable<Int4>,
 		remarks -> Nullable<Text>,
-		status -> Nullable<Text>,
+		status -> Nullable<PerformanceReviewStatus>,
 		cid -> Int8,
 		ctime -> Timestamptz,
 		mid -> Int8,
@@ -261,7 +350,8 @@ diesel::table! {
 diesel::table! {
 	tbl_salary_grade (id) {
 		id -> Int8,
-		salary_grade_id -> Uuid,
+		#[max_length = 120]
+		salary_grade_id -> Varchar,
 		level -> Text,
 		base_salary -> Numeric,
 		cid -> Int8,
@@ -339,6 +429,7 @@ diesel::joinable!(tbl_user_role -> tbl_user_account (user_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
 	tbl_address,
+	tbl_applicant,
 	tbl_attendance_record,
 	tbl_audit_log,
 	tbl_deduction,

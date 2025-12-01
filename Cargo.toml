@@ -6,6 +6,7 @@ members = [
     "crates/lib-models",
     "crates/lib-utils",
     "crates/reqwest_client",
+    "crates/lib-schema",
     "hiive"
 ]
 
@@ -18,6 +19,11 @@ authors = ["devixion", "icarusvagner <ruthakaza@gmail.com>"]
 [workspace.dependencies]
 reqwest_client = { path = "crates/reqwest_client" }
 
+modql = "0.4.1"
+sea-query = "0.32.7"
+sea-query-binder = "0.7.0"
+
+tracing = "0.1.43"
 anyhow = "1.0.100"
 base64 = "0.22.1"
 chrono = { version = "0.4.42", features = ["serde"] }
@@ -36,11 +42,11 @@ derive_more = { version = "2.0.1", features = ["from", "display"] }
 serde_with = { version = "3.16.0", features = ["time_0_3"] }
 sqlx = { version = "0.8.6", features = ["macros", "runtime-tokio", "postgres", "uuid"] }
 time = { version = "0.3", features = ["formatting", "serde", "parsing"] }
-diesel = { version = "2.3.3", features = ["postgres", "time", "uuid"] }
+diesel = { version = "2.3.3", features = ["chrono", "postgres", "serde_json", "time", "uuid", "r2d2"] }
 dotenvy = "0.15.7"
 pq-sys = { version = "0.7.5", features = ["bundled"] }
 serde = { version = "1.0.228", features = ["derive"] }
-uuid = { version = "1.18.1", features = ["fast-rng", "v7", "v4"] }
+uuid = { version = "1.18.1", features = ["fast-rng", "v7", "v4", "serde"] }
 
 [workspace.lints.clippy]
 almost_complete_range = "allow"
