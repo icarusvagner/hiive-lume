@@ -379,7 +379,8 @@ diesel::table! {
 diesel::table! {
 	tbl_user_account (id) {
 		id -> Int8,
-		user_id -> Uuid,
+		#[max_length = 120]
+		user_id -> Varchar,
 		employee_id -> Nullable<Int8>,
 		#[max_length = 128]
 		username -> Varchar,
