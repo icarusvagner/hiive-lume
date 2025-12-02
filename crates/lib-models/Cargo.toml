@@ -7,11 +7,14 @@ authors.workspace = true
 
 [dependencies]
 chrono.workspace = true
-diesel.workspace = true
-lib-schema = { version = "0.1.0", path = "../lib-schema" }
+derive_more.workspace = true
+enum_dispatch = "0.3.13"
+modql.workspace = true
+sea-query.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 serde_with.workspace = true
+sqlx.workspace = true
 uuid.workspace = true
 
 [lints]

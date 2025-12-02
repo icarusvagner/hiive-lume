@@ -1537,47 +1537,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "diesel"
-version = "2.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e7624a3bb9fffd82fff016be9a7f163d20e5a89eb8d28f9daaa6b30fff37500"
-dependencies = [
- "bitflags 2.10.0",
- "byteorder",
- "chrono",
- "diesel_derives",
- "downcast-rs 2.0.2",
- "itoa",
- "pq-sys",
- "r2d2",
- "serde_json",
- "time",
- "uuid",
-]
-
-[[package]]
-name = "diesel_derives"
-version = "2.3.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9daac6489a36e42570da165a10c424f3edcefdff70c5fd55e1847c23f3dd7562"
-dependencies = [
- "diesel_table_macro_syntax",
- "dsl_auto_type",
- "proc-macro2",
- "quote",
- "syn 2.0.110",
-]
-
-[[package]]
-name = "diesel_table_macro_syntax"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe2444076b48641147115697648dc743c2c00b61adade0f01ce67133c7babe8c"
-dependencies = [
- "syn 2.0.110",
-]
-
-[[package]]
 name = "digest"
 version = "0.10.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1698,26 +1657,6 @@ name = "downcast-rs"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "75b325c5dbd37f80359721ad39aca5a29fb04c89279657cffdda8736d0c0b9d2"
-
-[[package]]
-name = "downcast-rs"
-version = "2.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "117240f60069e65410b3ae1bb213295bd828f707b5bec6596a1afc8793ce0cbc"
-
-[[package]]
-name = "dsl_auto_type"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd122633e4bef06db27737f21d3738fb89c8f6d5360d6d9d7635dda142a7757e"
-dependencies = [
- "darling 0.21.3",
- "either",
- "heck 0.5.0",
- "proc-macro2",
- "quote",
- "syn 2.0.110",
-]
 
 [[package]]
 name = "dtor"
@@ -3671,7 +3610,6 @@ name = "lib-core"
 version = "0.1.0"
 dependencies = [
  "derive_more 2.0.1",
- "diesel",
  "lib-auth",
  "lib-utils",
  "modql",
@@ -3692,19 +3630,15 @@ name = "lib-models"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "diesel",
- "lib-schema",
+ "derive_more 2.0.1",
+ "enum_dispatch",
+ "modql",
+ "sea-query",
  "serde",
  "serde_json",
  "serde_with",
+ "sqlx",
  "uuid",
-]
-
-[[package]]
-name = "lib-schema"
-version = "0.1.0"
-dependencies = [
- "diesel",
 ]
 
 [[package]]
@@ -4070,6 +4004,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d4226d7e0d2a99687ed0eda5f33f2c9095bdf74869652eab73d075a9f981ecfd"
 dependencies = [
  "modql-macros",
+ "sea-query",
  "serde",
  "serde_json",
 ]
@@ -4082,6 +4017,7 @@ checksum = "64cb2ed7c4062a6219c5144317219a5b2668f413f40a52757b9481346817ac86"
 dependencies = [
  "proc-macro2",
  "quote",
+ "sea-query",
  "syn 2.0.110",
 ]
 
@@ -4927,17 +4863,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pq-sys"
-version = "0.7.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "574ddd6a267294433f140b02a726b0640c43cf7c6f717084684aaa3b285aba61"
-dependencies = [
- "libc",
- "pkg-config",
- "vcpkg",
-]
-
-[[package]]
 name = "precomputed-hash"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5133,17 +5058,6 @@ name = "r-efi"
 version = "5.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "69cdb34c158ceb288df11e18b4bd39de994f6657d83847bdffdbd7f346754b0f"
-
-[[package]]
-name = "r2d2"
-version = "0.8.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "51de85fb3fb6524929c8a2eb85e6b6d363de4e8c48f9e2c2eac4944abc181c93"
-dependencies = [
- "log",
- "parking_lot",
- "scheduled-thread-pool",
-]
 
 [[package]]
 name = "rand"
@@ -5774,15 +5688,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "scheduled-thread-pool"
-version = "0.2.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3cbc66816425a074528352f5789333ecff06ca41b36b0b0efdfbb29edc391a19"
-dependencies = [
- "parking_lot",
-]
-
-[[package]]
 name = "schemars"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5863,6 +5768,8 @@ checksum = "8a5d1c518eaf5eda38e5773f902b26ab6d5e9e9e2bb2349ca6c64cf96f80448c"
 dependencies = [
  "inherent",
  "sea-query-derive",
+ "time",
+ "uuid",
 ]
 
 [[package]]
@@ -5872,6 +5779,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0019f47430f7995af63deda77e238c17323359af241233ec768aba1faea7608"
 dependencies = [
  "sea-query",
+ "sqlx",
+ "time",
+ "uuid",
 ]
 
 [[package]]
@@ -6350,6 +6260,7 @@ dependencies = [
  "sha2",
  "smallvec",
  "thiserror 2.0.17",
+ "time",
  "tokio",
  "tokio-stream",
  "tracing",
@@ -6433,6 +6344,7 @@ dependencies = [
  "sqlx-core",
  "stringprep",
  "thiserror 2.0.17",
+ "time",
  "tracing",
  "uuid",
  "whoami",
@@ -6471,6 +6383,7 @@ dependencies = [
  "sqlx-core",
  "stringprep",
  "thiserror 2.0.17",
+ "time",
  "tracing",
  "uuid",
  "whoami",
@@ -6496,6 +6409,7 @@ dependencies = [
  "serde_urlencoded",
  "sqlx-core",
  "thiserror 2.0.17",
+ "time",
  "tracing",
  "url",
  "uuid",
@@ -8088,7 +8002,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "673a33c33048a5ade91a6b139580fa174e19fb0d23f396dca9fa15f2e1e49b35"
 dependencies = [
  "cc",
- "downcast-rs 1.2.1",
+ "downcast-rs",
  "rustix 1.1.2",
  "scoped-tls",
  "smallvec",

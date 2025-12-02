@@ -11,7 +11,6 @@ workspace = true
 [dependencies]
 lib-auth = { version = "0.1.0", path = "../lib-auth" }
 lib-utils = { version = "0.1.0", path = "../lib-utils" }
-
 derive_more.workspace = true
 modql.workspace = true
 sea-query.workspace = true
@@ -24,4 +23,3 @@ time.workspace = true
 tokio.workspace = true
 tracing.workspace = true
 uuid.workspace = true
-diesel = { workspace = true, features = ["postgres", "time", "uuid", "chrono", "serde_json", "r2d2"] }

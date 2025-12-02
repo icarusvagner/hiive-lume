@@ -6,7 +6,6 @@ members = [
     "crates/lib-models",
     "crates/lib-utils",
     "crates/reqwest_client",
-    "crates/lib-schema",
     "hiive"
 ]
 
@@ -19,9 +18,11 @@ authors = ["devixion", "icarusvagner <ruthakaza@gmail.com>"]
 [workspace.dependencies]
 reqwest_client = { path = "crates/reqwest_client" }
 
-modql = "0.4.1"
+modql = {version = "0.4.1", features = ["with-sea-query"] }
 sea-query = "0.32.7"
-sea-query-binder = "0.7.0"
+sqlx = { version = "0.8.6", features = ["macros", "runtime-tokio", "postgres", "uuid"] }
+sea-query-binder = { version = "0.7.0", features = ["sqlx-postgres", "with-uuid", "with-time"] }
+time = { version = "0.3", features = ["formatting", "serde", "parsing"] }
 
 tracing = "0.1.43"
 anyhow = "1.0.100"
@@ -40,10 +41,6 @@ reqwest = { version = "0.12.15-zed", package = "zed-reqwest" }
 #---- Crates dependencies ----
 derive_more = { version = "2.0.1", features = ["from", "display"] }
 serde_with = { version = "3.16.0", features = ["time_0_3"] }
-sqlx = { version = "0.8.6", features = ["macros", "runtime-tokio", "postgres", "uuid"] }
-time = { version = "0.3", features = ["formatting", "serde", "parsing"] }
-diesel = { version = "2.3.3", features = ["chrono", "postgres", "serde_json", "time", "uuid", "r2d2"] }
-dotenvy = "0.15.7"
 pq-sys = { version = "0.7.5", features = ["bundled"] }
 serde = { version = "1.0.228", features = ["derive"] }
 uuid = { version = "1.18.1", features = ["fast-rng", "v7", "v4", "serde"] }

@@ -1,25 +1,39 @@
+// region:    --- Modules
 
-use diesel::{
-	PgConnection, r2d2::{ConnectionManager, Pool}
-};
+pub(crate) mod dbx;
 
-use crate::{
-	core_config, error::{Error, Result}
-};
+use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
 
-pub type DbPool = Pool<ConnectionManager<PgConnection>>;
+use crate::core_config;
 
-pub fn init_connection() -> Result<DbPool> {
-	let manager = ConnectionManager::<PgConnection>::new(&core_config().DB_URL);
+// endregion: --- Modules
 
-	Pool::builder()
-		.max_size(if cfg!(test) {
-			1
-		} else {
-			15
-		})
-		.build(manager)
-		.map_err(|_| {
-			Error::DieselError(diesel::result::Error::BrokenTransactionManager)
-		})
+pub type Db = Pool<Postgres>;
+
+pub async fn new_db_pool() -> sqlx::Result<Db> {
+	// * See NOTE 1) below
+	let max_connections = if cfg!(test) {
+		1
+	} else {
+		5
+	};
+
+	PgPoolOptions::new()
+		.max_connections(max_connections)
+		.connect(&core_config().DB_URL)
+		.await
 }
+
+// NOTE 1) This is not an ideal situation; however, with sqlx 0.7.1, when
+// executing `cargo test`, some tests that use sqlx fail at a         rather low
+// level (in the tokio scheduler). It appears to be a low-level thread/async
+// issue, as removing/adding         tests causes different tests to fail. The
+// cause remains uncertain, but setting max_connections to 1 resolves the issue.
+//         The good news is that max_connections still function normally for a
+// regular run.         This issue is likely due to the unique requirements unit
+// tests impose on their execution, and therefore,         while not ideal, it
+// should serve as an acceptable temporary solution.         It's a very
+// challenging issue to investigate and narrow down. The alternative would have
+// been to stick with sqlx 0.6.x, which         is potentially less ideal and
+// might lead to confusion as to why we are maintaining the older version in
+// this blueprint.
