@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
 #[derive(Clone, Fields, FromRow, Debug, Serialize)]
-pub struct RolePermission {
+pub struct Permission {
 	pub id: i64,
 	pub module: String,
 	pub action: String,
@@ -11,14 +11,14 @@ pub struct RolePermission {
 }
 
 #[derive(Deserialize)]
-pub struct RolePermissionForCreate {
+pub struct PermissionForCreate {
 	pub module: String,
 	pub action: String,
 	pub level: String,
 }
 
 #[derive(Fields, Deserialize)]
-pub struct RolePermissionForUpdate {
+pub struct PermissionForUpdate {
 	pub action: String,
 	pub level: String,
 }

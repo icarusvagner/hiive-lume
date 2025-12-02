@@ -1,4 +1,4 @@
-use lib_models::authentication::{role::Role, role_permission::RolePermission};
+use lib_models::authentication::{role::Role, role_permission::Permission};
 use modql::{
 	field::HasSeaFields, filter::{FilterNodes, OpValsInt64, OpValsString, OpValsValue}
 };
@@ -16,7 +16,7 @@ pub enum RoleIden {
 }
 
 #[derive(Iden)]
-pub enum RolePermissionIden {
+pub enum PermissionIden {
 	Id,
 	Module,
 	Action,
@@ -43,15 +43,15 @@ pub trait RoleBy:
 }
 
 impl RoleBy for Role {}
-impl RoleBy for RolePermission {}
+impl RoleBy for Permission {}
 
 pub struct RoleBmc;
-pub struct RolePermissionBmc;
+pub struct PermissionBmc;
 
 impl DbBmc for RoleBmc {
 	const TABLE: &'static str = "tbl_role";
 }
 
-impl DbBmc for RolePermissionBmc {
-	const TABLE: &'static str = "tbl_role_permission";
+impl DbBmc for PermissionBmc {
+	const TABLE: &'static str = "tbl_permission";
 }
