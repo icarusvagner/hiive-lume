@@ -37,6 +37,7 @@ pub struct UserAccountForLogin {
 	pub token_salt: Uuid,
 }
 
+#[derive(Clone, FromRow, Fields, Debug)]
 pub struct UserAccountForAuth {
 	pub id: i64,
 	pub user_id: String,

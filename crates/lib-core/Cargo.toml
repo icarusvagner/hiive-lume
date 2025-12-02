@@ -11,6 +11,8 @@ workspace = true
 [dependencies]
 lib-auth = { version = "0.1.0", path = "../lib-auth" }
 lib-utils = { version = "0.1.0", path = "../lib-utils" }
+lib-models = { version = "0.1.0", path = "../lib-models" }
+
 derive_more.workspace = true
 modql.workspace = true
 sea-query.workspace = true

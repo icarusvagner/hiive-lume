@@ -1,7 +1,9 @@
 // region:    --- Modules
 
+mod crud_fns;
 mod utils;
 
+pub use crud_fns::*;
 // -- Flatten hierarchy for user code.
 use modql::SIden;
 use sea_query::{Iden, IntoIden, TableRef};

@@ -4,7 +4,11 @@ use crate::{
 
 mod base;
 
+pub use base::*;
+
 pub mod modql_utils;
+pub mod user;
+pub mod role;
 
 #[derive(Clone)]
 pub struct ModelManager {
@@ -21,7 +25,7 @@ impl ModelManager {
 		Ok(Self { dbx })
 	}
 
-	pub fn with_txn(&self) -> Result<ModelManager> {
+	pub fn new_with_txn(&self) -> Result<ModelManager> {
 		let dbx = Dbx::new(self.dbx.db().clone(), true)?;
 
 		Ok(Self { dbx })
