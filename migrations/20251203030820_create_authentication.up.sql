@@ -1,3 +1,4 @@
+-- Add up migration script here
 -- Your SQL goes here
 -- Auth & RBAC
 

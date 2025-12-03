@@ -19,6 +19,8 @@ pub struct PermissionForCreate {
 
 #[derive(Fields, Deserialize)]
 pub struct PermissionForUpdate {
+	pub module: String,
 	pub action: String,
 	pub level: String,
+	pub status: i32,
 }
