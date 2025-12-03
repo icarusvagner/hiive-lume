@@ -13,6 +13,10 @@ pub type Result<T> = core::result::Result<T, Error>;
 #[serde_as]
 #[derive(Debug, Serialize, From)]
 pub enum Error {
+	PermissionAlreadeyExists {
+		module: String,
+		action: String,
+	},
 	RoleAlreadyExists {
 		name: String,
 	},

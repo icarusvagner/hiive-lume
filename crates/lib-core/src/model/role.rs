@@ -1,5 +1,5 @@
 use lib_models::authentication::{
-	role::{Role, RoleForCreate, RoleForInsert}, role_permission::Permission
+	role::{Role, RoleForCreate, RoleForInsert}, role_permission::{Permission, PermissionForCreate, PermissionForInsert}
 };
 use modql::{
 	field::{HasSeaFields, SeaField, SeaFields}, filter::{
@@ -72,6 +72,47 @@ impl DbBmc for PermissionBmc {
 
 	fn has_timestamps() -> bool {
 		true
+	}
+}
+
+impl PermissionBmc {
+	pub async fn create_permission(
+		ctx: &Ctx,
+		mm: &ModelManager,
+		data: PermissionForCreate,
+	) -> Result<i64> {
+		let PermissionForCreate { module, action, level } = data;
+
+		let permission_fi = PermissionForInsert {
+			module: module.to_string(),
+			action: action.to_string(),
+			level: level.to_string(),
+		};
+
+		let mm = mm.new_with_txn()?;
+		mm.dbx().begin_txn().await?;
+
+		let permission_id = base::create::<Self, _>(ctx, &mm, permission_fi)
+			.await
+			.map_err(|model_err| {
+				Error::resolve_unique_violation(
+					model_err,
+					Some(|table: &str, constraint: &str| {
+						if table == "tbl_permission"
+							&& constraint.contains("module")
+						{
+							Some(Error::PermissionAlreadeyExists {
+								module,
+								action,
+							})
+						} else {
+							None
+						}
+					}),
+				)
+			})?;
+
+		Ok(permission_id)
 	}
 }
 

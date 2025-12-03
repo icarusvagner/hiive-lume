@@ -8,10 +8,18 @@ pub struct Permission {
 	pub module: String,
 	pub action: String,
 	pub level: String,
+	pub status: i32,
 }
 
 #[derive(Deserialize)]
 pub struct PermissionForCreate {
+	pub module: String,
+	pub action: String,
+	pub level: String,
+}
+
+#[derive(Fields)]
+pub struct PermissionForInsert {
 	pub module: String,
 	pub action: String,
 	pub level: String,

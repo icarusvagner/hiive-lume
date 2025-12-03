@@ -121,4 +121,3 @@ CREATE INDEX idx_user_account_active_only ON tbl_user_account(username) WHERE st
 
 -- Enforce permission uniqueness
 ALTER TABLE tbl_permission ADD CONSTRAINT unique_permission UNIQUE(module, action);
-
