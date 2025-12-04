@@ -12,3 +12,5 @@ pub mod job_type;
 pub mod work_type;
 #[allow(dead_code)]
 pub mod gen_status;
+
+pub mod request_res;

@@ -24,7 +24,7 @@ use crate::{
 pub enum UserIden {
 	Id,
 	Username,
-	Password,
+	PasswordHash,
 	State,
 }
 
@@ -52,19 +52,19 @@ impl UserBy for UserAccount {}
 impl UserBy for UserAccountForLogin {}
 impl UserBy for UserAccountForAuth {}
 
-pub struct UserBmc;
+pub struct UserAccountBmc;
 
-impl DbBmc for UserBmc {
+impl DbBmc for UserAccountBmc {
 	const TABLE: &'static str = "tbl_user_account";
 }
 
-impl UserBmc {
+impl UserAccountBmc {
 	pub async fn create(
 		ctx: &Ctx,
 		mm: &ModelManager,
 		user_c: UserAccountForCreate,
 	) -> Result<i64> {
-		let UserAccountForCreate { user_id, username, password } = user_c;
+		let UserAccountForCreate { user_id, username, password_hash } = user_c;
 
 		// create the user row for insert
 		let user_fi =
@@ -92,7 +92,7 @@ impl UserBmc {
 			})?;
 
 		// update the password
-		Self::update_password(ctx, &mm, user_id, &password).await?;
+		Self::update_password(ctx, &mm, user_id, &password_hash).await?;
 
 		// commit transaction
 		mm.dbx().commit_txn().await?;
@@ -165,7 +165,7 @@ impl UserBmc {
 		.await?;
 
 		let mut fields =
-			SeaFields::new(vec![SeaField::new(UserIden::Password, pwd)]);
+			SeaFields::new(vec![SeaField::new(UserIden::PasswordHash, pwd)]);
 		prep_fields_for_update::<Self>(&mut fields, ctx.user_id());
 
 		// build query

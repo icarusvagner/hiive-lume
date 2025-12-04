@@ -25,7 +25,7 @@ impl CoreConfig {
 	fn load_from_env() -> lib_utils::envs::Result<CoreConfig> {
 		Ok(CoreConfig {
 			// -- Db
-			DB_URL: get_env("SERVICE_DB_URL")?,
+			DB_URL: get_env("DATABASE_URL")?,
 
 			// -- Web
 			WEB_FOLDER: get_env("SERVICE_WEB_FOLDER")?,

@@ -16,6 +16,7 @@ RUST_LOG="hiive=debug,reqwest_client=debug,lib_core=debug,lib_utils=debug,lib_au
 # i.e., Encryption not needed.
 
 DATABASE_URL="postgres://devixion:Dev_only.2025@localhost/hiive_lume_db"
+SERVICE_WEB_FOLDER = "public"
 
 SERVICE_PWD_KEY="X6i9NNjv6SvF0oltbZVVvl-89drBwCRNp4whN3u6ZBALpxqoGCIpxXxkzI57rNQM79lG0A2EIC4UDTPeIZDZqA"
 

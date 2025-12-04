@@ -68,9 +68,9 @@ impl HomeHeader {
 			let button = Button::new(indx)
 				.custom(
 					ButtonCustomVariant::new(cx)
-						.color(cx.theme().background.opacity(0.20))
+						.color(cx.theme().accent.opacity(0.60))
 						.foreground(cx.theme().foreground)
-						.hover(cx.theme().background)
+						.hover(cx.theme().background.opacity(0.30))
 						.active(cx.theme().background),
 				)
 				.label(btn.label.clone())

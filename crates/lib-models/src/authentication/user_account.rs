@@ -17,7 +17,7 @@ pub struct UserAccount {
 pub struct UserAccountForCreate {
 	pub user_id: String,
 	pub username: String,
-	pub password: String,
+	pub password_hash: String,
 }
 
 #[derive(Fields)]
@@ -32,7 +32,7 @@ pub struct UserAccountForLogin {
 	pub user_id: String,
 	pub username: String,
 
-	pub password: Option<String>,
+	pub password_hash: Option<String>,
 	pub pass_salt: Uuid,
 	pub token_salt: Uuid,
 }

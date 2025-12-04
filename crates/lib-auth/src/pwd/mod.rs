@@ -144,14 +144,33 @@ mod tests {
 	use super::*;
 
 	#[tokio::test]
+	async fn test_encrypt_pass_ok() -> Result<()> {
+		let fx_salt = Uuid::parse_str("920c3daf-b791-4ed0-b897-058023c15bde")?;
+		let fx_to_hash =
+			ContentToHash { content: "4dmiN.2025".to_string(), salt: fx_salt };
+
+		// -- Exec
+		let pwd_hashed = hash_for_scheme("01", fx_to_hash.clone())?;
+
+		println!("{pwd_hashed:?}");
+
+		let demo_pass = "#01#YUXbAPsbFcvNoMRM8oHlMj995KdlhnBVUqDKMULFYGnNWTZyUjJ2dfQ3vsSEeEOx-kuOt75BitoZFkNvfBYz_A".to_string();
+
+		assert_eq!(pwd_hashed, demo_pass);
+
+		Ok(())
+	}
+
+	#[tokio::test]
 	async fn test_multi_scheme_ok() -> Result<()> {
 		// -- Setup & Fixtures
-		let fx_salt = Uuid::parse_str("f05e8961-d6ad-4086-9e78-a6de065e5453")?;
+		let fx_salt = Uuid::parse_str("d327a44b-ffa4-42db-bccc-56d55b3bc5b3")?;
 		let fx_to_hash =
 			ContentToHash { content: "hello world".to_string(), salt: fx_salt };
 
 		// -- Exec
 		let pwd_hashed = hash_for_scheme("01", fx_to_hash.clone())?;
+
 		let pwd_validate = validate_pwd(fx_to_hash.clone(), pwd_hashed).await?;
 
 		// -- Check
