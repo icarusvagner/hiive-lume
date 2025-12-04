@@ -1,0 +1,11 @@
+[package]
+name = "lib-dev-test"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+authors.workspace = true
+
+[dependencies]
+
+[lints]
+workspace = true

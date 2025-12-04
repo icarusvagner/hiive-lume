@@ -2917,6 +2917,7 @@ dependencies = [
  "gpui",
  "gpui-component",
  "gpui-component-assets",
+ "lib-models",
  "lib-utils",
  "mockd",
  "rand 0.9.2",
@@ -3625,6 +3626,10 @@ dependencies = [
  "tracing",
  "uuid",
 ]
+
+[[package]]
+name = "lib-dev-test"
+version = "0.1.0"
 
 [[package]]
 name = "lib-models"

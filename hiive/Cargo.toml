@@ -20,6 +20,7 @@ reqwest_client.workspace = true
 tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
 tracing = "0.1.41"
 lib-utils = { version = "0.1.0", path = "../crates/lib-utils" }
+lib-models = { version = "0.1.0", path = "../crates/lib-models" }
 
 [[example]]
 name = "example-001"
