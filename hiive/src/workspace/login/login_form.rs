@@ -3,7 +3,9 @@ use gpui_component::{
 	Icon, IconName, Sizable, WindowExt, button::{Button, ButtonVariants}, form::{field, v_form}, input::{Input, InputState}, notification::NotificationType
 };
 
-use crate::states::{auth_state::AuthState, db_state::ConnectionState};
+use crate::{
+	core::handlers::handlers_login::{LoginPayload, handlers_login}, states::{auth_state::AuthState, db_state::ConnectionState}
+};
 
 pub struct LoginForm {
 	username: Entity<InputState>,
@@ -54,6 +56,18 @@ impl LoginForm {
 		};
 
 		if self._validate_empty_input(window, cx) {
+			let payload = LoginPayload {
+				username: self.username.read(cx).value().to_string(),
+				password: self.password.read(cx).value().to_string(),
+			};
+
+			cx.spawn(async move |_, cx| {
+				match handlers_login(&mm_state, payload).await {
+					Ok(res) => {}
+					Err(err) => {}
+				}
+			})
+			.detach();
 			cx.notify();
 		} else {
 			window.push_notification(
