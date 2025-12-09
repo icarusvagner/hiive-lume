@@ -1,5 +1,11 @@
+mod ui;
+
 use gpui::*;
-use gpui_component::{Root, StyledExt, WindowExt, button::Button, label::Label};
+use gpui_component::{
+    Root, StyledExt, WindowExt,
+    button::{Button, ButtonVariants},
+    label::Label,
+};
 
 pub struct HiiveLume;
 
@@ -20,6 +26,7 @@ impl Render for HiiveLume {
             .child(
                 Button::new("text-btn")
                     .label("Click me")
+                    .primary()
                     .on_click(cx.listener(move |_, _, window, cx| {
                         window.open_dialog(cx, |dialog, _, _| {
                             dialog.title("You have clicked me!").confirm()
