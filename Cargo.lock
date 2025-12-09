@@ -2544,6 +2544,7 @@ dependencies = [
  "anyhow",
  "gpui",
  "gpui-component",
+ "hiive-ui-components",
  "rust-embed",
  "tokio",
  "tracing",
@@ -2588,6 +2589,10 @@ version = "0.1.0"
 [[package]]
 name = "hiive-ui-components"
 version = "0.1.0"
+dependencies = [
+ "gpui",
+ "gpui-component",
+]
 
 [[package]]
 name = "hkdf"

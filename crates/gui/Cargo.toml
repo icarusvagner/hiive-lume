@@ -8,6 +8,7 @@ authors.workspace = true
 anyhow.workspace = true
 gpui.workspace = true
 gpui-component.workspace = true
+hiive-ui-components = { version = "0.1.0", path = "../ui-components" }
 rust-embed.workspace = true
 tokio.workspace = true
 tracing.workspace = true

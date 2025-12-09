@@ -16,7 +16,7 @@ pub async fn run_app() -> anyhow::Result<()> {
 
         cx.spawn(async move |cx| {
             cx.open_window(window_options, |window, cx| {
-                let view = cx.new(|_| HiiveLume);
+                let view = HiiveLume::view(window, cx);
 
                 cx.new(|cx| Root::new(view, window, cx))
             })?;
