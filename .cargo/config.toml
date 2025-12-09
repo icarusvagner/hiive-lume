@@ -1,0 +1,4 @@
+[cargo-new]
+vcs = "none"
+
+[env]

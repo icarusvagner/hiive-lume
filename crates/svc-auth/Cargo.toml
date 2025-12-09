@@ -1,0 +1,11 @@
+[package]
+name = "hiive-svc-auth"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+authors.workspace = true
+
+[dependencies]
+
+[lints]
+workspace = true

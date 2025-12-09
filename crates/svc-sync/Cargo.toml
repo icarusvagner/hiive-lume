@@ -1,0 +1,21 @@
+[package]
+name = "hiive-svc-sync"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+default = []
+
+[dependencies]
+anyhow.workspace = true
+async-trait.workspace = true
+hiive-store = { version = "0.1.0", path = "../store" }
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
