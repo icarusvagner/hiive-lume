@@ -9,15 +9,19 @@ use gpui_component::{
 };
 use hiive_ui_components::HeaderComponent;
 
+use crate::ui::workspace::ui::login::LoginView;
+
 pub struct HiiveLume {
     header: Entity<HeaderComponent>,
+    view: Entity<LoginView>,
 }
 
 impl HiiveLume {
     pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
         let header = HeaderComponent::view(window, cx);
+        let view = LoginView::view(window, cx);
 
-        Self { header }
+        Self { header, view }
     }
 
     pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
@@ -35,23 +39,7 @@ impl Render for HiiveLume {
             .bg(rgb(0xE0E0E0))
             .size_full()
             .child(self.header.clone())
-            .child(
-                v_flex()
-                    .size_full()
-                    .items_center()
-                    .justify_center()
-                    .child(Label::new("Hello world").text_xl().font_medium())
-                    .child(
-                        Button::new("text-btn")
-                            .label("Click me")
-                            .primary()
-                            .on_click(cx.listener(move |_, _, window, cx| {
-                                window.open_dialog(cx, |dialog, _, _| {
-                                    dialog.title("You have clicked me!").confirm()
-                                })
-                            })),
-                    ),
-            )
+            .child(self.view.clone())
             .children(Root::render_dialog_layer(window, cx))
     }
 }

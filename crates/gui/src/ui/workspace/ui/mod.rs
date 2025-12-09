@@ -1,2 +1,2 @@
-mod home;
-mod login;
+pub mod home;
+pub mod login;
