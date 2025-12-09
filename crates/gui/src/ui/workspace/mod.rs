@@ -1,9 +1,9 @@
 use gpui::*;
 use gpui_component::{Root, StyledExt, WindowExt, button::Button, label::Label};
 
-pub struct HelloWorld;
+pub struct HiiveLume;
 
-impl Render for HelloWorld {
+impl Render for HiiveLume {
     fn render(
         &mut self,
         window: &mut gpui::Window,

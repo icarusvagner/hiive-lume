@@ -3,7 +3,7 @@ use gpui_component::Root;
 
 use crate::{
     assets,
-    ui::{window::get_window_options, workspace::HelloWorld},
+    ui::{window::get_window_options, workspace::HiiveLume},
 };
 
 pub async fn run_app() -> anyhow::Result<()> {
@@ -16,7 +16,7 @@ pub async fn run_app() -> anyhow::Result<()> {
 
         cx.spawn(async move |cx| {
             cx.open_window(window_options, |window, cx| {
-                let view = cx.new(|_| HelloWorld);
+                let view = cx.new(|_| HiiveLume);
 
                 cx.new(|cx| Root::new(view, window, cx))
             })?;
