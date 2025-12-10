@@ -1,5 +1,5 @@
 mod dashboard;
-mod employee;
+mod employees;
 mod loading;
 mod view;
 

@@ -7,7 +7,7 @@ use crate::{
 	states::{
 		main_layout::{ActiveView, ViewState}, view_layout::{HomeActiveView, HomeView}
 	}, ui::workspace::home::{
-		dashboard::DashboardView, employee::EmployeeView, loading::LoadingView
+		dashboard::DashboardView, employees::EmployeeView, loading::LoadingView
 	}
 };
 
@@ -35,7 +35,7 @@ impl Homeview {
 			})];
 
 		Self {
-			view: HomeActiveView::Employees,
+			view: HomeActiveView::Dashboard,
 			collapse_menu: false,
 			_subscription,
 
@@ -184,9 +184,7 @@ impl Homeview {
 						.child(
 							SidebarMenuItem::new("Dashboard")
 								.icon(IconName::LayoutDashboard)
-								.on_click(|_, _, _| {
-									println!("Dashboard clicked")
-								})
+								.on_click(cx.listener(move |this, _,_,cx| this.navigate_view(HomeActiveView::Dashboard, cx)))
 								.when(
 									self.view.eq(&HomeActiveView::Dashboard),
 									|this| this.active(true),
@@ -199,9 +197,7 @@ impl Homeview {
 								))
 								.children([
 									SidebarMenuItem::new("Employees")
-										.on_click(cx.listener(move |this, _, _, cx| {
-											this.navigate_view(HomeActiveView::Employees, cx);
-										}))
+										.on_click(cx.listener(move |this, _, _, cx|  this.navigate_view(HomeActiveView::Employees, cx) ))
 										.when(
 										self.view
 											.eq(&HomeActiveView::Employees),
