@@ -8,21 +8,19 @@ description.workspace = true
 [lints]
 workspace = true
 
-[lib]
-path = "src/request_client.rs"
-doctest = true
-
 [dependencies]
 anyhow.workspace = true
 bytes.workspace = true
 futures.workspace = true
 gpui.workspace = true
+gpui-component.workspace = true
 log.workspace = true
 rand.workspace = true
 regex.workspace = true
 reqwest.workspace = true
 rustls.workspace = true
 rustls-platform-verifier.workspace = true
+serde_json.workspace = true
 thiserror.workspace = true
 time.workspace = true
 tokio.workspace = true

@@ -4,6 +4,7 @@ use gpui::AssetSource;
 #[derive(rust_embed::RustEmbed)]
 #[folder = "../assets"]
 #[include = "icons/**/*.svg"]
+#[include = "images/**/*.{png, jpg, jpeg, svg}"]
 pub struct Assets;
 
 impl AssetSource for Assets {

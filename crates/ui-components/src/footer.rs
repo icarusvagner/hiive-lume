@@ -1,5 +1,5 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, Icon, IconName, h_flex, label::Label};
+use gpui_component::{ActiveTheme, Icon, IconName, h_flex, label::Label, red_400};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub struct FooterComponent;
@@ -29,10 +29,12 @@ impl Render for FooterComponent {
             .text_xs()
             .opacity(0.6)
             .child(format!("v{VERSION}"))
-            .child(Icon::new(IconName::Heart));
+            .child(Icon::new(IconName::Heart).text_color(red_400()));
 
         h_flex()
             .bg(cx.theme().background.opacity(0.50))
+            .border_t_1()
+            .border_color(cx.theme().foreground.opacity(0.20))
             .w_full()
             .px_1()
             .items_center()
