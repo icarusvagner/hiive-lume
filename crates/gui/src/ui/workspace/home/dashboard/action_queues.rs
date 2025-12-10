@@ -1,5 +1,7 @@
 use gpui::*;
-use gpui_component::{ActiveTheme, Icon, h_flex};
+use gpui_component::{
+	ActiveTheme, Icon, StyledExt, h_flex, label::Label, v_flex
+};
 
 pub struct DashboardActionQueues;
 
@@ -24,6 +26,7 @@ impl DashboardActionQueues {
 					.items_center()
 					.justify_center()
 					.p_4()
+					.gap_4()
 					.rounded_full()
 					.bg(cx.theme().yellow_light.opacity(0.10))
 					.child(
@@ -32,6 +35,17 @@ impl DashboardActionQueues {
 							.path("icons/custom/calendar-plus.svg")
 							.text_color(cx.theme().yellow_light),
 					),
+			)
+			.child(
+				v_flex()
+					.items_start()
+					.justify_center()
+					.child(
+						Label::new("Approved Leave Requests")
+							.text_sm()
+							.font_medium(),
+					)
+					.child(Label::new("15").text_2xl().font_bold()),
 			)
 	}
 
@@ -52,13 +66,24 @@ impl DashboardActionQueues {
 					.justify_center()
 					.p_4()
 					.rounded_full()
-					.bg(cx.theme().yellow_light.opacity(0.10))
+					.bg(cx.theme().red_light.opacity(0.10))
 					.child(
 						Icon::empty()
 							.size_4()
 							.path("icons/custom/clock-fading.svg")
-							.text_color(cx.theme().yellow_light),
+							.text_color(cx.theme().red_light),
 					),
+			)
+			.child(
+				v_flex()
+					.items_start()
+					.justify_center()
+					.child(
+						Label::new("Approved OT Requests")
+							.text_sm()
+							.font_medium(),
+					)
+					.child(Label::new("150").text_2xl().font_bold()),
 			)
 	}
 
@@ -79,13 +104,24 @@ impl DashboardActionQueues {
 					.justify_center()
 					.p_4()
 					.rounded_full()
-					.bg(cx.theme().yellow_light.opacity(0.10))
+					.bg(cx.theme().blue_light.opacity(0.10))
 					.child(
 						Icon::empty()
 							.size_4()
 							.path("icons/custom/paper-recycle.svg")
-							.text_color(cx.theme().yellow_light),
+							.text_color(cx.theme().blue_light),
 					),
+			)
+			.child(
+				v_flex()
+					.items_start()
+					.justify_center()
+					.child(
+						Label::new("Pending Contract Renewals")
+							.text_sm()
+							.font_medium(),
+					)
+					.child(Label::new("50").text_2xl().font_bold()),
 			)
 	}
 
@@ -106,67 +142,24 @@ impl DashboardActionQueues {
 					.justify_center()
 					.p_4()
 					.rounded_full()
-					.bg(cx.theme().yellow_light.opacity(0.10))
+					.bg(cx.theme().green_light.opacity(0.10))
 					.child(
 						Icon::empty()
 							.size_4()
 							.path("icons/custom/time-progress.svg")
-							.text_color(cx.theme().yellow_light),
+							.text_color(cx.theme().green_light),
 					),
 			)
-	}
-
-	fn visitor_onsite_pass_approvals(
-		&self,
-		_window: &mut Window,
-		cx: &mut Context<Self>,
-	) -> Div {
-		h_flex()
-			.bg(cx.theme().accent.opacity(0.30))
-			.p_5()
-			.rounded_xl()
-			.gap_5()
 			.child(
-				div()
-					.flex()
-					.items_center()
+				v_flex()
+					.items_start()
 					.justify_center()
-					.p_4()
-					.rounded_full()
-					.bg(cx.theme().yellow_light.opacity(0.10))
 					.child(
-						Icon::empty()
-							.size_4()
-							.path("icons/custom/badge-id.svg")
-							.text_color(cx.theme().yellow_light),
-					),
-			)
-	}
-
-	fn employee_info_update_progress(
-		&self,
-		_window: &mut Window,
-		cx: &mut Context<Self>,
-	) -> Div {
-		h_flex()
-			.bg(cx.theme().accent.opacity(0.30))
-			.p_5()
-			.rounded_xl()
-			.gap_5()
-			.child(
-				div()
-					.flex()
-					.items_center()
-					.justify_center()
-					.p_4()
-					.rounded_full()
-					.bg(cx.theme().yellow_light.opacity(0.10))
-					.child(
-						Icon::empty()
-							.size_4()
-							.path("icons/custom/user-edit.svg")
-							.text_color(cx.theme().yellow_light),
-					),
+						Label::new("Probationary Evaluations Due")
+							.text_sm()
+							.font_medium(),
+					)
+					.child(Label::new("20").text_2xl().font_bold()),
 			)
 	}
 }
@@ -179,14 +172,12 @@ impl Render for DashboardActionQueues {
 	) -> impl IntoElement {
 		div()
 			.grid()
-			.grid_cols(6)
+			.grid_cols(4)
 			.gap_5()
 			.items_center()
 			.child(self.approve_leave_requests(window, cx))
 			.child(self.approve_overtime_request(window, cx))
 			.child(self.pending_contract_renewals(window, cx))
 			.child(self.probationary_evaluation_due(window, cx))
-			.child(self.visitor_onsite_pass_approvals(window, cx))
-			.child(self.employee_info_update_progress(window, cx))
 	}
 }

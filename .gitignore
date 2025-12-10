@@ -62,12 +62,12 @@ out/
 *.avi
 
 # Images
-*.icns
-*.ico
-*.jpeg
-*.jpg
-*.png
-*.bmp
+# *.icns
+# *.ico
+# *.jpeg
+# *.jpg
+# *.png
+# *.bmp
 
 # -- Nodejs
 node_modules/
