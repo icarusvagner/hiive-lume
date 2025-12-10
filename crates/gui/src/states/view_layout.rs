@@ -52,6 +52,9 @@ pub enum HomeActiveView {
 	UserAccounts,
 	Integrations,
 	BackupsSync,
+
+	// Loading state
+	Loading,
 }
 
 #[derive(Debug, PartialEq)]

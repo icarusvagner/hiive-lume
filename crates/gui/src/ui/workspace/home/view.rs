@@ -5,29 +5,44 @@ use gpui_component::{
 
 use crate::{
 	states::{
-		main_layout::{ActiveView, ViewState}, view_layout::HomeActiveView
-	}, ui::workspace::home::{dashboard::DashboardView, employee::EmployeeView}
+		main_layout::{ActiveView, ViewState}, view_layout::{HomeActiveView, HomeView}
+	}, ui::workspace::home::{
+		dashboard::DashboardView, employee::EmployeeView, loading::LoadingView
+	}
 };
 
 pub struct Homeview {
 	view: HomeActiveView,
 	collapse_menu: bool,
+	_subscription: Vec<Subscription>,
 
 	// Views
 	dashboard: Entity<DashboardView>,
 	employee: Entity<EmployeeView>,
+	loading: Entity<LoadingView>,
 }
 
 impl Homeview {
 	pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
 		let dashboard = DashboardView::view(window, cx);
 		let employee = EmployeeView::view(window, cx);
+		let loading = LoadingView::view(window, cx);
+
+		let _subscription =
+			vec![cx.observe_global::<HomeView>(move |this, cx| {
+				this.view = cx.global::<HomeView>().home.clone();
+				cx.notify();
+			})];
 
 		Self {
-			view: HomeActiveView::Dashboard,
+			view: HomeActiveView::Employees,
+			collapse_menu: false,
+			_subscription,
+
+			// Views
 			dashboard,
 			employee,
-			collapse_menu: false,
+			loading,
 		}
 	}
 
@@ -43,15 +58,45 @@ impl Homeview {
 		v_flex().size_full().id("dashboard-view").child(self.dashboard.clone())
 	}
 
-	fn handle_logout(&self, _window: &mut Window, cx: &mut Context<Self>) {
+	fn render_loading(&self, _cx: &mut Context<Self>) -> Stateful<Div> {
+		v_flex()
+			.flex_1()
+			.flex_shrink_0()
+			.id("home-loading-view")
+			.child(self.loading.clone())
+	}
+
+	fn handle_logout(&self, cx: &mut Context<Self>) {
 		let _ = cx.update_global::<ViewState, _>(|state, _| {
 			state.view = ActiveView::Loading;
 		});
 
 		cx.spawn(async move |_, cx| {
-			tokio::time::sleep(std::time::Duration::from_millis(1_200)).await;
+			cx.background_executor()
+				.timer(std::time::Duration::from_millis(1_200))
+				.await;
+
 			let _ = cx.update_global::<ViewState, _>(|state, _| {
 				state.view = ActiveView::Login;
+			});
+		})
+		.detach();
+	}
+
+	fn navigate_view(&self, view: HomeActiveView, cx: &mut App) {
+		let _ = cx.update_global::<HomeView, _>(|state, _| {
+			if !state.home.eq(&view) {
+				state.home = HomeActiveView::Loading;
+			}
+		});
+
+		cx.spawn(async move |cx| {
+			cx.background_executor()
+				.timer(std::time::Duration::from_millis(1_200))
+				.await;
+
+			let _ = cx.update_global::<HomeView, _>(|state, _| {
+				state.home = view;
 			});
 		})
 		.detach();
@@ -65,6 +110,7 @@ impl Homeview {
 		match self.view {
 			HomeActiveView::Dashboard => self.render_dashboard(cx),
 			HomeActiveView::Employees => self.render_employee(cx),
+			HomeActiveView::Loading => self.render_loading(cx),
 			_ => unreachable!(),
 		}
 	}
@@ -152,7 +198,11 @@ impl Homeview {
 									"icons/custom/users-round-outline.svg",
 								))
 								.children([
-									SidebarMenuItem::new("Employees").when(
+									SidebarMenuItem::new("Employees")
+										.on_click(cx.listener(move |this, _, _, cx| {
+											this.navigate_view(HomeActiveView::Employees, cx);
+										}))
+										.when(
 										self.view
 											.eq(&HomeActiveView::Employees),
 										|this| this.active(true),
@@ -283,8 +333,8 @@ impl Homeview {
 					)
 					.large()
 					.primary()
-					.on_click(cx.listener(|this, _, window, cx| {
-						this.handle_logout(window, cx)
+					.on_click(cx.listener(|this, _, _, cx| {
+						this.handle_logout(cx)
 					})),
 			)
 	}
