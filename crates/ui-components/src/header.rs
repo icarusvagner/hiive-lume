@@ -9,12 +9,8 @@ use gpui_component::{
 pub struct HeaderComponent;
 
 impl HeaderComponent {
-    pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
-        Self {}
-    }
-
-    pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
-        cx.new(|cx| Self::new(window, cx))
+    pub fn view(_window: &mut Window, cx: &mut App) -> Entity<Self> {
+        cx.new(|_| HeaderComponent)
     }
 }
 
@@ -38,20 +34,22 @@ impl Render for HeaderComponent {
             .ghost()
             .on_click(|_, _, cx| cx.open_url("https://github.com/icarusvagner/hiive-lume.git"));
 
-        TitleBar::new().bg(rgb(0xE0E0E0)).child(
-            h_flex()
-                .w_full()
-                .pr_2()
-                .justify_between()
-                .child(Label::new("MORPHIQ LUME").text_xs().font_medium())
-                .child(
-                    div()
-                        .pr_1()
-                        .flex()
-                        .items_center()
-                        .child(theme_toggle)
-                        .child(github_btn),
-                ),
-        )
+        TitleBar::new()
+            .bg(cx.theme().background.opacity(0.50))
+            .child(
+                h_flex()
+                    .w_full()
+                    .pr_2()
+                    .justify_between()
+                    .child(Label::new("MORPHIQ LUME").text_xs().font_medium())
+                    .child(
+                        div()
+                            .pr_1()
+                            .flex()
+                            .items_center()
+                            .child(theme_toggle)
+                            .child(github_btn),
+                    ),
+            )
     }
 }

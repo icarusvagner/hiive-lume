@@ -1,6 +1,6 @@
 [package]
-name = "hiive-svc-sync"
-version.workspace = true
+name = "svc-sync"
+version = "0.1.0"
 edition.workspace = true
 description.workspace = true
 authors.workspace = true
@@ -12,9 +12,10 @@ workspace = true
 default = []
 
 [dependencies]
+store = { version = "0.1.0", path = "../store" }
+
 anyhow.workspace = true
 async-trait.workspace = true
-hiive-store = { version = "0.1.0", path = "../store" }
 serde.workspace = true
 serde_json.workspace = true
 tokio.workspace = true

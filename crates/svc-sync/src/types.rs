@@ -1,8 +1,8 @@
 use std::time::Duration;
 
 use anyhow::{Result, anyhow};
-use hiive_store::StoreRef;
 use serde::{Deserialize, Serialize};
+use store::StoreRef;
 use tokio::{
     sync::mpsc::{Receiver, Sender},
     task::JoinHandle,
@@ -121,7 +121,7 @@ impl SyncService {
 }
 
 async fn do_sync_cycle(
-    store: &dyn hiive_store::Store,
+    store: &dyn store::Store,
     ev_tx: &tokio::sync::mpsc::Sender<SyncEvent>,
 ) -> Result<()> {
     let pending = store.load_pending_changes().await?;

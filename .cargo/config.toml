@@ -2,3 +2,6 @@
 vcs = "none"
 
 [env]
+RUST_LOG="app=debug,gui=debug,ui_components=debug,app_core=debug,store=debug,svc_sync=debug,svc_auth=debug,integration=debug,ui=debug"
+
+APP_NAME="Morphiq Lume"

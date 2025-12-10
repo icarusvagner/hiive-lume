@@ -1,14 +1,16 @@
+use chrono::Utc;
 use gpui::{AppContext, Application};
 use gpui_component::Root;
 
 use crate::{
-    assets,
-    ui::{window::get_window_options, workspace::HiiveLume},
+    assets, states,
+    ui::{window::get_window_options, workspace::Workspace},
 };
 
 pub async fn run_app() -> anyhow::Result<()> {
     let app = Application::new().with_assets(assets::Assets);
 
+    tracing::info!("{:<12} - {}", "APP Running", Utc::now().to_string());
     app.run(move |cx| {
         gpui_component::init(cx);
 
@@ -16,7 +18,9 @@ pub async fn run_app() -> anyhow::Result<()> {
 
         cx.spawn(async move |cx| {
             cx.open_window(window_options, |window, cx| {
-                let view = HiiveLume::view(window, cx);
+                states::init(cx);
+
+                let view = Workspace::view(window, cx);
 
                 cx.new(|cx| Root::new(view, window, cx))
             })?;

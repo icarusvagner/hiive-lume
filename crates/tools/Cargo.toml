@@ -1,7 +1,31 @@
 [package]
-name = "hiive-tools"
-version.workspace = true
+name = "tools"
+version = "0.1.0"
 edition.workspace = true
 authors.workspace = true
+description.workspace = true
+
+[lints]
+workspace = true
+
+[lib]
+path = "src/request_client.rs"
+doctest = true
 
 [dependencies]
+anyhow.workspace = true
+bytes.workspace = true
+futures.workspace = true
+gpui.workspace = true
+log.workspace = true
+rand.workspace = true
+regex.workspace = true
+reqwest.workspace = true
+rustls.workspace = true
+rustls-platform-verifier.workspace = true
+thiserror.workspace = true
+time.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+gpui.workspace = true

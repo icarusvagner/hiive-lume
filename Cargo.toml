@@ -16,7 +16,6 @@ exclude = [
 ]
 
 [workspace.package]
-version = "0.1.0"
 edition = "2024"
 description = "Hiive Lume is a next‑generation desktop Human Resource & Operations Management system built using Rust, gpui, and gpui-component. Inspired by Morphiq Lume but architected for a fully declarative, component‑driven UI, Hiive Lume delivers a fast, clean, and modern HR experience."
 authors = ["devixion", "icarusvagner <ruthakaza@gmail.com>", "lanphil <lanphil2000@proton.me>"]
@@ -49,6 +48,12 @@ serde_with = { version = "3.16.0", features = ["time_0_3"] }
 pq-sys = { version = "0.7.5", features = ["bundled"] }
 serde = { version = "1.0.228", features = ["derive"] }
 uuid = { version = "1.18.1", features = ["fast-rng", "v7", "v4", "serde"] }
+rustls = "0.23.35"
+rustls-platform-verifier = "0.6.2"
+regex = "1.12.2"
+log = "0.4.29"
+bytes = "1.11.0"
+futures = "0.3.31"
 
 [workspace.lints.clippy]
 almost_complete_range = "allow"
