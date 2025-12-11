@@ -21,7 +21,6 @@ description = "Hiive Lume is a next‑generation desktop Human Resource & Operat
 authors = ["devixion", "icarusvagner <ruthakaza@gmail.com>", "lanphil <lanphil2000@proton.me>"]
 
 [workspace.dependencies]
-reqwest_client = { path = "crates/reqwest_client" }
 modql = {version = "0.4.1", features = ["with-sea-query"] }
 sea-query = "0.32.7"
 sqlx = { version = "0.8.6", features = ["macros", "runtime-tokio", "postgres", "uuid"] }
@@ -54,6 +53,12 @@ regex = "1.12.2"
 log = "0.4.29"
 bytes = "1.11.0"
 futures = "0.3.31"
+hmac = "0.12.1"
+sha2 = "0.10.9"
+blake3 = "1.8.2"
+argon2 = { version = "0.5.3", features = ["std"] }
+lazy-regex = "3.4.2"
+enum_dispatch = "0.3.13"
 
 [workspace.lints.clippy]
 almost_complete_range = "allow"

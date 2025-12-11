@@ -3,6 +3,8 @@ use gpui_component::{
 	Icon, IconName, Sizable, StyledExt, button::{Button, ButtonVariants}, h_flex, label::Label, v_flex
 };
 
+mod table;
+
 pub struct EmployeeView;
 
 impl EmployeeView {
@@ -24,7 +26,7 @@ impl EmployeeView {
 			.items_center()
 			.px_5()
 			.py_2()
-			.child(Label::new("Employees").text_lg().font_bold())
+			.child(Label::new("Employees").text_2xl().font_bold())
 			.child(div().mx_auto())
 			.child(
 				h_flex()
