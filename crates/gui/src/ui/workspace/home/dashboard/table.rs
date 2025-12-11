@@ -1,6 +1,6 @@
 use gpui::*;
 use gpui_component::{
-	ActiveTheme, Icon, Sizable, button::{Button, ButtonVariants}, h_flex, table::{Column, Table, TableDelegate, TableState}, v_flex
+	ActiveTheme, Icon, Sizable, StyledExt, button::{Button, ButtonVariants}, h_flex, label::Label, table::{Column, Table, TableDelegate, TableState}, v_flex
 };
 
 pub struct DashboardTable {
@@ -27,12 +27,26 @@ impl Render for DashboardTable {
 		_window: &mut Window,
 		cx: &mut Context<Self>,
 	) -> impl IntoElement {
-		v_flex().h_112().w_full().bg(cx.theme().accent.opacity(0.30)).child(
-			Table::new(&self.table)
-				.stripe(true)
-				.bordered(true)
-				.scrollbar_visible(true, true),
-		)
+		v_flex()
+			.h_112()
+			.w_full()
+			.child(
+				Label::new("Recent Clocked-In").text_2xl().font_bold().mb_3(),
+			)
+			.child(
+				div()
+					.bg(cx.theme().accent.opacity(0.30))
+					.h_full()
+					.w_full()
+					.p_4()
+					.rounded_lg()
+					.child(
+						Table::new(&self.table)
+							.stripe(true)
+							.bordered(true)
+							.scrollbar_visible(true, true),
+					),
+			)
 	}
 }
 
@@ -153,7 +167,11 @@ impl TableDelegate for DashboardTableDelegate {
 			"status" => div().child(row.status.clone()),
 			"action" => h_flex().gap_1().child(
 				Button::new("update")
-					.icon(Icon::empty().path("icons/custom/update-page.svg"))
+					.icon(
+						Icon::empty()
+							.path("icons/custom/update-page.svg")
+							.size_4(),
+					)
 					.small()
 					.compact()
 					.ghost(),
@@ -164,15 +182,5 @@ impl TableDelegate for DashboardTableDelegate {
 
 	fn load_more_threshold(&self) -> usize {
 		20
-	}
-}
-
-impl Render for DashboardTableDelegate {
-	fn render(
-		&mut self,
-		_window: &mut Window,
-		cx: &mut Context<Self>,
-	) -> impl IntoElement {
-		v_flex().h_112().w_full().bg(cx.theme().accent.opacity(0.30))
 	}
 }

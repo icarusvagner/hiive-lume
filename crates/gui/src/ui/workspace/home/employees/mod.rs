@@ -42,7 +42,7 @@ impl EmployeeView {
 							),
 					)
 					.child(
-						Button::new("btn-export-emp")
+						Button::new("btn-import-emp")
 							.cursor_pointer()
 							.small()
 							.py_3()

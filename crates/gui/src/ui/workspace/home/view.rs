@@ -35,7 +35,7 @@ impl Homeview {
 			})];
 
 		Self {
-			view: HomeActiveView::Loading,
+			view: HomeActiveView::Dashboard,
 			collapse_menu: false,
 			_subscription,
 

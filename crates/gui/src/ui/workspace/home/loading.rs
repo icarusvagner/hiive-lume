@@ -16,6 +16,7 @@ impl Render for LoadingView {
 		cx: &mut Context<Self>,
 	) -> impl IntoElement {
 		v_flex()
+			.mt_64()
 			.flex_1()
 			.flex_shrink_0()
 			.h_full()
