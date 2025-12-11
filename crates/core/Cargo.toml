@@ -5,4 +5,25 @@ edition.workspace = true
 authors.workspace = true
 description.workspace = true
 
+[lints]
+workspace = true
+
 [dependencies]
+svc-auth = { version = "0.1.0", path = "../svc-auth" }
+tools = { version = "0.1.0", path = "../tools" }
+
+derive_more.workspace = true
+modql.workspace = true
+sea-query.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_with.workspace = true
+sqlx.workspace = true
+time.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+uuid.workspace = true
+sea-query-binder.workspace = true
+
+[dev-dependencies]
+serial_test = "3.2.0"
