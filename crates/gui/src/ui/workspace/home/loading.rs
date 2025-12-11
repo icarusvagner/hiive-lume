@@ -18,8 +18,12 @@ impl Render for LoadingView {
 		v_flex()
 			.flex_1()
 			.flex_shrink_0()
+			.h_full()
+			.w_full()
 			.items_center()
 			.justify_center()
-			.child(Spinner::new().color(cx.theme().primary).with_size(px(100.)))
+			.child(div().my_auto().child(
+				Spinner::new().color(cx.theme().primary).with_size(px(100.)),
+			))
 	}
 }

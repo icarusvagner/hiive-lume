@@ -1,20 +1,20 @@
 mod action_queues;
 mod cards;
 mod charts;
+mod table;
 
 use gpui::*;
-use gpui_component::{
-	StyledExt, label::Label, scroll::ScrollableElement, v_flex
-};
+use gpui_component::{StyledExt, label::Label, v_flex};
 
 use crate::ui::workspace::home::dashboard::{
-	action_queues::DashboardActionQueues, cards::DashboardCards, charts::DashboardCharts
+	action_queues::DashboardActionQueues, cards::DashboardCards, charts::DashboardCharts, table::DashboardTable
 };
 
 pub struct DashboardView {
 	cards: Entity<DashboardCards>,
 	action_queues: Entity<DashboardActionQueues>,
 	charts: Entity<DashboardCharts>,
+	table: Entity<DashboardTable>,
 }
 
 impl DashboardView {
@@ -22,12 +22,17 @@ impl DashboardView {
 		let cards = DashboardCards::view(window, cx);
 		let action_queues = DashboardActionQueues::view(window, cx);
 		let charts = DashboardCharts::view(window, cx);
+		let table = DashboardTable::view(window, cx);
 
-		Self { cards, action_queues, charts }
+		Self { cards, action_queues, charts, table }
 	}
 
 	pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
 		cx.new(|cx| Self::new(window, cx))
+	}
+
+	fn render_table(&self, _cx: &mut Context<Self>) -> Stateful<Div> {
+		div().id("dashboard-table").mt_4().child(self.table.clone())
 	}
 
 	fn render_cards(&self, _cx: &mut Context<Self>) -> Stateful<Div> {
@@ -59,7 +64,7 @@ impl DashboardView {
 					.child(self.render_cards(cx))
 					.child(self.render_action_queues(cx))
 					.child(self.render_charts(cx))
-					.overflow_y_scrollbar(),
+					.child(self.render_table(cx)),
 			)
 	}
 }
@@ -71,7 +76,7 @@ impl Render for DashboardView {
 		cx: &mut Context<Self>,
 	) -> impl IntoElement {
 		v_flex()
-			.h_full()
+			.flex_1()
 			.relative()
 			.overflow_hidden()
 			.flex_shrink_0()

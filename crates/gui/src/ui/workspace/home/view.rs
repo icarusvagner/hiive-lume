@@ -1,6 +1,6 @@
 use gpui::{prelude::FluentBuilder, *};
 use gpui_component::{
-	ActiveTheme, Icon, IconName, Side, Sizable, button::{Button, ButtonVariants}, h_flex, label::Label, sidebar::{Sidebar, SidebarGroup, SidebarMenu, SidebarMenuItem}, v_flex
+	ActiveTheme, Icon, IconName, Side, Sizable, button::{Button, ButtonVariants}, h_flex, label::Label, scroll::ScrollableElement, sidebar::{Sidebar, SidebarGroup, SidebarMenu, SidebarMenuItem}, v_flex
 };
 
 use crate::{
@@ -35,7 +35,7 @@ impl Homeview {
 			})];
 
 		Self {
-			view: HomeActiveView::Dashboard,
+			view: HomeActiveView::Loading,
 			collapse_menu: false,
 			_subscription,
 
@@ -59,11 +59,7 @@ impl Homeview {
 	}
 
 	fn render_loading(&self, _cx: &mut Context<Self>) -> Stateful<Div> {
-		v_flex()
-			.flex_1()
-			.flex_shrink_0()
-			.id("home-loading-view")
-			.child(self.loading.clone())
+		v_flex().id("home-loading-view").child(self.loading.clone())
 	}
 
 	fn handle_logout(&self, cx: &mut Context<Self>) {
@@ -346,7 +342,12 @@ impl Render for Homeview {
 			.h_full()
 			.w_full()
 			.child(self.render_sidebar_menu(window, cx))
-			.child(self.render_content(window, cx));
+			.child(
+				div()
+					.id("worspace-content")
+					.child(self.render_content(window, cx))
+					.overflow_y_scrollbar(),
+			);
 
 		v_flex().h_full().w_full().child(content)
 	}

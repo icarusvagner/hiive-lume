@@ -1,6 +1,6 @@
 use gpui::*;
 use gpui_component::{
-	ActiveTheme, Icon, StyledExt, h_flex, label::Label, tooltip::Tooltip, v_flex, white
+	ActiveTheme, Icon, StyledExt, h_flex, label::Label, v_flex, white
 };
 
 pub struct DashboardCards;
@@ -42,7 +42,7 @@ impl DashboardCards {
 					.size_12()
 					.mb_2(),
 			)
-			.child(div().child("195/200").text_2xl().font_black().mb_3())
+			.child(div().child("195/200").text_2xl().font_black())
 			.child(Label::new("Active Employees").text_sm().font_medium())
 	}
 
@@ -60,7 +60,7 @@ impl DashboardCards {
 					.size_12()
 					.mb_2(),
 			)
-			.child(div().child("189/200").text_2xl().font_black().mb_3())
+			.child(div().child("189/200").text_2xl().font_black())
 			.child(Label::new("Total Success Payroll").text_sm().font_medium())
 	}
 
@@ -79,29 +79,15 @@ impl DashboardCards {
 					.mb_2(),
 			)
 			.child(
-				div()
-					.id("pr-ss")
+				h_flex()
+					.items_center()
+					.gap(px(0.50))
 					.child(
-						h_flex()
-							.items_center()
-							.gap(px(0.50))
-							.child(
-								Icon::empty()
-									.path("icons/custom/philippine-peso.svg"),
-							)
-							.child(
-								Label::new("123,450.00")
-									.text_lg()
-									.font_medium(),
-							),
+						Icon::empty().path("icons/custom/philippine-peso.svg"),
 					)
-					.text_2xl()
-					.font_black()
-					.mb_3()
-					.tooltip(|window, cx| {
-						Tooltip::new("Last Month").build(window, cx)
-					}),
+					.child(Label::new("123,450.00").text_lg().font_black()),
 			)
+			.child(Label::new("Last Month").text_sm().font_medium())
 	}
 
 	fn fifth_card(&self, _window: &mut Window, cx: &mut Context<Self>) -> Div {
@@ -119,29 +105,15 @@ impl DashboardCards {
 					.mb_2(),
 			)
 			.child(
-				div()
-					.id("pr-ss")
+				h_flex()
+					.items_center()
+					.gap(px(0.50))
 					.child(
-						h_flex()
-							.items_center()
-							.gap(px(0.50))
-							.child(
-								Icon::empty()
-									.path("icons/custom/philippine-peso.svg"),
-							)
-							.child(
-								Label::new("12,123,450.00")
-									.text_lg()
-									.font_medium(),
-							),
+						Icon::empty().path("icons/custom/philippine-peso.svg"),
 					)
-					.text_2xl()
-					.font_black()
-					.mb_3()
-					.tooltip(|window, cx| {
-						Tooltip::new("All-Time Sales").build(window, cx)
-					}),
+					.child(Label::new("12,123,450.00").text_lg().font_black()),
 			)
+			.child(Label::new("All-Time Sales").text_sm().font_medium())
 	}
 }
 
