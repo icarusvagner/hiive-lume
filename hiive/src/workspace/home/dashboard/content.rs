@@ -355,9 +355,9 @@ impl Render for DashboardContent {
 		v_flex()
 			.px_10()
 			.py_6()
-			.gap_8()
 			.h_full()
 			.flex_1()
+			// Cards
 			.child(
 				div()
 					.grid()
@@ -366,17 +366,21 @@ impl Render for DashboardContent {
 					.children(self.cards(cx))
 					.child(self.pie_chart_card(cx)),
 			)
+			// Chart and preview
 			.child(
 				div()
 					.grid()
+					.mt_8()
 					.grid_cols(2)
 					.gap_8()
 					.child(self.render_attendance_overview(window, cx))
 					.child(self.render_events_news(window, cx)),
 			)
+			// another previews
 			.child(
 				div()
 					.grid()
+					.mt_8()
 					.grid_cols(6)
 					.gap_8()
 					.h_full()
