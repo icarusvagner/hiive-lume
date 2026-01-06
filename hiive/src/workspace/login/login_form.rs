@@ -10,6 +10,7 @@ use crate::{
 pub struct LoginForm {
 	username: Entity<InputState>,
 	password: Entity<InputState>,
+	loading: bool,
 }
 
 impl LoginForm {
@@ -24,7 +25,7 @@ impl LoginForm {
 					.masked(true)
 			});
 
-			Self { username, password }
+			Self { username, password, loading: false }
 		})
 	}
 
@@ -37,50 +38,62 @@ impl LoginForm {
 		cx.notify();
 	}
 
-	fn _validate_empty_input(
-		&mut self,
-		_window: &mut Window,
-		cx: &mut Context<Self>,
-	) -> bool {
+	fn _validate_empty_input(&mut self, cx: &mut Context<Self>) -> bool {
 		!self.username.read(cx).value().is_empty()
 			&& !self.password.read(cx).value().is_empty()
 	}
 
 	fn auth_login(&mut self, window: &mut Window, cx: &mut Context<Self>) {
-		let Some(mm_state) = cx.global::<ConnectionState>().mm.clone() else {
-			window.push_notification(
-				(NotificationType::Warning, "Connection Unstable"),
-				cx,
-			);
+		if self.loading {
 			return;
-		};
+		}
 
-		if self._validate_empty_input(window, cx) {
-			let payload = LoginPayload {
-				username: self.username.read(cx).value().to_string(),
-				password: self.password.read(cx).value().to_string(),
-			};
-			let entity = cx.entity();
+		if let Some(mm_state) = cx.global::<ConnectionState>().mm.clone() {
+			self.loading = true;
+			cx.notify();
 
-			cx.spawn_in(window, async move |view, cx| {
-				let result = handlers_login(&mm_state, payload).await;
+			if self._validate_empty_input(cx) {
+				let payload = LoginPayload {
+					username: self.username.read(cx).value().to_string(),
+					password: self.password.read(cx).value().to_string(),
+				};
+				let entity = cx.entity();
 
-				let _ = cx.update(|_this, cx| match result {
-					Ok(res) => {
-						window.push_notification(
-							(NotificationType::Info, "Login Successfully"),
-							cx,
-						);
-					}
-					Err(err) => {}
-				});
-			})
-			.detach();
-		} else {
-			window.push_notification(
-				(NotificationType::Error, "Input fields are required"),
-				cx,
-			);
+				cx.spawn_in(window, async move |this, cx| {
+					let result = handlers_login(&mm_state, payload).await;
+
+					let _ = cx.update(|window, cx| match result {
+						Ok(res) => {}
+						Err(err) => {
+							let err_msg: SharedString =
+								format!("{}", err.to_string()).into();
+							tracing::error!(
+								"{:<12} - {}",
+								"SOMETHING WENT WRONG",
+								err.to_string()
+							);
+							window.push_notification(
+								(NotificationType::Error, err_msg),
+								cx,
+							);
+						}
+					});
+
+					cx.update_entity(&entity, |form, cx| {
+						form.loading = false;
+						cx.notify();
+					})
+					.ok();
+				})
+				.detach();
+			} else {
+				window.push_notification(
+					(NotificationType::Error, "Input fields are required"),
+					cx,
+				);
+				self.loading = false;
+				cx.notify();
+			}
 		}
 	}
 }
@@ -127,8 +140,9 @@ impl Render for LoginForm {
 						.w_full()
 						.large()
 						.py_5()
-						.on_click(cx.listener(|this, _, window, cx| {
-							this.auth_login(window, cx)
+						.loading(self.loading)
+						.on_click(cx.listener(|this, _, win, cx| {
+							this.auth_login(win, cx)
 						})),
 				),
 			)

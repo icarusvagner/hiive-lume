@@ -13,7 +13,6 @@ base64.workspace = true
 chrono.workspace = true
 gpui.workspace = true
 gpui-component.workspace = true
-gpui-component-assets.workspace = true
 mockd.workspace = true
 rand.workspace = true
 rust-embed.workspace = true

@@ -1,7 +1,7 @@
 use chrono::NaiveDateTime;
 use gpui::*;
 use gpui_component::{
-	ActiveTheme, StyledExt, avatar::Avatar, chart::{AreaChart, PieChart}, h_flex, label::Label, radio::RadioGroup, v_flex
+	ActiveTheme, StyledExt, avatar::Avatar, chart::{AreaChart, PieChart}, h_flex, label::Label, radio::RadioGroup, scroll::ScrollableElement, v_flex
 };
 
 use crate::{
@@ -402,6 +402,6 @@ impl Render for DashboardContent {
 							.child(self.render_project_overview(cx)),
 					),
 			)
-			.scrollable(Axis::Vertical)
+			.overflow_y_scrollbar()
 	}
 }

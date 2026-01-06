@@ -31,9 +31,8 @@ thiserror = "2.0.17"
 anyhow = "1.0.100"
 base64 = "0.22.1"
 chrono = { version = "0.4.42", features = ["serde"] }
-gpui = "0.2.2"
-gpui-component = { version = "0.4.0", features = ["tree-sitter-languages"] }
-gpui-component-assets = "0.4.0"
+gpui = "0.2"
+gpui-component = { version = "0.5", features = ["tree-sitter-languages"] }
 mockd = { version = "0.4.54", features = ["image", "job", "name", "company", "address"] }
 rand = "0.9.2"
 rust-embed = { version = "8.9.0", features = ["interpolate-folder-path"] }

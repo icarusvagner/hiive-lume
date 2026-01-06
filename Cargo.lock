@@ -2541,9 +2541,9 @@ dependencies = [
 
 [[package]]
 name = "gpui-component"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f58e192c970b94144e884d7eadbeb47ae0439b94eead33abd331df16ec71f48"
+checksum = "2dda822a7bab4e0a08a4276ba68e2f82cc5855bf0b377d7b195c58c8061dc7d1"
 dependencies = [
  "aho-corasick",
  "anyhow",
@@ -2607,21 +2607,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "gpui-component-assets"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "275913d119db966729c1e4a7c51f87ded868026f84de3ad327aa88367c225d4b"
-dependencies = [
- "anyhow",
- "gpui",
- "rust-embed",
-]
-
-[[package]]
 name = "gpui-component-macros"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e6ac41ada7802159245da8bb8cc2ae15506b74f2c7abde583538d9a60058346"
+checksum = "581a8cd1e38b2fd86d1029dd56a3296ffd1388fda295054104d89923755de902"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2917,7 +2906,6 @@ dependencies = [
  "derive_more 2.0.1",
  "gpui",
  "gpui-component",
- "gpui-component-assets",
  "lib-auth",
  "lib-core",
  "lib-models",

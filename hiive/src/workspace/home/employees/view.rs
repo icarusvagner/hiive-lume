@@ -1,6 +1,6 @@
 use gpui::*;
 use gpui_component::{
-	ActiveTheme, Icon, IconName, IndexPath, Selectable, Sizable, StyledExt, button::{Button, ButtonCustomVariant, ButtonGroup, ButtonVariants}, h_flex, label::Label, select::{Select, SelectState}, v_flex
+	ActiveTheme, Icon, IconName, IndexPath, Selectable, Sizable, button::{Button, ButtonCustomVariant, ButtonGroup, ButtonVariants}, h_flex, label::Label, scroll::ScrollableElement, select::{Select, SelectState}, v_flex
 };
 
 use crate::{
@@ -238,6 +238,6 @@ impl Render for Employees {
 			.flex_grow()
 			.child(self.render_top_content(window, cx))
 			.child(mode_content)
-			.scrollable(Axis::Vertical)
+			.overflow_y_scrollbar()
 	}
 }
