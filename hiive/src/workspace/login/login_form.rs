@@ -4,7 +4,9 @@ use gpui_component::{
 };
 
 use crate::{
-	core::handlers::handlers_login::{LoginPayload, handlers_login}, states::{auth_state::AuthState, db_state::ConnectionState}
+	core::handlers::handlers_login::{LoginPayload, handlers_login}, states::{
+		auth_state::AuthState, db_state::ConnectionState, show_layout::LayoutState
+	}
 };
 
 pub struct LoginForm {
@@ -59,11 +61,17 @@ impl LoginForm {
 				};
 				let entity = cx.entity();
 
-				cx.spawn_in(window, async move |this, cx| {
+				cx.spawn_in(window, async move |_, cx| {
 					let result = handlers_login(&mm_state, payload).await;
 
 					let _ = cx.update(|window, cx| match result {
-						Ok(res) => {}
+						Ok(_) => {
+							cx.update_global::<LayoutState, _>(
+								move |state, _| {
+									state.layout = crate::states::show_layout::ActiveLayout::Home;
+								},
+							);
+						}
 						Err(err) => {
 							let err_msg: SharedString =
 								format!("{}", err.to_string()).into();

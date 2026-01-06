@@ -20,9 +20,10 @@ pub async fn handlers_login(
 		UserAccountBmc::first_by_username(&root_ctx, &mm, &username)
 			.await?
 			.ok_or(Error::LoginFailUsernameNotFound(username.to_string()))?;
-	let user_id = user.id;
 	let Some(pwd) = user.password_hash else {
-		return Err(Error::LoginFailUserNoPassword { user_id });
+		return Err(Error::LoginFailUserNoPassword(
+			username.clone().to_string(),
+		));
 	};
 
 	let scheme_status = pwd::validate_pwd(
@@ -30,7 +31,9 @@ pub async fn handlers_login(
 		pwd,
 	)
 	.await
-	.map_err(|_| Error::LoginFailPasswordNotMatching { user_id })?;
+	.map_err(|_| {
+		Error::LoginFailPasswordNotMatching(username.clone().to_string())
+	})?;
 
 	if let SchemeStatus::Outdated = scheme_status {
 		tracing::debug!("password scheme outdated, upgrading.");

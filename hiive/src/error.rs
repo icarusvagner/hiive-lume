@@ -7,10 +7,10 @@ pub type Result<T> = core::result::Result<T, Error>;
 pub enum Error {
 	#[error("{0} username not found")]
 	LoginFailUsernameNotFound(String),
-	#[error("{user_id:?} has no password")]
-	LoginFailUserNoPassword { user_id: i64 },
-	#[error("{user_id:?} username has no password")]
-	LoginFailPasswordNotMatching { user_id: i64 },
+	#[error("{0} has no password")]
+	LoginFailUserNoPassword(String),
+	#[error("{0} username has no password")]
+	LoginFailPasswordNotMatching(String),
 	#[error("Data store disconnected")]
 	Disconnect(#[from] std::io::Error),
 	#[error("Internal error something went wrong")]

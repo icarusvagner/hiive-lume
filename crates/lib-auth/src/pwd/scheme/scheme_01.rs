@@ -63,11 +63,11 @@ mod tests {
 	#[test]
 	fn test_scheme_01_hash_into_b64u_ok() -> Result<()> {
 		// -- Setup & Fixtures
-		let fx_salt = Uuid::parse_str("f05e8961-d6ad-4086-9e78-a6de065e5453")?;
+		let fx_salt = Uuid::parse_str("920c3daf-b791-4ed0-b897-058023c15bde")?;
 		let fx_key = &auth_config().PWD_KEY; // 512 bits = 64 bytes
 		let fx_to_hash =
-			ContentToHash { content: "hello world".to_string(), salt: fx_salt };
-		let fx_res = "6BhkptutVj3CYkMRQ7XZo7d_KNILnwp46bvBulcUIIY3t_OI7KAdUSsjNRITCLjAP5NmHWAByvIksIRd2m98lg";
+			ContentToHash { content: "4dmin.2025".to_string(), salt: fx_salt };
+		let fx_res = "fpqM8aqCiGUwQaF3SY-rluNw-sQH2GP7sIjL_XhjjMgL5aabpafrKuT-vlPvAhxSgt_Nl3B-MtmuEhi-apSoAg";
 
 		// -- Exec
 		let res = hash(fx_key, &fx_to_hash)?;

@@ -17,7 +17,7 @@ INSERT INTO tbl_user_account (
 VALUES (
     'admin-001',                              -- user_id
     'admin',                                  -- username
-    '#01#1ZUacqPZw7NVYvep6IDn2HJ00O8WBo1e0zvjNxWddEb4OGmkwUW2VssKC-IMjWc_himzKr6SaoprB7ufh204KQ',
+    '#01#fpqM8aqCiGUwQaF3SY-rluNw-sQH2GP7sIjL_XhjjMgL5aabpafrKuT-vlPvAhxSgt_Nl3B-MtmuEhi-apSoAg',
     gen_random_uuid(),                        -- pass_salt
     gen_random_uuid(),                        -- token_salt
     'active',                                 -- user_session_state
