@@ -60,15 +60,22 @@ impl LoginForm {
 				username: self.username.read(cx).value().to_string(),
 				password: self.password.read(cx).value().to_string(),
 			};
+			let entity = cx.entity();
 
-			cx.spawn(async move |_, cx| {
-				match handlers_login(&mm_state, payload).await {
-					Ok(res) => {}
+			cx.spawn_in(window, async move |view, cx| {
+				let result = handlers_login(&mm_state, payload).await;
+
+				let _ = cx.update(|_this, cx| match result {
+					Ok(res) => {
+						window.push_notification(
+							(NotificationType::Info, "Login Successfully"),
+							cx,
+						);
+					}
 					Err(err) => {}
-				}
+				});
 			})
 			.detach();
-			cx.notify();
 		} else {
 			window.push_notification(
 				(NotificationType::Error, "Input fields are required"),
