@@ -106,7 +106,7 @@ impl Candidates {
 							),
 					)
 					.child(
-						Button::new("add-newjob-btn")
+						Button::new("add-candidates-btn")
 							.large()
 							.p_3()
 							.custom(
@@ -119,11 +119,11 @@ impl Candidates {
 							)
 							.rounded_full()
 							.icon(IconName::Plus)
-							.label("Add New Job")
+							.label("Add Candidate")
 							.cursor_pointer()
 							.on_click(|_, window, cx| {
 								window.open_dialog(cx, |dialog, _, _| {
-									dialog.title("Post new Job").alert()
+									dialog.title("Add candidate").alert()
 								});
 							}),
 					),

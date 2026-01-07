@@ -59,7 +59,7 @@ impl LoginForm {
 				};
 				let entity = cx.entity();
 
-				cx.spawn_in(window, async move |_, cx| {
+				cx.spawn_in(window, async move |view, cx| {
 					let result = handlers_login(&mm_state, payload).await;
 
 					let _ = cx.update(|window, cx| match result {
@@ -70,6 +70,11 @@ impl LoginForm {
 								(NotificationType::Success, res_msg),
 								cx,
 							);
+
+							let _ = view.update(cx, |this, cx| {
+								this._clear(window, cx);
+							});
+
 							cx.update_global::<LayoutState, _>(
 								move |state, _| {
 									state.layout = crate::states::show_layout::ActiveLayout::Home;
@@ -93,6 +98,7 @@ impl LoginForm {
 
 					cx.update_entity(&entity, |form, cx| {
 						form.loading = false;
+
 						cx.notify();
 					})
 					.ok();
