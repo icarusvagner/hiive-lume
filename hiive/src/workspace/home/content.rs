@@ -40,7 +40,7 @@ impl HomeContent {
 			})];
 
 		Self {
-			active: HomeActiveLayout::Dashboard,
+			active: HomeActiveLayout::CreateEmployee,
 			dashboard,
 			employees,
 			jobs,

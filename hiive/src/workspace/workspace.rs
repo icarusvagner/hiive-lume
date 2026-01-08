@@ -31,7 +31,7 @@ impl Workspace {
 
 		Self {
 			header_bar,
-			layout: ActiveLayout::Login,
+			layout: ActiveLayout::Home,
 			login_space,
 			home_space,
 			footer_bar,
