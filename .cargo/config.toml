@@ -2,7 +2,7 @@
 vcs = "none"
 
 [env]
-RUST_LOG="hiive=debug,reqwest_client=debug,lib_core=debug,lib_utils=debug,lib_auth=debug"
+RUST_LOG="hiive=debug,reqwest_client=debug,lib_core=debug,lib_utils=debug,lib_auth=debug,lib_models=debug,lib_dev_test=debug"
 
 # -- Service Environment Variables
 # IMPORTANT: 

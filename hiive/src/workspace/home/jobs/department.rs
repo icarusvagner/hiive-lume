@@ -1,45 +1,33 @@
 use gpui::*;
 use gpui_component::{
-	ActiveTheme, Icon, IconName, WindowExt, button::{Button, ButtonCustomVariant, ButtonVariants}, h_flex, label::Label, v_flex
+	ActiveTheme, Icon, IconName, Sizable, WindowExt, button::{Button, ButtonCustomVariant, ButtonVariants}, form::{field, v_form}, h_flex, input::{Input, InputState}, label::Label, v_flex
 };
 
-pub struct Departments;
+pub struct Departments {
+	department_name: Entity<InputState>,
+	department_address: Entity<InputState>,
+	department_description: Entity<InputState>,
+}
 
 impl Departments {
-	pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
-		Self
+	pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
+		let department_name = cx.new(|cx| {
+			InputState::new(window, cx).placeholder("Enter department name")
+		});
+		let department_address = cx.new(|cx| {
+			InputState::new(window, cx).placeholder("Where it is located")
+		});
+		let department_description = cx.new(|cx| {
+			InputState::new(window, cx)
+				.placeholder("Short description")
+				.auto_grow(10, 30)
+		});
+
+		Self { department_name, department_address, department_description }
 	}
 
 	pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
 		cx.new(|cx| Self::new(window, cx))
-	}
-
-	fn render_new_department(
-		&self,
-		window: &mut Window,
-		cx: &mut Context<Self>,
-	) {
-		window.open_dialog(cx, |dialog, _, _| {
-			dialog.title("Add new Job").footer(|_, _, _, _| {
-				vec![
-					Button::new("job-confirm-btn")
-						.primary()
-						.py_3()
-						.label("Add new Job")
-						.cursor_pointer()
-						.on_click(|_, window, cx| {
-							window.close_dialog(cx);
-						}),
-					Button::new("job-cancel-btn")
-						.py_3()
-						.label("Cancel")
-						.cursor_pointer()
-						.on_click(|_, window, cx| {
-							window.close_dialog(cx);
-						}),
-				]
-			})
-		});
 	}
 
 	fn render_top_content(
@@ -83,7 +71,41 @@ impl Departments {
 						.label("New Department")
 						.cursor_pointer()
 						.on_click(cx.listener(|this, _, window, cx| {
-							this.render_new_department(window, cx)
+							let department_name = this.department_name.clone();
+							let department_address =
+								this.department_address.clone();
+							let department_desc =
+								this.department_description.clone();
+
+							window.open_dialog(cx, move |dialog, _, _| {
+								dialog.title("Add Department").child(
+									v_form()
+										.gap_6()
+										.child(
+											field()
+												.label("Department Name")
+												.child(Input::new(
+													&department_name,
+												)),
+										)
+										.child(
+											field()
+												.label("Full Address")
+												.child(
+													Input::new(
+														&department_address,
+													)
+													.large(),
+												),
+										)
+										.child(
+											field().label("Description").child(
+												Input::new(&department_desc)
+													.large(),
+											),
+										),
+								)
+							});
 						})),
 				),
 		)

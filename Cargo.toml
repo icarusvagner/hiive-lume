@@ -2,7 +2,8 @@
 resolver = "2"
 members = [
     "crates/lib-auth",
-    "crates/lib-core", "crates/lib-dev-test",
+    "crates/lib-core",
+    "crates/lib-dev-test",
     "crates/lib-models",
     "crates/lib-utils",
     "crates/reqwest_client",
