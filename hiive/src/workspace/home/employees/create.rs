@@ -29,7 +29,6 @@ pub struct CreateEmployee {
 	purok_name: Entity<InputState>,
 	street_name: Entity<InputState>,
 	barangay: Entity<InputState>,
-	city: Entity<InputState>,
 	municipality: Entity<InputState>,
 	province: Entity<InputState>,
 	zipcode: Entity<InputState>,
@@ -121,11 +120,6 @@ impl CreateEmployee {
 					.placeholder("Enter barangay")
 					.clean_on_escape()
 			});
-			let city = cx.new(|cx| {
-				InputState::new(window, cx)
-					.placeholder("Enter city")
-					.clean_on_escape()
-			});
 			let municipality = cx.new(|cx| {
 				InputState::new(window, cx)
 					.placeholder("Enter municipality")
@@ -157,7 +151,6 @@ impl CreateEmployee {
 				purok_name,
 				street_name,
 				barangay,
-				city,
 				municipality,
 				province,
 				zipcode,
@@ -185,7 +178,6 @@ impl CreateEmployee {
 		let _ = self.purok_name.update(cx, |this, cx| this.set_value("", window, cx));
 		let _ = self.street_name.update(cx, |this, cx| this.set_value("", window, cx));
 		let _ = self.barangay.update(cx, |this, cx| this.set_value("", window, cx));
-		let _ = self.city.update(cx, |this, cx| this.set_value("", window, cx));
 		let _ = self.municipality.update(cx, |this, cx| this.set_value("", window, cx));
 		let _ = self.province.update(cx, |this, cx| this.set_value("", window, cx));
 		let _ = self.zipcode.update(cx, |this, cx| this.set_value("", window, cx));
@@ -220,7 +212,6 @@ impl CreateEmployee {
 			)
 	}
 
-	#[rustfmt::skip]
 	fn render_form(&self, _window: &mut Window, cx: &mut Context<Self>) -> Div {
 		div()
 			.px_10()
@@ -283,6 +274,9 @@ impl CreateEmployee {
 														.child(field().label("Phone Number").required(true).child(Input::new(&self.phone_number).large()))
 												)
 												.child(
+													v_flex().gap_6()
+													
+										.child(
 											h_flex()
 												.gap_6()
 												.items_center()
@@ -290,17 +284,25 @@ impl CreateEmployee {
 													.child(field().label("Purok Name").required(true).child(Input::new(&self.purok_name).large()))
 													.child(field().label("Barangay").required(true).child(Input::new(&self.barangay).large())))
 										)
-									)
-									.child(field().label("Emergency Contact").label_indent(false))
-									.child(
-										field().child(
-											v_flex()
+										.child(
+											h_flex()
 												.gap_6()
-												.child(field().label("Firstname").required(true).child(Input::new(&self.emergency_contact_fname).large()))
-												.child(field().label("Lastname").required(true).child(Input::new(&self.emergency_contact_lname).large()))
-												.child(field().label("Contact Number").child(Input::new(&self.emergency_contact_number).large()))
-										),
+												.items_center()
+												.child(field().label("Municipality").required(true).child(Input::new(&self.municipality).large()))
+												.child(field().label("Zipcode").required(true).child(Input::new(&self.zipcode).large()))
+												.child(field().label("Province").required(true).child(Input::new(&self.province).large()))
+										)
+												)
+								)
+								.child(
+									field().child(
+										v_flex()
+											.gap_6()
+											.child(field().label("Firstname").required(true).child(Input::new(&self.emergency_contact_fname).large()))
+											.child(field().label("Lastname").required(true).child(Input::new(&self.emergency_contact_lname).large()))
+											.child(field().label("Contact Number").child(Input::new(&self.emergency_contact_number).large()))
 									),
+								),
 							),
 						)
 						.child(

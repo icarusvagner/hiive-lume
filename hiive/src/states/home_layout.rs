@@ -5,6 +5,7 @@ pub enum HomeActiveLayout {
 	Dashboard,
 	Employees,
 	Jobs,
+	Department,
 	Candidates,
 	Payroll,
 	Leaves,

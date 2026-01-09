@@ -5,7 +5,7 @@ use gpui_component::{
 
 use crate::{
 	states::home_layout::{HomeActiveLayout, HomeLayout}, workspace::home::{
-		candidates::view::Candidates, dashboard::Dashboard, employees::{create::CreateEmployee, view::Employees}, jobs::view::Jobs, leaves::Leaves, payroll::Payroll, settings::Settings
+		candidates::view::Candidates, dashboard::Dashboard, employees::{create::CreateEmployee, view::Employees}, jobs::{department::Departments, view::Jobs}, leaves::Leaves, payroll::Payroll, settings::Settings
 	}
 };
 
@@ -14,6 +14,7 @@ pub struct HomeContent {
 	dashboard: Entity<Dashboard>,
 	employees: Entity<Employees>,
 	jobs: Entity<Jobs>,
+	department: Entity<Departments>,
 	candidates: Entity<Candidates>,
 	leaves: Entity<Leaves>,
 	payroll: Entity<Payroll>,
@@ -32,6 +33,7 @@ impl HomeContent {
 		let settings = Settings::view(window, cx);
 		let create_employee = CreateEmployee::view(window, cx);
 		let payroll = Payroll::view(window, cx);
+		let department = Departments::view(window, cx);
 
 		let _subscription =
 			vec![cx.observe_global::<HomeLayout>(move |this, cx| {
@@ -44,6 +46,7 @@ impl HomeContent {
 			dashboard,
 			employees,
 			jobs,
+			department,
 			candidates,
 			payroll,
 			leaves,
@@ -83,6 +86,16 @@ impl HomeContent {
 			.size_full()
 			.bg(cx.theme().background)
 			.child(self.jobs.clone());
+
+		content
+	}
+
+	fn render_department(&self, cx: &mut Context<Self>) -> Stateful<Div> {
+		let content = v_flex()
+			.id("jobs")
+			.size_full()
+			.bg(cx.theme().background)
+			.child(self.department.clone());
 
 		content
 	}
@@ -181,6 +194,7 @@ impl Render for HomeContent {
 			HomeActiveLayout::Payroll => self.render_payroll(cx),
 			HomeActiveLayout::CreateEmployee => self.render_create_employee(cx),
 			HomeActiveLayout::Loading => self.render_loading_home(cx),
+			HomeActiveLayout::Department => self.render_department(cx),
 		};
 
 		v_flex()

@@ -28,6 +28,11 @@ impl HeaderMenu {
 				HomeActiveLayout::Jobs,
 			),
 			HomeHeaderMenuModel::new(
+				"Departments".to_string(),
+				Icon::new(IconName::Building2),
+				HomeActiveLayout::Department,
+			),
+			HomeHeaderMenuModel::new(
 				"Candidates".to_string(),
 				Icon::new(
 					Icon::empty().path("icons/custom/users-round-outline.svg"),
