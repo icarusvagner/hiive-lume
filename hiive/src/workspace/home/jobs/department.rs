@@ -1,6 +1,6 @@
 use gpui::*;
 use gpui_component::{
-	ActiveTheme, Icon, IconName, Sizable, WindowExt, button::{Button, ButtonCustomVariant, ButtonVariants}, form::{field, v_form}, h_flex, input::{Input, InputState}, label::Label, v_flex
+	ActiveTheme, Icon, IconName, Sizable, WindowExt, button::{Button, ButtonCustomVariant, ButtonVariants}, form::{field, v_form}, h_flex, input::{Input, InputState}, label::Label, notification::NotificationType, v_flex
 };
 
 pub struct Departments {
@@ -78,33 +78,49 @@ impl Departments {
 								this.department_description.clone();
 
 							window.open_dialog(cx, move |dialog, _, _| {
-								dialog.title("Add Department").child(
-									v_form()
-										.gap_6()
-										.child(
-											field()
-												.label("Department Name")
-												.child(Input::new(
-													&department_name,
-												)),
-										)
-										.child(
-											field()
-												.label("Full Address")
-												.child(
-													Input::new(
-														&department_address,
-													)
-													.large(),
-												),
-										)
-										.child(
-											field().label("Description").child(
-												Input::new(&department_desc)
-													.large(),
+								dialog
+									.title("Add Department")
+									.child(
+										v_form()
+											.gap_6()
+											.child(
+												field()
+													.label("Department Name")
+													.child(Input::new(
+														&department_name,
+													)),
+											)
+											.child(
+												field()
+													.label("Full Address")
+													.child(
+														Input::new(
+															&department_address,
+														)
+														.large(),
+													),
+											)
+											.child(
+												field()
+													.label("Description")
+													.child(
+														Input::new(
+															&department_desc,
+														)
+														.large(),
+													),
 											),
-										),
-								)
+									)
+									.on_ok(|_, window, cx| {
+										window.push_notification(
+											(
+												NotificationType::Success,
+												"Departments submitted",
+											),
+											cx,
+										);
+										true
+									})
 							});
 						})),
 				),
