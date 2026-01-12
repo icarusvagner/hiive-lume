@@ -111,6 +111,7 @@ impl Departments {
 													),
 											),
 									)
+									.confirm()
 									.on_ok(|_, window, cx| {
 										window.push_notification(
 											(
