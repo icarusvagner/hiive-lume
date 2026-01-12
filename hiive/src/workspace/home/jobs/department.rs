@@ -30,6 +30,14 @@ impl Departments {
 		cx.new(|cx| Self::new(window, cx))
 	}
 
+	fn validate_inputs(
+		&self,
+		window: &mut Window,
+		cx: &mut Context<Self>,
+	) -> bool {
+		false
+	}
+
 	fn render_top_content(
 		&self,
 		_window: &mut Window,
