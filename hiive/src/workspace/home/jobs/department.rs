@@ -30,12 +30,49 @@ impl Departments {
 		cx.new(|cx| Self::new(window, cx))
 	}
 
-	fn validate_inputs(
-		&self,
-		window: &mut Window,
-		cx: &mut Context<Self>,
-	) -> bool {
-		false
+	fn validate_inputs(&self, window: &mut Window, cx: &mut App) -> bool {
+		let d_name = self.department_name.read(cx).value();
+		let d_addr = self.department_address.read(cx).value();
+		let d_desc = self.department_description.read(cx).value();
+
+		match (d_name.is_empty(), d_addr.is_empty(), d_desc.is_empty()) {
+			(false, true, true) => {
+				window.push_notification(
+					(NotificationType::Warning, "Department name is required!"),
+					cx,
+				);
+				false
+			}
+			(true, false, true) => {
+				window.push_notification(
+					(NotificationType::Warning, "Address is required!"),
+					cx,
+				);
+				false
+			}
+			(true, true, false) => {
+				window.push_notification(
+					(NotificationType::Warning, "Description is required!"),
+					cx,
+				);
+				false
+			}
+			(true, true, true) => true,
+			(false, false, false) => {
+				window.push_notification(
+					(NotificationType::Error, "Fill in the required fields"),
+					cx,
+				);
+				false
+			}
+			(_, _, _) => false,
+		}
+	}
+
+	fn save_department(&self, window: &mut Window, cx: &mut Context<Self>) {
+		if self.validate_inputs(window, cx) {
+			return;
+		}
 	}
 
 	fn render_top_content(
@@ -84,8 +121,11 @@ impl Departments {
 								this.department_address.clone();
 							let department_desc =
 								this.department_description.clone();
+							let entity = cx.entity();
 
 							window.open_dialog(cx, move |dialog, _, _| {
+								let entity = entity.clone();
+
 								dialog
 									.title("Add Department")
 									.child(
@@ -120,14 +160,17 @@ impl Departments {
 											),
 									)
 									.confirm()
-									.on_ok(|_, window, cx| {
-										window.push_notification(
-											(
-												NotificationType::Success,
-												"Departments submitted",
-											),
-											cx,
+									.on_ok(move |_, window, cx| {
+										cx.update_entity(
+											&entity.clone(),
+											|entity, cx| {
+												entity.save_department(
+													window, cx,
+												);
+												cx.notify();
+											},
 										);
+
 										true
 									})
 							});

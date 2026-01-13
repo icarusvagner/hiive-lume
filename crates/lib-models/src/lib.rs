@@ -4,3 +4,4 @@ pub mod authentication;
 pub mod employee;
 pub mod log;
 pub mod types;
+pub mod department;
