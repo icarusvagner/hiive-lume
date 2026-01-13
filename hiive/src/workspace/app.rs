@@ -42,6 +42,12 @@ pub async fn run() -> Result<()> {
 				cx.new(|cx| Root::new(workspace_view, window, cx))
 			})?;
 
+			tracing::debug!(
+				"{:<12} - {}",
+				"APP RUNNING",
+				"no errors and successfully running"
+			);
+
 			Ok::<_, anyhow::Error>(())
 		})
 		.detach();

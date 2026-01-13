@@ -5,7 +5,7 @@ use gpui_component::{
 
 use crate::{
 	core::handlers::handlers_department::{
-		DepartmentAddPayload, handlers_add_department
+		DepartmentAddPayload, handlers_add_department, handlers_get_count
 	}, states::{auth_state::AuthState, db_state::ConnectionState}
 };
 
@@ -14,6 +14,9 @@ pub struct Departments {
 	department_address: Entity<InputState>,
 	department_description: Entity<InputState>,
 	loading: bool,
+	search_department: Entity<InputState>,
+	total_department: usize,
+	_subscriptions: Vec<Subscription>,
 }
 
 impl Departments {
@@ -29,12 +32,26 @@ impl Departments {
 				.placeholder("Short description")
 				.auto_grow(10, 30)
 		});
+		let search_department = cx.new(|cx| {
+			InputState::new(window, cx).placeholder("Search department...")
+		});
+
+		let _subscriptions = vec![cx.observe_global_in::<ConnectionState>(
+			window,
+			move |this, _window, cx| {
+				this.get_departments_count(cx);
+				cx.notify();
+			},
+		)];
 
 		Self {
 			department_name,
 			department_address,
 			department_description,
 			loading: false,
+			search_department,
+			total_department: 0,
+			_subscriptions,
 		}
 	}
 
@@ -47,8 +64,10 @@ impl Departments {
 		let _ = self.department_name.update(cx, |this, cx| this.set_value("", window, cx));
 		let _ = self.department_address.update(cx, |this, cx| this.set_value("", window, cx));
 		let _ = self.department_description.update(cx, |this, cx| this.set_value("", window, cx));
+		let _ = self.search_department.update(cx, |this, cx| this.set_value("", window, cx));
 	}
 
+	#[rustfmt::skip]
 	fn validate_inputs(&self, window: &mut Window, cx: &mut App) -> bool {
 		let d_name = self.department_name.read(cx).value();
 		let d_addr = self.department_address.read(cx).value();
@@ -56,40 +75,28 @@ impl Departments {
 
 		match (d_name.is_empty(), d_addr.is_empty(), d_desc.is_empty()) {
 			(false, true, true) => {
-				window.push_notification(
-					(NotificationType::Warning, "Department name is required!"),
-					cx,
-				);
+				window.push_notification((NotificationType::Warning, "Department name is required!"), cx);
 				false
 			}
 			(true, false, true) => {
-				window.push_notification(
-					(NotificationType::Warning, "Address is required!"),
-					cx,
-				);
+				window.push_notification((NotificationType::Warning, "Address is required!"), cx);
 				false
 			}
 			(true, true, false) => {
-				window.push_notification(
-					(NotificationType::Warning, "Description is required!"),
-					cx,
-				);
+				window.push_notification((NotificationType::Warning, "Description is required!"), cx);
 				false
 			}
 			(true, true, true) => true,
-			(false, false, false) => {
-				window.push_notification(
-					(NotificationType::Error, "Fill in the required fields"),
-					cx,
-				);
-				false
-			}
 			(_, _, _) => false,
 		}
 	}
 
 	fn save_department(&mut self, window: &mut Window, cx: &mut Context<Self>) {
 		if self.validate_inputs(window, cx) {
+			window.push_notification(
+				(NotificationType::Warning, "Fields are required!"),
+				cx,
+			);
 			return;
 		}
 
@@ -112,23 +119,19 @@ impl Departments {
 						handlers_add_department(&mm_state, auth.id, payload)
 							.await;
 
+					#[rustfmt::skip]
 					let _ = cx.update(|window, cx| match result {
 						Ok(_res) => {
-							window.push_notification(
-								(
-									NotificationType::Success,
-									"Department Added Successfully",
-								),
-								cx,
-							);
+							tracing::info!("{:<12} - {}", "SUCCESS", "adding department success");
+							window.push_notification((NotificationType::Success, "Department Added Successfully"), cx);
+							cx.update_entity(&entity, |this, cx| {
+								this.refresh_department_count(window, cx);
+								cx.notify();
+							});
 						}
 						Err(err) => {
-							let err_msg: SharedString =
-								format!("{}", err.to_string()).into();
-							window.push_notification(
-								(NotificationType::Error, err_msg),
-								cx,
-							);
+							tracing::error!("{:<12} - {}", "ADD DEPARTMENT ERROR", err.to_string());
+							window.push_notification((NotificationType::Error, "Something went wrong"), cx);
 						}
 					});
 
@@ -143,13 +146,52 @@ impl Departments {
 		}
 	}
 
+	#[rustfmt::skip]
+	fn refresh_department_count(&mut self, _window: &mut Window, cx: &mut Context<Self>)
+	{
+		self.get_departments_count(cx);
+	}
+
+	#[rustfmt::skip]
+	fn get_departments_count(&mut self, cx: &mut Context<Self>) {
+		if self.loading {
+			return;
+		}
+
+		if let Some(mm_state) = cx.global::<ConnectionState>().mm.clone() {
+			let entity = cx.entity();
+
+			if let Some(auth) = cx.global::<AuthState>().user.clone() {
+				cx.spawn(async move |_this, cx| {
+					let result = handlers_get_count(&mm_state, auth.id).await;
+
+					match result {
+						Ok(res) => {
+							let _ = cx.update_entity(&entity, |view, cx| {
+								view.total_department = res;
+								cx.notify();
+							});
+						}
+						Err(err) => {
+							tracing::error!("{:<12} - {}", "DEPARTMENT COUNT ERROR", err.to_string());
+						}
+					}
+
+					let _ = cx.update_entity(&entity, |view, cx| {
+						view.loading = false;
+						cx.notify();
+					});
+				})
+				.detach();
+			}
+		}
+	}
+
 	fn render_top_content(
 		&self,
 		_window: &mut Window,
 		cx: &mut Context<Self>,
 	) -> Div {
-		let total_department = 5;
-
 		v_flex().px_10().py_6().bg(cx.theme().accent).child(
 			h_flex()
 				.justify_between()
@@ -163,7 +205,7 @@ impl Departments {
 						)
 						.child(
 							Label::new(format!(
-								"{total_department} Total Departments"
+								"{} Total Departments",self.total_department
 							))
 							.text_lg()
 							.font_weight(FontWeight::THIN),
@@ -191,6 +233,7 @@ impl Departments {
 								this.department_description.clone();
 							let entity = cx.entity();
 
+							#[rustfmt::skip]
 							window.open_dialog(cx, move |dialog, _, _| {
 								let entity = entity.clone();
 
@@ -199,46 +242,19 @@ impl Departments {
 									.child(
 										v_form()
 											.gap_6()
-											.child(
-												field()
-													.label("Department Name")
-													.child(Input::new(
-														&department_name,
-													)),
-											)
-											.child(
-												field()
-													.label("Full Address")
-													.child(
-														Input::new(
-															&department_address,
-														)
-														.large(),
-													),
-											)
-											.child(
-												field()
-													.label("Description")
-													.child(
-														Input::new(
-															&department_desc,
-														)
-														.large(),
-													),
-											),
+											.child(field().label("Department Name").child(Input::new(&department_name)))
+											.child(field().label("Full Address").child(Input::new(&department_address).large()))
+											.child(field().label("Description").child(Input::new(&department_desc).large())),
 									)
 									.confirm()
 									.on_ok(move |_, window, cx| {
 										cx.update_entity(
 											&entity.clone(),
 											|entity, cx| {
-												entity.save_department(
-													window, cx,
-												);
+												entity.save_department(window, cx);
 												cx.notify();
 											},
 										);
-
 										true
 									})
 							});

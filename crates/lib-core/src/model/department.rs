@@ -27,10 +27,6 @@ impl DbBmc for DepartmentBmc {
 	fn has_timestamps() -> bool {
 		true
 	}
-
-	fn has_owner_id() -> bool {
-		true
-	}
 }
 
 impl DepartmentBmc {
@@ -39,6 +35,7 @@ impl DepartmentBmc {
 		mm: &ModelManager,
 		data: DepartmentForCreate,
 	) -> Result<i64> {
+		tracing::debug!("{:<12} - {}", "INSERT", "adding department");
 		let DepartmentForCreate { name, full_address, description } = data;
 
 		let department_fi = DepartmentForInsert {
@@ -71,6 +68,7 @@ impl DepartmentBmc {
 				)
 			})?;
 
+		mm.dbx().commit_txn().await?;
 		Ok(deparment_id)
 	}
 
