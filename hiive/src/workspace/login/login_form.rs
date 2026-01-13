@@ -4,7 +4,9 @@ use gpui_component::{
 };
 
 use crate::{
-	core::handlers::handlers_login::{LoginPayload, handlers_login}, states::{db_state::ConnectionState, show_layout::LayoutState}
+	core::handlers::handlers_login::{LoginPayload, handlers_login}, states::{
+		auth_state::AuthState, db_state::ConnectionState, show_layout::LayoutState
+	}
 };
 
 pub struct LoginForm {
@@ -64,12 +66,19 @@ impl LoginForm {
 
 					let _ = cx.update(|window, cx| match result {
 						Ok(res) => {
-							let res_msg: SharedString =
-								format!("{}", res.message).into();
 							window.push_notification(
-								(NotificationType::Success, res_msg),
+								(
+									NotificationType::Success,
+									"Login Successfully",
+								),
 								cx,
 							);
+
+							let _ =
+								cx.update_global::<AuthState, _>(|state, _| {
+									state.authenticated = res.authenticated;
+									state.user = res.user;
+								});
 
 							let _ = view.update(cx, |this, cx| {
 								this._clear(window, cx);

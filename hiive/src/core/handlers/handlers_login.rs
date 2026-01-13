@@ -2,16 +2,16 @@ use lib_auth::pwd::{self, ContentToHash, SchemeStatus};
 use lib_core::{
 	ctx::Ctx, model::{ModelManager, user::UserAccountBmc}
 };
-use lib_models::authentication::user_account::UserAccountForLogin;
-
-use crate::{
-	Error, Result, core::types::request_res::{RequestError, RequestResult}
+use lib_models::{
+	authentication::user_account::{UserAccount, UserAccountForLogin}, types::UserSessionState
 };
+
+use crate::{Error, Result, core::types::request_res::LoginRequestResult};
 
 pub async fn handlers_login(
 	mm: &ModelManager,
 	payload: LoginPayload,
-) -> Result<RequestResult> {
+) -> Result<LoginRequestResult> {
 	let LoginPayload { username, password: pwd_clear } = payload;
 
 	let root_ctx = Ctx::root_ctx();
@@ -41,10 +41,15 @@ pub async fn handlers_login(
 			.await?;
 	}
 
-	let result_req = RequestResult {
-		message: "Login Successfully".to_string(),
-		status: RequestError::Success,
+	let auth_user = UserAccount {
+		id: user.id,
+		user_id: user.user_id,
+		username: user.username,
+		status: UserSessionState::Active,
 	};
+
+	let result_req =
+		LoginRequestResult { authenticated: true, user: Some(auth_user) };
 
 	Ok(result_req)
 }

@@ -1,17 +1,13 @@
 use lib_core::model::{ModelManager, department::DepartmentBmc};
 use lib_models::department::DepartmentForCreate;
 
-use crate::{
-	Result, core::{
-		context::ctx_resolve, types::request_res::{RequestError, RequestResult}
-	}
-};
+use crate::{Result, core::context::ctx_resolve};
 
 pub async fn handlers_add_department(
 	mm: &ModelManager,
 	user_id: i64,
 	payload: DepartmentAddPayload,
-) -> Result<RequestResult> {
+) -> Result<i64> {
 	let DepartmentAddPayload { name, full_address, description } = payload;
 
 	let data = DepartmentForCreate {
@@ -22,12 +18,10 @@ pub async fn handlers_add_department(
 
 	let ctx = ctx_resolve(user_id).await?.0;
 
-	let _ = DepartmentBmc::create_department(&ctx, &mm, data).await?;
+	let department_id =
+		DepartmentBmc::create_department(&ctx, &mm, data).await?;
 
-	Ok(RequestResult {
-		message: "Department Successfully Added".to_string(),
-		status: RequestError::Success,
-	})
+	Ok(department_id)
 }
 
 #[derive(Debug)]

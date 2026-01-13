@@ -6,7 +6,7 @@ use gpui_component::{
 use crate::{
 	core::handlers::handlers_department::{
 		DepartmentAddPayload, handlers_add_department
-	}, states::db_state::ConnectionState
+	}, states::{auth_state::AuthState, db_state::ConnectionState}
 };
 
 pub struct Departments {
@@ -40,6 +40,13 @@ impl Departments {
 
 	pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
 		cx.new(|cx| Self::new(window, cx))
+	}
+
+	#[rustfmt::skip]
+	fn _clear(&self, window: &mut Window, cx: &mut Context<Self>) {
+		let _ = self.department_name.update(cx, |this, cx| this.set_value("", window, cx));
+		let _ = self.department_address.update(cx, |this, cx| this.set_value("", window, cx));
+		let _ = self.department_description.update(cx, |this, cx| this.set_value("", window, cx));
 	}
 
 	fn validate_inputs(&self, window: &mut Window, cx: &mut App) -> bool {
@@ -97,16 +104,42 @@ impl Departments {
 				description: self.department_description.read(cx).value().to_string(),
 			};
 
-			cx.spawn_in(window, async move |_this, cx| {
-				let result =
-					handlers_add_department(&mm_state, 0, payload).await;
+			let entity = cx.entity();
 
-				let _ = cx.update(|window, cx| match result {
-					Ok(res) => {}
-					Err(err) => {}
-				});
-			})
-			.detach();
+			if let Some(auth) = cx.global::<AuthState>().user.clone() {
+				cx.spawn_in(window, async move |_this, cx| {
+					let result =
+						handlers_add_department(&mm_state, auth.id, payload)
+							.await;
+
+					let _ = cx.update(|window, cx| match result {
+						Ok(_res) => {
+							window.push_notification(
+								(
+									NotificationType::Success,
+									"Department Added Successfully",
+								),
+								cx,
+							);
+						}
+						Err(err) => {
+							let err_msg: SharedString =
+								format!("{}", err.to_string()).into();
+							window.push_notification(
+								(NotificationType::Error, err_msg),
+								cx,
+							);
+						}
+					});
+
+					let _ = cx.update_entity(&entity, |entity, cx| {
+						entity.loading = false;
+						cx.notify();
+					});
+				})
+				.detach();
+				self._clear(window, cx);
+			}
 		}
 	}
 

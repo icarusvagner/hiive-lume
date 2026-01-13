@@ -1,4 +1,4 @@
-use lib_core::{ctx::Ctx, model::ModelManager};
+use lib_core::ctx::Ctx;
 
 use crate::error::{CtxError, CtxResult, CtxW};
 
