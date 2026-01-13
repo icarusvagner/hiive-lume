@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS tbl_department (
     name TEXT NOT NULL UNIQUE,
     full_address TEXT NOT NULL,
     description TEXT,
+    visible: TINYINT DEFAULT 0,
 
     -- Timestamps
     cid BIGINT NOT NULL DEFAULT 0,

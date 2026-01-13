@@ -21,6 +21,13 @@ pub enum Error {
 		name: String,
 	},
 
+	// For general purpose
+	EntityAlreadyExists {
+		table_name: String,
+		attribute_name: String,
+		tuple: String,
+	},
+
 	EntityNotFound {
 		entity: &'static str,
 		id: i64,

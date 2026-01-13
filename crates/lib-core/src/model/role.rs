@@ -1,57 +1,25 @@
-use lib_models::authentication::{
-	role::{Role, RoleForCreate, RoleForInsert}, role_permission::{Permission, PermissionForCreate, PermissionForInsert}
+use lib_models::{
+	authentication::{
+		role::{Role, RoleForCreate, RoleForInsert}, role_permission::{
+			Permission, PermissionForCreate, PermissionForInsert
+		}
+	}, types::identities::RoleIden
 };
 use modql::{
-	field::{HasSeaFields, SeaField, SeaFields}, filter::{
-		FilterNodes, ListOptions, OpValsInt64, OpValsString, OpValsValue
-	}
+	field::{HasSeaFields, SeaField, SeaFields}, filter::ListOptions
 };
-use sea_query::{Expr, Iden, PostgresQueryBuilder, Query};
+use sea_query::{Expr, PostgresQueryBuilder, Query};
 use sea_query_binder::SqlxBinder;
-use serde::Deserialize;
 use sqlx::{FromRow, postgres::PgRow};
 
 use crate::{
 	ctx::Ctx, model::{
-		Error, ModelManager, Result, base::{self, CommonIden, DbBmc, prep_fields_for_update}, modql_utils::time_to_sea_value, prep_fields_for_create
+		Error, ModelManager, Result, base::{self, CommonIden, DbBmc, prep_fields_for_update}, filters::RoleFilter, prep_fields_for_create
 	}
 };
 
-#[derive(Iden)]
-pub enum RoleIden {
-	Id,
-	Name,
-	Description,
-	Status,
-}
-
-#[derive(Iden)]
-pub enum PermissionIden {
-	Id,
-	Module,
-	Action,
-	Level,
-	Status,
-}
-
-#[derive(FilterNodes, Deserialize, Default, Debug)]
-pub struct RoleFilter {
-	pub id: Option<OpValsInt64>,
-	pub name: Option<OpValsString>,
-	pub description: Option<OpValsString>,
-
-	pub cid: Option<OpValsInt64>,
-	#[modql(to_sea_value_fn = "time_to_sea_value")]
-	pub ctime: Option<OpValsValue>,
-	pub mid: Option<OpValsInt64>,
-	#[modql(to_sea_value_fn = "time_to_sea_value")]
-	pub mtime: Option<OpValsValue>,
-}
-
-pub trait RoleBy:
-	HasSeaFields + for<'r> FromRow<'r, PgRow> + Unpin + Send
-{
-}
+#[rustfmt::skip]
+pub trait RoleBy: HasSeaFields + for<'r> FromRow<'r, PgRow> + Unpin + Send { }
 
 impl RoleBy for Role {}
 impl RoleBy for Permission {}

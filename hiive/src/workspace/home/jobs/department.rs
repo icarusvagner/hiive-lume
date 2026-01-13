@@ -3,10 +3,17 @@ use gpui_component::{
 	ActiveTheme, Icon, IconName, Sizable, WindowExt, button::{Button, ButtonCustomVariant, ButtonVariants}, form::{field, v_form}, h_flex, input::{Input, InputState}, label::Label, notification::NotificationType, v_flex
 };
 
+use crate::{
+	core::handlers::handlers_department::{
+		DepartmentAddPayload, handlers_add_department
+	}, states::db_state::ConnectionState
+};
+
 pub struct Departments {
 	department_name: Entity<InputState>,
 	department_address: Entity<InputState>,
 	department_description: Entity<InputState>,
+	loading: bool,
 }
 
 impl Departments {
@@ -23,7 +30,12 @@ impl Departments {
 				.auto_grow(10, 30)
 		});
 
-		Self { department_name, department_address, department_description }
+		Self {
+			department_name,
+			department_address,
+			department_description,
+			loading: false,
+		}
 	}
 
 	pub fn view(window: &mut Window, cx: &mut App) -> Entity<Self> {
@@ -69,9 +81,32 @@ impl Departments {
 		}
 	}
 
-	fn save_department(&self, window: &mut Window, cx: &mut Context<Self>) {
+	fn save_department(&mut self, window: &mut Window, cx: &mut Context<Self>) {
 		if self.validate_inputs(window, cx) {
 			return;
+		}
+
+		if let Some(mm_state) = cx.global::<ConnectionState>().mm.clone() {
+			self.loading = true;
+			cx.notify();
+
+			#[rustfmt::skip]
+			let payload = DepartmentAddPayload {
+				name: self.department_name.read(cx).value().to_string(),
+				full_address: self.department_address.read(cx).value().to_string(),
+				description: self.department_description.read(cx).value().to_string(),
+			};
+
+			cx.spawn_in(window, async move |_this, cx| {
+				let result =
+					handlers_add_department(&mm_state, 0, payload).await;
+
+				let _ = cx.update(|window, cx| match result {
+					Ok(res) => {}
+					Err(err) => {}
+				});
+			})
+			.detach();
 		}
 	}
 

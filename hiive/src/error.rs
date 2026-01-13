@@ -1,7 +1,8 @@
 use lib_auth::{pwd, token};
-use lib_core::error;
+use lib_core::{ctx::Ctx, error};
 
 pub type Result<T> = core::result::Result<T, Error>;
+pub type CtxResult = core::result::Result<CtxW, CtxError>;
 
 #[derive(Debug, thiserror::Error, strum::AsRefStr)]
 pub enum Error {
@@ -25,4 +26,17 @@ pub enum Error {
 	TokenError(#[from] token::Error),
 	#[error("{0}")]
 	ServiceError(String),
+	#[error("{0}")]
+	CtxError(#[from] self::CtxError),
+}
+
+#[derive(Debug, Clone)]
+pub struct CtxW(pub Ctx);
+
+#[derive(Clone, Debug, thiserror::Error, strum::AsRefStr)]
+pub enum CtxError {
+	#[error("Context user id is not in the request")]
+	CtxNotInRequest,
+	#[error("{0}")]
+	CtxCreateFail(String),
 }

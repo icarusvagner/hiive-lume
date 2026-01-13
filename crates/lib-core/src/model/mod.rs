@@ -6,9 +6,11 @@ mod base;
 
 pub use base::*;
 
+pub mod department;
 pub mod modql_utils;
-pub mod user;
 pub mod role;
+pub mod user;
+pub mod filters;
 
 #[derive(Clone)]
 pub struct ModelManager {
